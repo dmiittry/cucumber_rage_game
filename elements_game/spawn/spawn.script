@@ -16,9 +16,8 @@ TIME_SPAWN_MOSTER = 0
 function init(self)
 	self.level = 1
 	self.boost = 0
-	self.next_level = 120
+	self.next_level = TIME_NEXT_LEVEL
 	math.randomseed(os.time())
-	msg.post(".", "acquire_input_focus")
 	self.index = 1
 	self.max_index = 4
 	-- boss_spawn()
@@ -36,45 +35,40 @@ function update(self, dt)
 			self.boost = self.boost + 1
 			self.level = self.level + 1
 			if self.boost == 1 then
-				DURATION_SPAWN_MOSTER = 3
-				red_spawn_horizontal_bottom()
-				red_spawn_horizontal_up()
+				purple_spawn()
 				yellow_spawn()
-				print('boost = ', self.boost)
-				self.next_level = 120
-			elseif self.boost == 2 then
-				DURATION_SPAWN_MOSTER = 3
-				red_spawn_horizontal_bottom()
 				red_spawn_horizontal_up()
-				red_spawn_right()
-				red_spawn_left()
 				print('boost = ', self.boost)
-				self.next_level = 120
+				self.next_level = TIME_NEXT_LEVEL
+			elseif self.boost == 2 then
+				purple_spawn()
+				yellow_spawn()
+				red_spawn_horizontal_up()
+				print('boost = ', self.boost)
+				self.next_level = TIME_NEXT_LEVEL
 			elseif self.boost == 3 then
 				print('boost = ', self.boost)
-				DURATION_SPAWN_MOSTER = 2
-				blue_spawn_horizontal_bottom()
-				blue_spawn_horizontal_up()
-				blue_spawn_right()
 				blue_spawn_left()
+				purple_spawn()
+				yellow_spawn()
 				self.max_index = 5
-				self.next_level = 120
+				self.next_level = TIME_NEXT_LEVEL
 			elseif self.boost == 4 then
 				print('boost = ', self.boost)
 				red_spawn_left()
-				red_spawn_right()
-				blue_spawn_horizontal_bottom()
 				blue_spawn_horizontal_up()
-				self.next_level = 120
+				purple_spawn()
+				yellow_spawn()
+				self.next_level = TIME_NEXT_LEVEL
 			elseif self.boost == 5 then
 				print('boost = ', self.boost)
-				red_spawn_horizontal_bottom()
+				purple_spawn()
+				yellow_spawn()
 				red_spawn_horizontal_up()
 				red_spawn_right()
-				blue_spawn_left()
 				blue_spawn_horizontal_up()
 				self.boost = 0
-				self.next_level = 60
+				self.next_level = TIME_NEXT_LEVEL
 			end
 		end
 	elseif self.level == 6 then

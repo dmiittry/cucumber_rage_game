@@ -6,7 +6,7 @@ go.property("regen", false)
 function init(self)
 	go.set("#damage", "scale", vmath.vector3(0.25,0.25,1))
 	self.time_life = 0.5
-	local damage_text = string.format("%.0f", self.damage)
+	local damage_text = string.format("%.1f", self.damage)
 	label.set_text("#damage", "-" .. damage_text)
 	go.set("#damage", "color", vmath.vector4(1, 1, 1, 1))
 	if self.player then

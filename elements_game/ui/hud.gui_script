@@ -74,12 +74,13 @@ function init(self)
 end
 
 function update(self, dt)
+	local damage_text = 
 	gui.set_text(EXP_TEXT, "EXP: ".. EXP .. "/".. EXP_LVL[LEVEL])
 	gui.set_text(MONEY_TEXT, MONEY)
 	gui.set_text(MONEY_TEXT1, MONEY)
 	gui.set_text(SPEED_TEXT, "скорость: ".. SPEED_PLAYER)
 	gui.set_text(DAMAGE_TEXT, "урон: ".. DAMAGE_BULLET)
-	gui.set_text(HEARTS_TEXT, HP_PLAYER .. "/" .. MAX_HP_PLAYER)
+	gui.set_text(HEARTS_TEXT, string.format("%.1f", HP_PLAYER) .. "/" .. MAX_HP_PLAYER)
 	gui.set_text(REGEN_TEXT, "регенерация: 0." .. REGEN_PLAYER)
 	gui.set_text(VAMPIR_TEXT, "вампиризм: ".. VAMPIR)
 	gui.set_text(DAMAGE_UNIT_TEXT, "урон юнитов: ".. DAMAGE_UNIT)
@@ -197,25 +198,39 @@ function choose_upgrade()
 	local first = upgrade[rand1]
 	table.remove(upgrade, rand1)
 	BUY1 = first.buy
-	if first.value >= 5 then
+	VALUE1 = first.value
+	if free_upgrade then
+		VALUE1 = math.random(10,12)
+		if LEVEL == 20 then
+			VALUE1 = math.random(20,23)
+		end
+	end
+		
+	if VALUE1 >= 5 then
 		BUY1 = BUY1 + math.random(15, 25)
 		gui.set_color(TEXT1, GREEN_COLOR)
 	end
 	if first.value == 0 then
 		gui.set_text(TEXT1, first.text1)
 	else
-		gui.set_text(TEXT1, "+" .. first.value .. first.text1)
+		gui.set_text(TEXT1, "+" .. VALUE1 .. first.text1)
 	end
 	gui.set_text(TEXT11, first.text2)
 	gui.set_text(BUY_TEXT1, BUY1)
-	VALUE1 = first.value
 	KEY1 = first.key
 
 	local rand2 = math.random(1, #upgrade)
 	local second = upgrade[rand2]
 	table.remove(upgrade, rand2)
 	BUY2 = second.buy
-	if second.value >= 5 then
+	VALUE2 = second.value
+	if free_upgrade then
+		VALUE2 = math.random(10,12)
+		if LEVEL == 20 then
+			VALUE2 = math.random(20,23)
+		end
+	end
+	if VALUE2 >= 5 then
 		BUY2 = BUY2 + math.random(20, 30)
 		gui.set_color(TEXT2, GREEN_COLOR)
 	end
@@ -223,18 +238,24 @@ function choose_upgrade()
 	if second.value == 0 then
 		gui.set_text(TEXT2, second.text1)
 	else
-		gui.set_text(TEXT2,  "+" .. second.value .. second.text1)
+		gui.set_text(TEXT2,  "+" .. VALUE2 .. second.text1)
 	end
 	gui.set_text(TEXT22, second.text2)
 	gui.set_text(BUY_TEXT2, BUY2)
-	VALUE2 = second.value
 	KEY2 = second.key
 
 	local rand3 = math.random(1, #upgrade)
 	local three = upgrade[rand3]
 	table.remove(upgrade, rand3)
 	BUY3 = three.buy
-	if three.value >= 5 then
+	VALUE3 = three.value
+	if free_upgrade then
+		VALUE3 = math.random(10,12)
+		if LEVEL == 20 then
+			VALUE3 = math.random(20,23)
+		end
+	end
+	if VALUE3 >= 5 then
 		BUY3 = BUY3 + math.random(15, 25)
 		gui.set_color(TEXT3, GREEN_COLOR)
 	end
@@ -242,29 +263,34 @@ function choose_upgrade()
 	if three.value == 0 then
 		gui.set_text(TEXT3, three.text1)
 	else
-		gui.set_text(TEXT3, "+" .. three.value .. three.text1)
+		gui.set_text(TEXT3, "+" .. VALUE3 .. three.text1)
 	end
 	gui.set_text(TEXT33, three.text2)
 	gui.set_text(BUY_TEXT3, BUY3)
-	VALUE3 = three.value
 	KEY3 = three.key
 
 	local rand4 = math.random(1, #upgrade)
 	local fore = upgrade[rand4]
 	table.remove(upgrade, rand4)
 	BUY4 = fore.buy
-	if fore.value >= 5 then
+	VALUE4 = fore.value
+	if free_upgrade then
+		VALUE4 = math.random(10,12)
+		if LEVEL == 20 then
+			VALUE4 = math.random(20,23)
+		end
+	end
+	if VALUE4 >= 5 then
 		BUY4 = BUY4 + math.random(15, 25)
 		gui.set_color(TEXT4, GREEN_COLOR)
 	end
 	if fore.value == 0 then
 		gui.set_text(TEXT4, fore.text1)
 	else
-		gui.set_text(TEXT4, "+" .. fore.value .. fore.text1)
+		gui.set_text(TEXT4, "+" .. VALUE4 .. fore.text1)
 	end
 	gui.set_text(TEXT44, fore.text2)
 	gui.set_text(BUY_TEXT4, BUY4)
-	VALUE4 = fore.value
 	KEY4 = fore.key
 end
 
@@ -329,7 +355,7 @@ function on_input(self, action_id, action)
 		
 	elseif action_id == hash("fire") and action.released and gui.pick_node(CHANGE_BOX, action.x, action.y) and gui.is_enabled(UPGRADE_BOX) and MONEY >= change_coins then
 		change_money(-change_coins)
-		change_coins = change_coins + math.random(5,9)
+		change_coins = change_coins + math.random(5,13)
 		choose_upgrade()
 	elseif action_id == hash("fire") and action.released and gui.pick_node(CURRENT_BOX, action.x, action.y) and gui.is_enabled(UPGRADE_BOX) and CURRENT_KEY ~= 0 and BUY <= MONEY then
 
@@ -346,9 +372,9 @@ function on_input(self, action_id, action)
 	elseif action_id == hash("fire") and action.released and gui.pick_node(CLOSE_BOX, action.x, action.y) and gui.is_enabled(UPGRADE_BOX) and gui.is_enabled(CLOSE_BOX) then
 		gui.set_enabled(UPGRADE_BOX, false)
 		text_update()
+		free_upgrade = true
 		choose_upgrade()
 		change_state('start')
 		change_coins = 5
-		free_upgrade = true
 	end
 end

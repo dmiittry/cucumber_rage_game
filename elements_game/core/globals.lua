@@ -20,9 +20,9 @@ CHAR_CRITICAL = {value = math.random(2,6), key = "critical", text1 = "% крит
 CHAR_ARMOR = {value = math.random(2,7), key = "armor", text1 = " повысить броню", text2 = "увеличивает бронью, броня уменьшает урон", img = 'img', buy = math.random(20,32)}
 CHAR_UKLON = {value = math.random(2,6), key = "uklon", text1 = "% повысить уклонение", text2 = "будешь уклонятся от атак как бог", img = 'img', buy = math.random(20,32)}
 CHAR_SPEED_SHOOT = {value = math.random(2,5), key = "speed_shoot", text1 = " увеличивает скорость атаки", text2 = "увеличивает скорость стрельбы из пистолета", img = 'img', buy = math.random(20,32)}
-SKILL_ADD_AK47 = {value = 0, key = "add_ak", text1 = " добавить ak47", text2 = "Добавляет ак47 которая стреляем самостоятельно", buy = math.random(200, 300), img = 'ak47'}
+SKILL_ADD_AK47 = {value = 0, key = "add_ak", text1 = "добавить ak47", text2 = "Добавляет ак47 которая стреляем самостоятельно", buy = math.random(200, 300), img = 'ak47'}
 SKILL_ADD_KNIFE = {value = 0, key = "add_knife", text1 = "добавить меч", text2 = "добавляет мечи которые вращаются вокруг оугрчика", buy = math.random(200, 300), img = 'knife' }
-SKILL_PROBITIE = {value = 1, key = "probitie", text1 = "пробивающие пули", text2 = "Ваши пули пробивают врагов", buy = math.random(200, 300), img = "img" }
+SKILL_PROBITIE = {value = 0, key = "probitie", text1 = "пробивающие пули", text2 = "Ваши пули пробивают +1 врага", buy = math.random(200, 300), img = "img" }
 UP_DMG_KNIFE = {value = math.random(3,7), key = "up_dmg_knife", text1 = " увеличивает урон МЕЧА", text2 = "увеличивает урон меча", buy = math.random(100, 150), img =""}
 UP_SPEED_AK = {value =  math.random(2,7), key = "up_speed_ak", text1 = " увеличивает скорость АК47", text2 = "увеличивает скорость атаки АК47", buy = math.random(100, 150), img =""}
 UP_SPEED_KNIFE = {value =  math.random(2,7), key = "up_speed_knife", text1 = " увеличивает скорость меча", text2 = "увеличивает скорость меча", buy = math.random(100, 150), img =""}
@@ -32,26 +32,28 @@ CHAR_UKLON, CHAR_SPEED_SHOOT, SKILL_ADD_AK47, SKILL_ADD_KNIFE, SKILL_PROBITIE}
 
 STATE = "dead"
 
-KOL_PROBITIE = 5
+KOL_PROBITIE = 0
 -- SETTINGS
+TIME_NEXT_LEVEL = 60
+PUSH_MONSTER = 50
 IS_MOUSE = false
 EXP = 0
 MONEY = 50
 LEVEL = 1
-HP_PLAYER = 0
+HP_PLAYER = 100
 -- CHAR PLAYER
-MAX_HP_PLAYER = 1000
+MAX_HP_PLAYER = 100
 REGEN_PLAYER = 0 -- /10 max 30
 VAMPIR = 0 -- % max 9
-DAMAGE_BULLET = 12
-DAMAGE_UNIT = 10
+DAMAGE_BULLET = 8
+DAMAGE_UNIT = 9
 CRITICAL = 0.05   -- %
 ARMOR = 3 -- %
 UKLON_PLAYER = 0.05 -- max 0.6 %
 SPEED_PLAYER = 80
-SPEED_SHOOT = 0.2 -- sekunda - max 0.2
+SPEED_SHOOT = 0.8 -- sekunda - max 0.2
 -- AK47
-TIME_SHOOT_AK47 = 0.3 -- max 0.3
+TIME_SHOOT_AK47 = 0.8 -- max 0.3
 
 
 AK = 0
@@ -130,22 +132,33 @@ function upgrade_skills(key, value)
 		end
 	elseif key == "speed_shoot" then
 		SPEED_SHOOT = SPEED_SHOOT - value/100
+		if SPEED_SHOOT < 0.2 then
+			SPEED_SHOOT = 0.2
+			for key, value in pairs(UPGRADE_LIST) do
+				if value == SPEED_SHOOT then
+					table.remove(UPGRADE_LIST, key)
+				end
+			end
+		end
 	elseif key == "add_ak" then
 		add_ak()
 	elseif key == "add_knife" then
 		add_knife()
 	elseif key == "probitie" then
-		KOL_PROBITIE = KOL_PROBITIE + value
-		for key, value in pairs(UPGRADE_LIST) do
-			if value == SKILL_PROBITIE then
-				table.remove(UPGRADE_LIST, key)
+		KOL_PROBITIE = KOL_PROBITIE + 1
+		if KOL_PROBITIE > 3 then
+			for key, value in pairs(UPGRADE_LIST) do
+				if value == SKILL_PROBITIE then
+					table.remove(UPGRADE_LIST, key)
+				end
 			end
 		end
 	elseif key == "up_dmg_knife" then
 		KNIFE_DAMAGE = KNIFE_DAMAGE + value
 	elseif key == "up_speed_ak" then
 		TIME_SHOOT_AK47 = TIME_SHOOT_AK47 - value/100
-		if TIME_SHOOT_AK47 <= 0.3 then
+		if TIME_SHOOT_AK47 <= 0.25 then
+			TIME_SHOOT_AK47 = 0.25
 			for key, value in pairs(UPGRADE_LIST) do
 				if value == UP_SPEED_AK then
 					table.remove(UPGRADE_LIST, key)
@@ -155,6 +168,7 @@ function upgrade_skills(key, value)
 	elseif key == "up_speed_knife" then
 		TIME_KNIFE = TIME_KNIFE - value/100
 		if TIME_KNIFE <= 1 then
+			TIME_KNIFE = 0.9
 			for key, value in pairs(UPGRADE_LIST) do
 				if value == UP_SPEED_KNIFE then
 					table.remove(UPGRADE_LIST, key)
@@ -164,7 +178,7 @@ function upgrade_skills(key, value)
 	end
 end
 
-PUSH_MONSTER = 50
+
 --RED MONSTER
 MONEY_RED = 6
 SCORE_RED = 4
@@ -223,12 +237,12 @@ function change_exp(value)
 		DAMAGE_PURPLE = DAMAGE_PURPLE + 1
 		DAMAGE_YELLOW = DAMAGE_YELLOW + 1
 		if LEVEL % 5 == 0 then
-			HEALTH_BLUE = HEALTH_BLUE + 10
-			HEALTH_RED = HEALTH_RED + 10
+			-- HEALTH_BLUE = HEALTH_BLUE + 10
+			-- HEALTH_RED = HEALTH_RED + 10
+			-- HEALTH_PURPLE = HEALTH_PURPLE + 10
+			-- HEALTH_YELLOW = HEALTH_YELLOW + 20
 			DAMAGE_BLUE = DAMAGE_BLUE + 5
 			DAMAGE_RED = DAMAGE_RED + 5
-			HEALTH_PURPLE = HEALTH_PURPLE + 10
-			HEALTH_YELLOW = HEALTH_YELLOW + 20
 			DAMAGE_PURPLE = DAMAGE_PURPLE + 5
 			DAMAGE_YELLOW = DAMAGE_YELLOW + 5
 			MONEY_BLUE = 1.5
@@ -236,12 +250,12 @@ function change_exp(value)
 			MONEY_PURPLE = 2
 			MONEY_YELLOW = 2.5 
 		elseif LEVEL % 11 == 10 then
-			HEALTH_BLUE = HEALTH_BLUE + 20
-			HEALTH_RED = HEALTH_RED + 20
+			-- HEALTH_BLUE = HEALTH_BLUE + 20
+			-- HEALTH_RED = HEALTH_RED + 20
+			-- HEALTH_PURPLE = HEALTH_PURPLE + 20
+			-- HEALTH_YELLOW = HEALTH_YELLOW + 40
 			DAMAGE_BLUE = DAMAGE_BLUE + 10
 			DAMAGE_RED = DAMAGE_RED + 10
-			HEALTH_PURPLE = HEALTH_PURPLE + 20
-			HEALTH_YELLOW = HEALTH_YELLOW + 40
 			DAMAGE_PURPLE = DAMAGE_PURPLE + 10
 			DAMAGE_YELLOW = DAMAGE_YELLOW + 10
 			MONEY_BLUE = 1.2
