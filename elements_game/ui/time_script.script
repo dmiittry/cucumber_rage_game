@@ -1,0 +1,14 @@
+require "elements_game.core.globals"
+
+function init(self)
+	
+end
+local time = 0
+
+function update(self, dt)
+	time = time + dt
+	local hour = time / 60
+	local format = string.format("%01d:%02d", hour ,time)
+	label.set_text("#label", format)
+	label.set_text("#level_label", LEVEL)
+end

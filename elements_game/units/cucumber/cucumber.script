@@ -1,0 +1,120 @@
+require "elements_game.core.globals"
+
+is_shield = true
+
+function init(self)
+	math.randomseed(os.time())
+	msg.post(".", "acquire_input_focus")
+	self.dir = vmath.vector3()
+	self.correction = vmath.vector3()
+	self.regen = 1
+	go.set(".", "rotation", vmath.quat(0, 0, 0.1, -0.2))
+	local pos = go.get_position()
+	go.animate("#sprite_cucumber", "scale", go.PLAYBACK_LOOP_PINGPONG, vmath.vector3(1,1.2,1), go.EASING_LINEAR, 0.5)
+	go.animate(".", "rotation", go.PLAYBACK_LOOP_PINGPONG, vmath.quat(0, 0, 0.1, 0.2), go.EASING_LINEAR, 0.5)
+	sprite.play_flipbook("#sprite_cucumber", hash("pickle_walk"))
+end
+
+
+local function dead_player(self)
+	go.cancel_animations(".", "position")
+	msg.post("#collisionobject", "disable")
+	go.animate(".", "scale", go.PLAYBACK_ONCE_FORWARD, vmath.vector3(0,0,0), go.EASING_INOUTSINE, 0.5)
+	go.animate(".", "rotation", go.PLAYBACK_ONCE_FORWARD, vmath.quat(0,0,1,1), go.EASING_INOUTSINE, 0.5)
+	timer.delay(0.5, false, function()
+		msg.post(".", "disable")
+		change_state("dead")
+	end)
+
+end
+
+function is_shield_player(self)
+	is_shield = true
+end
+
+local function player_hitted(self, damage)
+	local rota = vmath.quat_rotation_z(0)
+	is_shield = false
+	local dmg = damage - damage * ARMOR / 100
+	factory.create("#damage", nil, rota, {damage = dmg, player = true})
+	change_hp(-dmg)
+	if HP_PLAYER <= 0 then
+		dead_player(self)
+	end
+	if dmg ~= 0 then
+		particlefx.play("#blood")
+		go.animate("#sprite_cucumber", "tint", go.PLAYBACK_LOOP_PINGPONG, vmath.vector4(1,0,0,1), go.EASING_INBOUNCE, 0.5)
+	end
+	timer.delay(0.3, false, function()
+		go.cancel_animations("#sprite_cucumber", "tint")
+		is_shield_player(self)
+	end)
+end	
+
+function update(self, dt)
+	if HP_PLAYER < MAX_HP_PLAYER then
+		local prosent = HP_PLAYER * 100 / MAX_HP_PLAYER /100
+		go.set("#sprite_cucumber", "tint", vmath.vector4(1,prosent,prosent,1))
+	end
+	if REGEN_PLAYER > 0 then
+		if HP_PLAYER < MAX_HP_PLAYER then
+			self.regen = self.regen - dt
+			if self.regen < 0 then
+				factory.create("#damage", nil, vmath.quat_rotation_z(0), { damage = REGEN_PLAYER/10, player = true, regen = true})
+				change_hp(REGEN_PLAYER/10)
+				self.regen = 1
+			end
+		end
+	end
+	local pos = go.get_position()
+	if self.dir ~= vmath.vector3() then
+		local new_pos = pos + dt * SPEED_PLAYER * self.dir
+		go.set_position(new_pos)
+	end
+	self.dir = vmath.vector3()
+	self.correction = vmath.vector3()
+end
+
+function on_message(self, message_id, message, sender)
+	if message_id == hash("contact_point_response") then
+		if message.other_group == hash("stena") then
+			local proj = vmath.dot(self.correction, message.normal)
+			local comp = (message.distance - proj) * message.normal
+			self.correction = self.correction + comp
+			go.set_position(go.get_position() + comp)
+		end
+	elseif message_id == hash("hit_player") then
+		if is_shield then
+			local randomValue = math.random()
+			if randomValue <= UKLON_PLAYER then
+				player_hitted(self, 0)
+			else
+				player_hitted(self, message.value)
+			end
+		end
+	elseif message_id == hash("comeback") then
+		msg.post(".", "enable")
+		go.set(".", "scale", vmath.vector3(0.85,1,1))
+		go.set(".", "rotation", vmath.quat(0, 0, 0.1, -0.2))
+	end
+end
+
+
+
+function on_input(self, action_id, action)
+	if action_id == hash("up") then
+		self.dir.y = 1
+	elseif action_id == hash("down") then
+		self.dir.y = -1
+	elseif action_id == hash("left") then
+		self.dir.x = -1
+		sprite.set_hflip("#sprite_cucumber", false)
+	elseif action_id == hash("right") then
+		self.dir.x = 1
+		sprite.set_hflip("#sprite_cucumber", true)
+	end
+
+	if vmath.length(self.dir) > 0 then
+		self.dir = vmath.normalize(self.dir)
+	end
+end

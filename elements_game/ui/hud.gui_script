@@ -1,0 +1,354 @@
+require "elements_game.core.globals"
+
+local change_coins = 5
+local free_upgrade = true
+
+function init(self)
+	change_state('next')
+	math.randomseed(os.time())
+	msg.post(".", "acquire_input_focus")
+	UPGRADE_BOX = gui.get_node("upgrade_box")
+	UPGRADE_TEXT = gui.get_node("upgrade_text")
+	CHANGE_BOX = gui.get_node("change_box")
+	CHANGE_TEXT = gui.get_node("change_text")
+	CURRENT_BOX = gui.get_node("current_box")
+	CURRENT_TEXT = gui.get_node("current_text")
+	CLOSE_BOX = gui.get_node("close_box")
+	BOX1 = gui.get_node("box1")
+	BOX2 = gui.get_node("box2")
+	BOX3 = gui.get_node("box3")
+	BOX4 = gui.get_node("box4")
+	TEXT1 = gui.get_node("text1")
+	TEXT2 = gui.get_node("text2")
+	TEXT3 = gui.get_node("text3")
+	TEXT4 = gui.get_node("text4")
+	TEXT11 = gui.get_node("text11")
+	TEXT22 = gui.get_node("text22")
+	TEXT33 = gui.get_node("text33")
+	TEXT44 = gui.get_node("text44")
+	BUY_TEXT1 = gui.get_node("buy_text1")
+	BUY_TEXT2 = gui.get_node("buy_text2")
+	BUY_TEXT3 = gui.get_node("buy_text3")
+	BUY_TEXT4 = gui.get_node("buy_text4")
+	BUY_BOX1 = gui.get_node("buy_box1")
+	BUY_BOX2 = gui.get_node("buy_box2")
+	BUY_BOX3 = gui.get_node("buy_box3")
+	BUY_BOX4 = gui.get_node("buy_box4")
+	VALUE1 = 0
+	VALUE2 = 0
+	VALUE3 = 0
+	VALUE4 = 0
+	KEY1 = 0
+	KEY2 = 0
+	KEY3 = 0
+	KEY4 = 0
+	BUY1 = 0
+	BUY2 = 0
+	BUY3 = 0
+	BUY4 = 0
+	BUY = 0
+	BOX = 0
+	CURRENT_KEY = 0
+	CURRENT_VALUE = 0
+
+	EXP_TEXT = gui.get_node("exp_text")
+	MONEY_TEXT = gui.get_node("money_text")
+	MONEY_TEXT1 = gui.get_node("money_text1")
+	SPEED_TEXT = gui.get_node("speed_text")
+	DAMAGE_TEXT = gui.get_node("damage_text")
+	HEARTS_TEXT = gui.get_node("hearts_text")
+	REGEN_TEXT = gui.get_node("regen_text")
+	VAMPIR_TEXT = gui.get_node("vampir_text")
+	DAMAGE_UNIT_TEXT = gui.get_node("damage_unit_text")
+	CRITICAL_TEXT = gui.get_node("critical_text")
+	ARMOR_TEXT = gui.get_node("armor_text")
+	UKLON_TEXT = gui.get_node("uklon_text")
+	TIME_SHOOT_TEXT = gui.get_node("time_shoot_text")
+	PROBITIE_TEXT = gui.get_node("probitie_text")
+	SPEED_AK_TEXT = gui.get_node("speed_ak_text")
+	DAMAGE_KNIFE_TEXT = gui.get_node("damage_knife_text")
+	SPEED_KNIFE_TEXT = gui.get_node("speed_knife_text")
+	
+	text_update()
+	choose_upgrade()
+end
+
+function update(self, dt)
+	gui.set_text(EXP_TEXT, "EXP: ".. EXP .. "/".. EXP_LVL[LEVEL])
+	gui.set_text(MONEY_TEXT, MONEY)
+	gui.set_text(MONEY_TEXT1, MONEY)
+	gui.set_text(SPEED_TEXT, "скорость: ".. SPEED_PLAYER)
+	gui.set_text(DAMAGE_TEXT, "урон: ".. DAMAGE_BULLET)
+	gui.set_text(HEARTS_TEXT, HP_PLAYER .. "/" .. MAX_HP_PLAYER)
+	gui.set_text(REGEN_TEXT, "регенерация: 0." .. REGEN_PLAYER)
+	gui.set_text(VAMPIR_TEXT, "вампиризм: ".. VAMPIR)
+	gui.set_text(DAMAGE_UNIT_TEXT, "урон юнитов: ".. DAMAGE_UNIT)
+	gui.set_text(CRITICAL_TEXT, "критический урон %: ".. CRITICAL*100)
+	gui.set_text(ARMOR_TEXT, "броня: ".. ARMOR)
+	gui.set_text(UKLON_TEXT, "уклонение %: ".. UKLON_PLAYER*100)
+	gui.set_text(TIME_SHOOT_TEXT, "скорость атаки: ".. SPEED_SHOOT)
+	gui.set_text(PROBITIE_TEXT, "пробитие: ".. KOL_PROBITIE)
+	gui.set_text(SPEED_AK_TEXT, "скорость атаки АК47: ".. TIME_SHOOT_AK47)
+	gui.set_text(SPEED_KNIFE_TEXT, "скорость вращения меча: ".. TIME_KNIFE)
+	gui.set_text(DAMAGE_KNIFE_TEXT, "урон меча: ".. KNIFE_DAMAGE)
+	
+	if STATE == "next" then
+		gui.set_enabled(UPGRADE_BOX, true)
+	end
+	if free_upgrade then
+		if CURRENT_KEY == 0 then
+			gui.set_color(CURRENT_BOX, BLACK_COLOR)
+		else
+			gui.set_color(CURRENT_BOX, GREEN_COLOR)
+		end
+	else
+		if BUY <= MONEY and BUY ~= 0 then
+			gui.set_color(CURRENT_BOX, GREEN_COLOR)
+		else
+			gui.set_color(CURRENT_BOX, BLACK_COLOR)
+		end
+	end
+	if MONEY >= change_coins then
+		gui.set_color(CHANGE_BOX, GREY_COLOR)
+	else
+		gui.set_color(CHANGE_BOX, RED_COLOR)
+	end
+	if free_upgrade then
+		gui.set_enabled(CLOSE_BOX, false)
+		gui.set_enabled(BUY_BOX1, false)
+		gui.set_enabled(BUY_BOX2, false)
+		gui.set_enabled(BUY_BOX3, false)
+		gui.set_enabled(BUY_BOX4, false)
+		-- gui.set_text(UPGRADE_TEXT, "free upgrade")
+		gui.set_text(CURRENT_TEXT, "Выбрать")
+	else
+		gui.set_enabled(CLOSE_BOX, true)
+		gui.set_enabled(BUY_BOX1, true)
+		gui.set_enabled(BUY_BOX2, true)
+		gui.set_enabled(BUY_BOX3, true)
+		gui.set_enabled(BUY_BOX4, true)
+		-- gui.set_text(UPGRADE_TEXT, "buy upgrade")
+		gui.set_text(CURRENT_TEXT, "Купить")
+	end
+	if BUY1 > MONEY then
+		gui.set_color(BUY_BOX1, RED_COLOR)
+	else
+		gui.set_color(BUY_BOX1, GREY_COLOR)
+	end
+	if BUY2 > MONEY then
+		gui.set_color(BUY_BOX2, RED_COLOR)
+	else
+		gui.set_color(BUY_BOX2, GREY_COLOR)
+	end
+	if BUY3 > MONEY then
+		gui.set_color(BUY_BOX3, RED_COLOR)
+	else
+		gui.set_color(BUY_BOX3, GREY_COLOR)
+	end
+	if BUY4 > MONEY then
+		gui.set_color(BUY_BOX4, RED_COLOR)
+	else
+		gui.set_color(BUY_BOX4, GREY_COLOR)
+	end
+
+end
+
+function text_update()
+	gui.set_text(SPEED_TEXT, SPEED_PLAYER)
+	gui.set_text(DAMAGE_TEXT, DAMAGE_BULLET)
+end
+
+local povtor_skill = 0
+local upgrade =  {}
+
+function choose_upgrade()
+	povtor_skill = povtor_skill + 1
+	if povtor_skill > 2 or povtor_skill == 1 then
+		upgrade = {}
+		for key,value in pairs(UPGRADE_LIST) do 
+			upgrade[key] = value
+		end
+		if povtor_skill > 2 then
+			povtor_skill = 0
+		end
+	end
+		
+	gui.set_enabled(BOX1, true)
+	gui.set_enabled(BOX2, true)
+	gui.set_enabled(BOX3, true)
+	gui.set_enabled(BOX4, true)
+	gui.set_text(CHANGE_TEXT, "Поменять - " .. change_coins)
+	CURRENT_KEY = 0
+	BUY = 0
+	BUY1 = 0
+	BUY2 = 0
+	BUY3 = 0
+	BUY4 = 0
+	BOX = 0
+	gui.set_color(BOX1, BLACK_COLOR)
+	gui.set_color(BOX2, BLACK_COLOR)
+	gui.set_color(BOX3, BLACK_COLOR)
+	gui.set_color(BOX4, BLACK_COLOR)
+	gui.set_color(TEXT1, WHITE_COLOR)
+	gui.set_color(TEXT2, WHITE_COLOR)
+	gui.set_color(TEXT3, WHITE_COLOR)
+	gui.set_color(TEXT4, WHITE_COLOR)
+	local rand1 = math.random(1, #upgrade)
+	local first = upgrade[rand1]
+	table.remove(upgrade, rand1)
+	BUY1 = first.buy
+	if first.value >= 5 then
+		BUY1 = BUY1 + math.random(15, 25)
+		gui.set_color(TEXT1, GREEN_COLOR)
+	end
+	if first.value == 0 then
+		gui.set_text(TEXT1, first.text1)
+	else
+		gui.set_text(TEXT1, "+" .. first.value .. first.text1)
+	end
+	gui.set_text(TEXT11, first.text2)
+	gui.set_text(BUY_TEXT1, BUY1)
+	VALUE1 = first.value
+	KEY1 = first.key
+
+	local rand2 = math.random(1, #upgrade)
+	local second = upgrade[rand2]
+	table.remove(upgrade, rand2)
+	BUY2 = second.buy
+	if second.value >= 5 then
+		BUY2 = BUY2 + math.random(20, 30)
+		gui.set_color(TEXT2, GREEN_COLOR)
+	end
+
+	if second.value == 0 then
+		gui.set_text(TEXT2, second.text1)
+	else
+		gui.set_text(TEXT2,  "+" .. second.value .. second.text1)
+	end
+	gui.set_text(TEXT22, second.text2)
+	gui.set_text(BUY_TEXT2, BUY2)
+	VALUE2 = second.value
+	KEY2 = second.key
+
+	local rand3 = math.random(1, #upgrade)
+	local three = upgrade[rand3]
+	table.remove(upgrade, rand3)
+	BUY3 = three.buy
+	if three.value >= 5 then
+		BUY3 = BUY3 + math.random(15, 25)
+		gui.set_color(TEXT3, GREEN_COLOR)
+	end
+
+	if three.value == 0 then
+		gui.set_text(TEXT3, three.text1)
+	else
+		gui.set_text(TEXT3, "+" .. three.value .. three.text1)
+	end
+	gui.set_text(TEXT33, three.text2)
+	gui.set_text(BUY_TEXT3, BUY3)
+	VALUE3 = three.value
+	KEY3 = three.key
+
+	local rand4 = math.random(1, #upgrade)
+	local fore = upgrade[rand4]
+	table.remove(upgrade, rand4)
+	BUY4 = fore.buy
+	if fore.value >= 5 then
+		BUY4 = BUY4 + math.random(15, 25)
+		gui.set_color(TEXT4, GREEN_COLOR)
+	end
+	if fore.value == 0 then
+		gui.set_text(TEXT4, fore.text1)
+	else
+		gui.set_text(TEXT4, "+" .. fore.value .. fore.text1)
+	end
+	gui.set_text(TEXT44, fore.text2)
+	gui.set_text(BUY_TEXT4, BUY4)
+	VALUE4 = fore.value
+	KEY4 = fore.key
+end
+
+function select_box(key, value, box)
+	local list_box = {BOX1, BOX2, BOX3, BOX4}
+	CURRENT_KEY = key
+	CURRENT_VALUE = value
+	for i = 1, #list_box do
+		if list_box[i] == box then
+			gui.set_color(box, GREY_COLOR)
+		else
+			gui.set_color(list_box[i], BLACK_COLOR)
+		end
+	end
+end
+	
+function on_input(self, action_id, action)
+	if action_id == hash("fire") and action.released and gui.pick_node(BOX1, action.x, action.y) and gui.is_enabled(UPGRADE_BOX) and gui.is_enabled(BOX1) then
+		if free_upgrade then
+			select_box(KEY1, VALUE1, BOX1)
+		else
+			if BUY1 <= MONEY then
+				BUY = BUY1
+				BOX = BOX1
+				select_box(KEY1, VALUE1, BOX1)
+			end
+		end
+			
+		
+	elseif action_id == hash("fire") and action.released and gui.pick_node(BOX2, action.x, action.y) and gui.is_enabled(UPGRADE_BOX) and gui.is_enabled(BOX2)then
+		if free_upgrade then
+			select_box(KEY2, VALUE2, BOX2)
+		else
+			if BUY2 <= MONEY then
+				BUY = BUY2
+				BOX = BOX2
+				select_box(KEY2, VALUE2, BOX2)
+			end
+		end
+		
+	elseif action_id == hash("fire") and action.released and gui.pick_node(BOX3, action.x, action.y) and gui.is_enabled(UPGRADE_BOX) and gui.is_enabled(BOX3) then
+		if free_upgrade then
+			select_box(KEY3, VALUE3, BOX3)
+		else
+			if BUY3 <= MONEY then
+				BUY = BUY3
+				BOX = BOX3
+				select_box(KEY3, VALUE3, BOX3)
+			end
+		end
+		
+	elseif action_id == hash("fire") and action.released and gui.pick_node(BOX4, action.x, action.y) and gui.is_enabled(UPGRADE_BOX) and gui.is_enabled(BOX4)then
+		if free_upgrade then
+			select_box(KEY4, VALUE4, BOX4)
+		else
+			if BUY4 <= MONEY then
+				BUY = BUY4
+				BOX = BOX4
+				select_box(KEY4, VALUE4, BOX4)
+			end
+		end
+		
+	elseif action_id == hash("fire") and action.released and gui.pick_node(CHANGE_BOX, action.x, action.y) and gui.is_enabled(UPGRADE_BOX) and MONEY >= change_coins then
+		change_money(-change_coins)
+		change_coins = change_coins + math.random(5,9)
+		choose_upgrade()
+	elseif action_id == hash("fire") and action.released and gui.pick_node(CURRENT_BOX, action.x, action.y) and gui.is_enabled(UPGRADE_BOX) and CURRENT_KEY ~= 0 and BUY <= MONEY then
+
+		upgrade_skills(CURRENT_KEY,CURRENT_VALUE)
+		if free_upgrade then
+			free_upgrade = false
+			choose_upgrade()	
+		else
+			change_money(-BUY)
+			gui.set_enabled(BOX, false)
+		end
+		BUY = 0
+		text_update()
+	elseif action_id == hash("fire") and action.released and gui.pick_node(CLOSE_BOX, action.x, action.y) and gui.is_enabled(UPGRADE_BOX) and gui.is_enabled(CLOSE_BOX) then
+		gui.set_enabled(UPGRADE_BOX, false)
+		text_update()
+		choose_upgrade()
+		change_state('start')
+		change_coins = 5
+		free_upgrade = true
+	end
+end

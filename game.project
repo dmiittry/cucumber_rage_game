@@ -1,0 +1,39 @@
+[bootstrap]
+main_collection = /main/menu.collectionc
+
+[script]
+shared_state = 1
+
+[display]
+width = 640
+height = 360
+fullscreen = 0
+dynamic_orientation = 1
+high_dpi = 1
+
+[android]
+input_method = HiddenInputField
+
+[project]
+title = CucumberRageSurvival
+
+[graphics]
+default_texture_min_filter = nearest
+default_texture_mag_filter = nearest
+
+[sprite]
+max_count = 999
+
+[physics]
+max_collisions = 999
+max_contacts = 999
+trigger_overlap_capacity = 99
+gravity_y = 0.0
+max_collision_object_count = 999
+
+[collection]
+max_input_stack_entries = 99
+
+[factory]
+max_count = 500
+

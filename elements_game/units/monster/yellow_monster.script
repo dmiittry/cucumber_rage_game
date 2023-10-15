@@ -1,0 +1,83 @@
+require "elements_game.core.globals"
+
+function init(self)
+	self.speed = SPEED_YELLOW
+	self.health = HEALTH_YELLOW
+	self.damage = DAMAGE_YELLOW
+	msg.post(".", "acquire_input_focus")
+	msg.post("#collisionobject", "enable")
+	go.animate(".", "scale", go.PLAYBACK_LOOP_PINGPONG, vmath.vector3(1.1,1.1,1), go.EASING_LINEAR, 0.5)
+end
+
+local function blue_dead_monster(self)
+	msg.post("/player/one_pistol", "dead_monster")
+	-- msg.post("/player/ak471", "dead_monster")
+	-- msg.post("/player/ak47", "dead_monster")
+	change_exp(SCORE_YELLOW)
+	change_money(MONEY_YELLOW)
+	go.cancel_animations(".", "position")
+	msg.post("#collisionobject", "disable")
+	go.animate(".", "scale", go.PLAYBACK_ONCE_FORWARD, vmath.vector3(0,0,0), go.EASING_OUTSINE, 0.5)
+	go.animate(".", "rotation", go.PLAYBACK_ONCE_FORWARD, vmath.quat(0,0,1,1), go.EASING_OUTSINE, 0.5)
+	timer.delay(0.7, false, function() go.delete() end)
+end
+
+local function hitted_monster(self, value)
+	self.health = self.health - value
+	if self.health <= 0 then
+		blue_dead_monster(self)
+	end
+end
+
+local function push_monster(self, dir)
+	local to = go.get_position() + dir * PUSH_MONSTER
+	go.animate(".", "position", go.PLAYBACK_ONCE_FORWARD, to, go.EASING_OUTQUAD, 0.1,0, move_monster)
+end
+
+local function set_color(self)
+	go.set("#sprite", "tint", vmath.vector4(1,1,1,1)) 
+end
+
+local function hitted_animate(self)
+	go.animate("#sprite", "tint", go.PLAYBACK_ONCE_PINGPONG, vmath.vector4(150,255,55,1), go.EASING_LINEAR, 0.1, 0, set_color)
+end
+
+local function blue_move_monster(tg, self)
+	local current_pos = go.get_position()
+	local target_pos = vmath.vector3(tg.x, tg.y, 0) 
+	local distance = vmath.length(target_pos - current_pos)
+	local duration = distance / self.speed 
+	go.animate(".", "position", go.PLAYBACK_ONCE_FORWARD, target_pos, go.EASING_LINEAR, duration, 0)
+end
+
+
+function on_message(self, message_id, message, sender)
+	if message_id == hash("hit") then
+		hitted_animate(self)
+		hitted_monster(self, message.value)
+		push_monster(self, message.dir)
+	elseif message_id == hash("trigger_response") then
+		if message.other_group == hash("knife") then
+			if message.enter then
+				hitted_animate(self)
+				local rota = vmath.quat(0,0,0,0)
+				factory.create("#factory", nil, rota, {damage = KNIFE_DAMAGE})
+				hitted_monster(self, KNIFE_DAMAGE)
+			end	
+		end
+	elseif message_id == hash("collision_response") then
+		if message.other_group == hash("trigger") then
+			local tg = message.other_position
+			blue_move_monster(tg, self)
+		end
+	elseif message_id == hash("contact_point_response") then
+		if message.other_group == hash("player") then
+			msg.post(message.other_id, "hit_player", {value = self.damage})
+		end
+	end
+end
+
+
+
+
+

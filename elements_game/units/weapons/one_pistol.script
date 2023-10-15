@@ -1,0 +1,106 @@
+require "elements_game.core.globals"
+
+function init(self)
+	msg.post(".", "acquire_input_focus")
+	self.fire = true
+	if self.ak47 then
+		sprite.play_flipbook("#sprite_pistol", "ak47_hand")
+		go.set_position(go.get_position(go.get_parent())+ vmath.vector3(-20, 20, 0))
+		print('add')
+	end
+end
+
+local function look_at(target_position, pos)
+	if pos ~= nil and target_position ~= nil then
+		local my_position = pos
+		local angle = math.atan2(my_position.x  - target_position.x, target_position.y - my_position.y)
+		sprite.set_vflip("#sprite_pistol", angle < 0 )
+		go.set_rotation(vmath.quat_rotation_z(angle))
+	end
+end
+
+local function shoot(target_position, gl , self)
+	-- go.animate(".", "rotation", go.PLAYBACK_ONCE_BACKWARD, vmath.quat(0, 0, 0, 0.7), go.EASING_INBOUNCE, 0.2)
+	if target_position == gl then
+		target_position = target_position + vmath.vector3(0.1,0.1,0)
+	end
+	local dir = vmath.vector3(target_position.x- gl.x, target_position.y - gl.y, 0)
+	local angle = math.atan2(gl.x  - target_position.x, target_position.y - gl.y)
+	local rota = vmath.quat_rotation_z(angle)
+	local otdacha = vmath.quat(rota.x, rota.y, rota.z, rota.w + 0.2)
+	go.animate(".", "rotation", go.PLAYBACK_ONCE_BACKWARD, otdacha, go.EASING_INBOUNCE, 0.5)
+	sprite.set_vflip("#sprite_pistol", angle < 0 )
+	go.set_rotation(rota)
+	local bullet = factory.create("#bullet", nil,rota,{dir = vmath.normalize(dir), damage = DAMAGE_BULLET})
+	timer.delay(SPEED_SHOOT, false, function()
+		self.fire = true
+	end)
+end
+
+function update(self, dt)
+	if self.ak47 then
+		go.set_position(go.get_position(go.get_parent()))
+	end
+end
+
+local enemy_list = {}
+local nearest_enemy = nil
+local nearest_distance = math.huge
+
+local function change_nearest_enemy()
+	enemy_list = {}
+	nearest_enemy = nil
+	nearest_distance = math.huge
+end
+
+function on_message(self, message_id, message, sender)
+	if message_id == hash("dead_monster") then
+		change_nearest_enemy()
+	elseif message_id == hash("collision_response") then
+		if message.other_group == hash("enemy") then
+			if IS_MOUSE == false then
+				local id = message.other_id
+				local pos = message.other_position
+				local target_position = vmath.vector3(pos.x, pos.y, 0)
+				local gl = go.get_position(go.get_parent())
+				local dis = vmath.length(gl - pos)
+				local en = {key = id, value = dis}
+				table.insert(enemy_list, en)
+				for i = 1, #enemy_list do
+					if enemy_list[i].value < nearest_distance then
+						nearest_enemy = enemy_list[i].key
+						nearest_distance = enemy_list[i].value
+					end
+				end
+				if nearest_enemy == id then
+					if self.fire then
+						shoot(target_position, gl, self)
+						self.fire = false
+					end
+				end
+				if #enemy_list > 150 then
+					enemy_list = {}
+				end
+			end
+		end		
+	end
+end
+
+function on_input(self, action_id, action)
+	local target_position = vmath.vector3(action.x, action.y, 0)
+	local gl = go.get_position(go.get_parent())
+	
+	if action_id then
+		if action_id == hash("fire") and self.fire then
+			if IS_MOUSE then
+				shoot(target_position, gl, self)
+				self.fire = false
+			end
+		elseif action_id == hash('reload') then
+			IS_MOUSE = not IS_MOUSE
+		end
+	end
+	if IS_MOUSE then
+		look_at(target_position, gl)
+	end
+end

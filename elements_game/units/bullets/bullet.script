@@ -1,0 +1,56 @@
+require "elements_game.core.globals"
+go.property('dir', vmath.vector3())
+go.property('damage',0)
+go.property('ak', false)
+
+function init(self)
+	math.randomseed(os.time())
+	self.probitie = KOL_PROBITIE
+	self.speed = 1200
+	self.time_life = 1
+	sprite.set_hflip("#sprite_bullet", true)
+end
+
+function update(self, dt)
+	local pos = go.get_position()
+	local new_pos = pos + dt * self.speed * self.dir
+	go.set_position(new_pos)
+	self.time_life = self.time_life - dt
+	if self.time_life < 0 then
+		go.delete()
+	end
+end
+
+function on_message(self, message_id, message, sender)
+	if message_id == hash("trigger_response") then
+		if message.enter then
+			self.probitie = self.probitie - 1
+			local rota = vmath.quat_rotation_z(0)
+			local randomValue = math.random()
+			if randomValue <= CRITICAL then
+				factory.create("#damage_tittle", nil, rota, {damage = self.damage * 3, crit = true})
+				msg.post(message.other_id, "hit", {value = self.damage * 3, dir = self.dir})
+				if self.ak == false then
+					if VAMPIR ~= 0 then
+						local hp = self.damage * 3 * VAMPIR /100
+						change_hp(hp)
+						factory.create("#damage_tittle", go.get("/player/cucumber", "position"), vmath.quat_rotation_z(0), { damage = hp, player = true, regen = true})
+					end
+				end
+			else
+				factory.create("#damage_tittle", nil, rota, {damage = self.damage, crit = false})
+				msg.post(message.other_id, "hit", {value = self.damage, dir = self.dir})
+				if self.ak == false then
+					if VAMPIR ~= 0 then
+						local hp = self.damage * VAMPIR /100
+						change_hp(hp)
+						factory.create("#damage_tittle", go.get("/player/cucumber", "position"), vmath.quat_rotation_z(0), { damage = hp, player = true, regen = true})
+					end
+				end
+			end
+			if self.probitie < 0 then
+				go.delete()
+			end
+		end
+	end
+end

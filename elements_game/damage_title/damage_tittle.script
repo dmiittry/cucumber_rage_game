@@ -1,0 +1,40 @@
+go.property("damage", 1)
+go.property("player", false)
+go.property("crit", false)
+go.property("regen", false)
+
+function init(self)
+	go.set("#damage", "scale", vmath.vector3(0.25,0.25,1))
+	self.time_life = 0.5
+	local damage_text = string.format("%.0f", self.damage)
+	label.set_text("#damage", "-" .. damage_text)
+	go.set("#damage", "color", vmath.vector4(1, 1, 1, 1))
+	if self.player then
+		if self.damage == 0 then
+			go.set("#damage", "color", vmath.vector4(0.2, 0.7, 0.2, 1))
+			label.set_text("#damage", "miss")
+		else
+			go.set("#damage", "color", vmath.vector4(0.9, 0.2, 0.2, 1))
+			go.animate(".", "position.y", go.PLAYBACK_ONCE_FORWARD, 0, go.EASING_INCIRC, 3)
+		end
+		if self.regen then
+			go.set("#damage", "scale", vmath.vector3(0.25,0.25,1))
+			go.set("#damage", "color", vmath.vector4(0.2, 0.7, 0.2, 1))
+			label.set_text("#damage", "+"..damage_text)
+			go.animate(".", "position.y", go.PLAYBACK_ONCE_FORWARD, 400, go.EASING_INCIRC, 1.5)
+		end
+	else
+		go.animate(".", "position.y", go.PLAYBACK_ONCE_FORWARD, 400, go.EASING_INCIRC, 3)
+	end
+	if self.crit then
+		go.set("#damage", "color", vmath.vector4(0.9, 0.2, 0.2, 1))
+		label.set_text("#damage", "-" ..damage_text .. '!')
+	end
+end
+
+function update(self, dt)
+	self.time_life = self.time_life - dt
+	if self.time_life < 0 then
+		go.delete()
+	end
+end

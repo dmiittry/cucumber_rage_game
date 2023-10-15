@@ -1,0 +1,14 @@
+require "elements_game.core.globals"
+
+function init(self)
+	msg.post(".", "disable")
+	local rad = go.get(".", "euler.z")
+	go.animate(".", "euler.z", go.PLAYBACK_LOOP_FORWARD, rad + 360, go.EASING_LINEAR, TIME_KNIFE)
+end
+
+
+function on_message(self, message_id, message, sender)
+	if message_id == hash("add_knife") then
+		msg.post(".", "enable")
+	end
+end

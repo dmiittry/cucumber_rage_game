@@ -1,0 +1,138 @@
+require "elements_game.core.globals"
+
+local knife_dmg = true
+
+function init(self)
+	math.randomseed(os.time())
+	self.speed = SPEED_PURPLE
+	self.health = HEALTH_PURPLE
+	self.time_shoot = TIME_SHOOT_PURPLE
+	self.fire = false
+	timer.delay(1, false, function() self.fire = true end)
+	self.damage = DAMAGE_PURPLE
+	msg.post(".", "acquire_input_focus")
+	go.animate(".", "scale", go.PLAYBACK_LOOP_PINGPONG, vmath.vector3(1.1,1.1,1), go.EASING_LINEAR, 0.5)
+end
+
+local function red_dead_monster(self)
+	self.fire = false
+	msg.post("/player/one_pistol", "dead_monster")
+	-- msg.post("/player/ak471", "dead_monster")
+	-- msg.post("/player/ak47", "dead_monster")
+	change_exp(SCORE_PURPLE)
+	change_money(MONEY_PURPLE)
+	go.cancel_animations(".", "position")
+	msg.post("#collisionobject", "disable")
+	go.animate(".", "scale", go.PLAYBACK_ONCE_FORWARD, vmath.vector3(0,0,0), go.EASING_OUTSINE, 0.5)
+	go.animate(".", "rotation", go.PLAYBACK_ONCE_FORWARD, vmath.quat(0,0,1,1), go.EASING_OUTSINE, 0.5)
+	timer.delay(0.7, false, function() go.delete() end)
+end
+
+local function hitted_monster(self, value)
+	self.health = self.health - value
+	if self.health <= 0 then
+		red_dead_monster(self)
+	end
+end
+
+local function push_monster(self, dir)
+	local to = go.get_position() + dir * PUSH_MONSTER
+	go.animate(".", "position", go.PLAYBACK_ONCE_FORWARD, to, go.EASING_OUTQUAD, 0.1,0, move_monster)
+end
+
+local function set_color(self)
+	go.set("#sprite", "tint", vmath.vector4(1,1,1,1)) 
+end
+
+local function hitted_animate(self)
+	go.animate("#sprite", "tint", go.PLAYBACK_ONCE_PINGPONG, vmath.vector4(150,255,55,1), go.EASING_LINEAR, 0.1, 0, set_color)
+end
+
+local function red_move_monster(tg, self)
+	if tg == nil then
+		tg = vmath.vector3(0.1,0.1,0)
+	end
+	if tg.x < 320 then
+		tg.x = tg.x - 120
+		if tg.x < 32 then
+			tg.x = 40
+		end
+	else
+		tg.x = tg.x + 120
+		if tg.x > 608 then
+			tg.x = 610
+		end
+	end
+	if tg.y < 182 then
+		tg.y = tg.y - 100
+		if tg.x < 32 then
+			tg.x = 40
+		end
+	else
+		tg.y = tg.y + 100
+		if tg.y > 338 then
+			tg.y = 340
+		end
+	end
+	local current_pos = go.get_position()
+	local target_pos = vmath.vector3(tg.x, tg.y, 0) 
+	local angle = math.atan2(current_pos.x  - target_pos.x, target_pos.y - current_pos.y)
+	sprite.set_hflip("#sprite", angle < 0 )
+	local distance = vmath.length(target_pos - current_pos)
+	local duration = distance / self.speed 
+	go.animate(".", "position", go.PLAYBACK_ONCE_FORWARD, target_pos, go.EASING_LINEAR, duration, 0)
+end
+
+local function shoot(target_position, gl , self)
+	if target_position == gl then
+		target_position = target_position + vmath.vector3(0.1,0.1,0)
+	end
+	local dir = vmath.vector3(target_position.x- gl.x, target_position.y - gl.y, 0)
+	local angle = math.atan2(gl.x  - target_position.x, target_position.y - gl.y)
+	local rota = vmath.quat_rotation_z(0)
+	dir = dir - vmath.vector3(math.random(-80,80),math.random(-80,80), 0)
+	local bullet = factory.create("#bullet", nil,rota,{dir = vmath.normalize(dir), damage = self.damage})
+	timer.delay(self.time_shoot, false, function()
+		self.fire = true
+	end)
+end
+
+function on_message(self, message_id, message, sender)
+	if message_id == hash("hit") then
+		hitted_animate(self)
+		hitted_monster(self, message.value)
+		push_monster(self, message.dir)
+	elseif message_id == hash("trigger_response") then
+		if message.other_group == hash("knife") then
+			if message.enter then
+				hitted_animate(self)
+				local rota = vmath.quat(0,0,0,0)
+				factory.create("#factory", nil, rota, {damage = KNIFE_DAMAGE})
+				hitted_monster(self, KNIFE_DAMAGE)
+			end
+		end
+	elseif message_id == hash("collision_response") then
+		if message.other_group == hash("trigger") then
+			local tg = message.other_position
+			local target_position = vmath.vector3(tg.x, tg.y, 0)
+			local gl = go.get_position(go.get_parent())
+			if self.fire then
+				shoot(target_position, gl, self)
+				shoot(target_position, gl, self)
+				shoot(target_position, gl, self)
+				self.fire = false
+			end
+			red_move_monster(tg, self)
+		end
+	elseif message_id == hash("contact_point_response") then
+		if message.other_group == hash("player") then
+			msg.post(message.other_id, "hit_player", {value = self.damage})
+		end
+	end
+end
+
+
+
+
+
+
