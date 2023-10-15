@@ -25,7 +25,7 @@ function init(self)
 	msg.post("#laser_h", "disable")
 	go.animate(".", "scale", go.PLAYBACK_LOOP_PINGPONG, vmath.vector3(1.3,1.3,1), go.EASING_LINEAR, 2)
 	local rad = go.get(".", "euler.z")
-	go.animate(".", "euler.z", go.PLAYBACK_LOOP_FORWARD, rad + 360, go.EASING_LINEAR, 24)
+	go.animate(".", "euler.z", go.PLAYBACK_LOOP_FORWARD, rad + 360, go.EASING_LINEAR, 13)
 end
 
 local function red_dead_monster(self)
@@ -38,7 +38,10 @@ local function red_dead_monster(self)
 	msg.post("#collisionobject", "disable")
 	go.animate(".", "scale", go.PLAYBACK_ONCE_FORWARD, vmath.vector3(0,0,0), go.EASING_OUTSINE, 0.5)
 	go.animate(".", "rotation", go.PLAYBACK_ONCE_FORWARD, vmath.quat(0,0,1,1), go.EASING_OUTSINE, 0.5)
-	timer.delay(0.7, false, function() go.delete() end)
+	timer.delay(0.7, false, function()
+		msg.post("main:/spawn_monster/go#spawn", "boss_dead")
+		go.delete()
+	end)
 end
 
 local function hitted_monster(self, value)
@@ -175,10 +178,14 @@ function update(self, dt)
 		self.spawn = true
 		self.spawn_time = 5
 	end
-	if self.health < self.health /2 then
+	if self.health < self.health - 1000 then
 		self.spawn_time = 20
-	elseif self.health < self.health /3 then
+	elseif self.health < self.health /2 then
 		self.spawn_time = 15
+	elseif self.health < self.health /5 then
+		self.spawn_time = 10
+	elseif self.health < self.health /10 then
+		self.spawn_time = 5
 	end
 	if self.sfera < 0 then
 		self.fire = false

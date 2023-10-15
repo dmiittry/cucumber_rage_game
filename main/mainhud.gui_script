@@ -48,7 +48,6 @@ function on_input(self, action_id, action)
 	elseif action_id == hash("fire") and action.released and gui.pick_node(BTN_MENU, action.x, action.y) and gui.is_enabled(BTN_MENU) then
 		change_state("pause")
 	elseif action_id == hash("fire") and action.released and gui.pick_node(BTN_CONTINUE,action.x, action.y) and gui.is_enabled(BTN_MENU) and gui.is_enabled(PAUSE_MENU) then
-		
 		change_state("start")
 	elseif action_id == hash("fire") and action.released and gui.pick_node(REVIVE_BOX,action.x, action.y) and gui.is_enabled(DEAD_MENU) then
 		change_hp(MAX_HP_PLAYER)

@@ -24,6 +24,9 @@ end
 function on_message(self, message_id, message, sender)
 	if message_id == hash("trigger_response") then
 		if message.enter then
+			if self.probitie ~= KOL_PROBITIE then
+				self.damage = self.damage - self.damage/2
+			end
 			self.probitie = self.probitie - 1
 			local rota = vmath.quat_rotation_z(0)
 			local randomValue = math.random()

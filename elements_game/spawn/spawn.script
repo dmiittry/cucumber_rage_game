@@ -14,6 +14,7 @@ TIME_SPAWN_MOSTER = 0
 
 
 function init(self)
+	print(msg.url())
 	self.level = 1
 	self.boost = 0
 	self.next_level = TIME_NEXT_LEVEL
@@ -21,6 +22,13 @@ function init(self)
 	self.index = 1
 	self.max_index = 4
 	-- boss_spawn()
+end
+
+function on_message(self, message_id, message, sender)
+	if message_id == hash("boss_dead") then
+		self.level = 1
+		print('boss dead')
+	end
 end
 
 function update(self, dt)

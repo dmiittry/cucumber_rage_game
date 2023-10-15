@@ -93,6 +93,7 @@ function on_message(self, message_id, message, sender)
 			end
 		end
 	elseif message_id == hash("comeback") then
+		go.set("#sprite_cucumber", "tint", vmath.vector4(1,1,1,1))
 		msg.post(".", "enable")
 		go.set(".", "scale", vmath.vector3(0.85,1,1))
 		go.set(".", "rotation", vmath.quat(0, 0, 0.1, -0.2))
