@@ -33,8 +33,8 @@ embedded_components {
     w: 1.0
   }
   scale {
-    x: 0.325806
-    y: 0.971381
+    x: 0.364136
+    y: 1.103297
     z: 1.0
   }
 }
@@ -49,6 +49,7 @@ embedded_components {
   "group: \"bullet\"\n"
   "mask: \"enemy\"\n"
   "mask: \"stena\"\n"
+  "mask: \"boss\"\n"
   "embedded_collision_shape {\n"
   "  shapes {\n"
   "    shape_type: TYPE_BOX\n"

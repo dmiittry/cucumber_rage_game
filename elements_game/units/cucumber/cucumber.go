@@ -75,6 +75,7 @@ embedded_components {
   "mask: \"follow\"\n"
   "mask: \"bullet_sfera\"\n"
   "mask: \"laser\"\n"
+  "mask: \"boss\"\n"
   "embedded_collision_shape {\n"
   "  shapes {\n"
   "    shape_type: TYPE_SPHERE\n"

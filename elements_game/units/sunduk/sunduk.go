@@ -1,6 +1,6 @@
 components {
-  id: "ak47"
-  component: "/elements_game/units/weapons/ak47.script"
+  id: "sunduk"
+  component: "/elements_game/units/sunduk/sunduk.script"
   position {
     x: 0.0
     y: 0.0
@@ -14,38 +14,21 @@ components {
   }
 }
 embedded_components {
-  id: "bullet"
-  type: "factory"
-  data: "prototype: \"/elements_game/units/bullets/bullet.go\"\n"
-  "load_dynamically: false\n"
-  "dynamic_prototype: false\n"
-  ""
-  position {
-    x: 0.0
-    y: 0.0
-    z: 0.0
-  }
-  rotation {
-    x: 0.0
-    y: 0.0
-    z: 0.0
-    w: 1.0
-  }
-}
-embedded_components {
-  id: "shoot_range"
+  id: "collisionobject"
   type: "collisionobject"
   data: "collision_shape: \"\"\n"
-  "type: COLLISION_OBJECT_TYPE_TRIGGER\n"
-  "mass: 0.0\n"
+  "type: COLLISION_OBJECT_TYPE_DYNAMIC\n"
+  "mass: 1.0\n"
   "friction: 0.1\n"
   "restitution: 0.5\n"
-  "group: \"shoot\"\n"
-  "mask: \"enemy\"\n"
-  "mask: \"boss\"\n"
+  "group: \"enemy\"\n"
+  "mask: \"shoot\"\n"
+  "mask: \"bullet\"\n"
+  "mask: \"player\"\n"
+  "mask: \"knife\"\n"
   "embedded_collision_shape {\n"
   "  shapes {\n"
-  "    shape_type: TYPE_SPHERE\n"
+  "    shape_type: TYPE_BOX\n"
   "    position {\n"
   "      x: 0.0\n"
   "      y: 0.0\n"
@@ -58,13 +41,15 @@ embedded_components {
   "      w: 1.0\n"
   "    }\n"
   "    index: 0\n"
-  "    count: 1\n"
+  "    count: 3\n"
   "  }\n"
-  "  data: 640.0\n"
+  "  data: 16.395126\n"
+  "  data: 13.878326\n"
+  "  data: 10.0\n"
   "}\n"
   "linear_damping: 0.0\n"
   "angular_damping: 0.0\n"
-  "locked_rotation: false\n"
+  "locked_rotation: true\n"
   "bullet: false\n"
   ""
   position {
@@ -80,22 +65,47 @@ embedded_components {
   }
 }
 embedded_components {
-  id: "sprite"
+  id: "shadow"
   type: "sprite"
   data: "tile_set: \"/elements_game/sprites.atlas\"\n"
-  "default_animation: \"ak47_stroke\"\n"
+  "default_animation: \"shadow\"\n"
   "material: \"/builtins/materials/sprite.material\"\n"
   "blend_mode: BLEND_MODE_ALPHA\n"
   ""
   position {
-    x: 1.0
-    y: 2.0
-    z: 0.2
+    x: 0.0
+    y: -14.0
+    z: -0.1
   }
   rotation {
     x: 0.0
     y: 0.0
-    z: -0.70710677
-    w: 0.70710677
+    z: 0.0
+    w: 1.0
+  }
+  scale {
+    x: 1.409746
+    y: 1.822382
+    z: 0.72
+  }
+}
+embedded_components {
+  id: "sprite"
+  type: "sprite"
+  data: "tile_set: \"/elements_game/sprites.atlas\"\n"
+  "default_animation: \"sunduk\"\n"
+  "material: \"/builtins/materials/sprite.material\"\n"
+  "blend_mode: BLEND_MODE_ALPHA\n"
+  ""
+  position {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
   }
 }

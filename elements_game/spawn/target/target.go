@@ -1,6 +1,6 @@
 components {
   id: "target"
-  component: "/elements_game/target/target.script"
+  component: "/elements_game/spawn/target/target.script"
   position {
     x: 0.0
     y: 0.0

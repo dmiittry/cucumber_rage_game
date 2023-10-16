@@ -21,7 +21,7 @@ embedded_components {
   "mass: 1.0\n"
   "friction: 0.1\n"
   "restitution: 0.5\n"
-  "group: \"enemy\"\n"
+  "group: \"boss\"\n"
   "mask: \"shoot\"\n"
   "mask: \"bullet\"\n"
   "mask: \"enemy\"\n"

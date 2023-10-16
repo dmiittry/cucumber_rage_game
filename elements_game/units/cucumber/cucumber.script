@@ -3,6 +3,15 @@ require "elements_game.core.globals"
 is_shield = true
 
 function init(self)
+	if CUCUMBER == "hop" then
+		sprite.play_flipbook("#sprite_cucumber", hash("cucumber_walk"))
+	elseif CUCUMBER == "nik" then
+		sprite.play_flipbook("#sprite_cucumber", hash("pickle_walk"))
+	elseif CUCUMBER == "vampir" then
+		sprite.play_flipbook("#sprite_cucumber", hash("vampir_walk"))
+	elseif CUCUMBER == "arni" then
+		sprite.play_flipbook("#sprite_cucumber", hash("armor_walk"))
+	end
 	math.randomseed(os.time())
 	msg.post(".", "acquire_input_focus")
 	self.dir = vmath.vector3()
@@ -12,8 +21,8 @@ function init(self)
 	local pos = go.get_position()
 	go.animate("#sprite_cucumber", "scale", go.PLAYBACK_LOOP_PINGPONG, vmath.vector3(1,1.2,1), go.EASING_LINEAR, 0.5)
 	go.animate(".", "rotation", go.PLAYBACK_LOOP_PINGPONG, vmath.quat(0, 0, 0.1, 0.2), go.EASING_LINEAR, 0.5)
-	sprite.play_flipbook("#sprite_cucumber", hash("pickle_walk"))
 end
+
 
 
 local function dead_player(self)
@@ -35,7 +44,9 @@ end
 local function player_hitted(self, damage)
 	local rota = vmath.quat_rotation_z(0)
 	is_shield = false
-	local dmg = damage - damage * ARMOR / 100
+	local arm = damage * ARMOR / 100
+	local dmg = damage - arm
+	KOL_POGL_URON = KOL_POGL_URON + arm
 	factory.create("#damage", nil, rota, {damage = dmg, player = true})
 	change_hp(-dmg)
 	if HP_PLAYER <= 0 then
@@ -86,7 +97,7 @@ function on_message(self, message_id, message, sender)
 	elseif message_id == hash("hit_player") then
 		if is_shield then
 			local randomValue = math.random()
-			if randomValue <= UKLON_PLAYER then
+			if randomValue <= UKLON_PLAYER/100 then
 				player_hitted(self, 0)
 			else
 				player_hitted(self, message.value)

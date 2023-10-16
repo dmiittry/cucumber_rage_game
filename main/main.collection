@@ -21,7 +21,7 @@ instances {
 }
 instances {
   id: "target"
-  prototype: "/elements_game/target/target.go"
+  prototype: "/elements_game/spawn/target/target.go"
   position {
     x: 0.0
     y: 0.0

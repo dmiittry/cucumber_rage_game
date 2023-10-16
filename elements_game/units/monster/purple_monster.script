@@ -30,6 +30,7 @@ end
 
 local function hitted_monster(self, value)
 	self.health = self.health - value
+	KOL_DAMAGE = KOL_DAMAGE + value
 	if self.health <= 0 then
 		red_dead_monster(self)
 	end

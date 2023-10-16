@@ -3,10 +3,13 @@ require "elements_game.core.globals"
 local change_coins = 5
 local free_upgrade = true
 
+
 function init(self)
 	change_state('next')
 	math.randomseed(os.time())
 	msg.post(".", "acquire_input_focus")
+	ADD_MONEY_BOX = gui.get_node("add_money")
+	ADD_MONEY_TEXT = gui.get_node("add_money_text")
 	UPGRADE_BOX = gui.get_node("upgrade_box")
 	UPGRADE_TEXT = gui.get_node("upgrade_text")
 	CHANGE_BOX = gui.get_node("change_box")
@@ -70,11 +73,9 @@ function init(self)
 	SPEED_KNIFE_TEXT = gui.get_node("speed_knife_text")
 	
 	text_update()
-	choose_upgrade()
 end
 
 function update(self, dt)
-	local damage_text = 
 	gui.set_text(EXP_TEXT, "EXP: ".. EXP .. "/".. EXP_LVL[LEVEL])
 	gui.set_text(MONEY_TEXT, MONEY)
 	gui.set_text(MONEY_TEXT1, MONEY)
@@ -84,9 +85,9 @@ function update(self, dt)
 	gui.set_text(REGEN_TEXT, "регенерация: 0." .. REGEN_PLAYER)
 	gui.set_text(VAMPIR_TEXT, "вампиризм: ".. VAMPIR)
 	gui.set_text(DAMAGE_UNIT_TEXT, "урон юнитов: ".. DAMAGE_UNIT)
-	gui.set_text(CRITICAL_TEXT, "критический урон %: ".. CRITICAL*100)
+	gui.set_text(CRITICAL_TEXT, "критический урон %: ".. CRITICAL)
 	gui.set_text(ARMOR_TEXT, "броня: ".. ARMOR)
-	gui.set_text(UKLON_TEXT, "уклонение %: ".. UKLON_PLAYER*100)
+	gui.set_text(UKLON_TEXT, "уклонение %: ".. UKLON_PLAYER)
 	gui.set_text(TIME_SHOOT_TEXT, "скорость атаки: ".. SPEED_SHOOT)
 	gui.set_text(PROBITIE_TEXT, "пробитие: ".. KOL_PROBITIE)
 	gui.set_text(SPEED_AK_TEXT, "скорость атаки АК47: ".. TIME_SHOOT_AK47)
@@ -94,6 +95,9 @@ function update(self, dt)
 	gui.set_text(DAMAGE_KNIFE_TEXT, "урон меча: ".. KNIFE_DAMAGE)
 	
 	if STATE == "next" then
+		choose_upgrade()
+		change_state("magazin")
+	elseif STATE == "magazin" then
 		gui.set_enabled(UPGRADE_BOX, true)
 	end
 	if free_upgrade then
@@ -160,20 +164,22 @@ function text_update()
 end
 
 local povtor_skill = 0
+local list = {}
 local upgrade =  {}
 
 function choose_upgrade()
 	povtor_skill = povtor_skill + 1
 	if povtor_skill > 2 or povtor_skill == 1 then
 		upgrade = {}
+		list = {}
 		for key,value in pairs(UPGRADE_LIST) do 
 			upgrade[key] = value
+			list[key] = value["key"]
 		end
 		if povtor_skill > 2 then
 			povtor_skill = 0
 		end
-	end
-		
+	end		
 	gui.set_enabled(BOX1, true)
 	gui.set_enabled(BOX2, true)
 	gui.set_enabled(BOX3, true)
@@ -197,6 +203,7 @@ function choose_upgrade()
 	local rand1 = math.random(1, #upgrade)
 	local first = upgrade[rand1]
 	table.remove(upgrade, rand1)
+	table.remove(list, rand1)
 	BUY1 = first.buy
 	VALUE1 = first.value
 	if free_upgrade then
@@ -222,6 +229,7 @@ function choose_upgrade()
 	local rand2 = math.random(1, #upgrade)
 	local second = upgrade[rand2]
 	table.remove(upgrade, rand2)
+	table.remove(list, rand2)
 	BUY2 = second.buy
 	VALUE2 = second.value
 	if free_upgrade then
@@ -247,6 +255,7 @@ function choose_upgrade()
 	local rand3 = math.random(1, #upgrade)
 	local three = upgrade[rand3]
 	table.remove(upgrade, rand3)
+	table.remove(list, rand3)
 	BUY3 = three.buy
 	VALUE3 = three.value
 	if free_upgrade then
@@ -272,6 +281,7 @@ function choose_upgrade()
 	local rand4 = math.random(1, #upgrade)
 	local fore = upgrade[rand4]
 	table.remove(upgrade, rand4)
+	table.remove(list, rand4)
 	BUY4 = fore.buy
 	VALUE4 = fore.value
 	if free_upgrade then
@@ -373,8 +383,9 @@ function on_input(self, action_id, action)
 		gui.set_enabled(UPGRADE_BOX, false)
 		text_update()
 		free_upgrade = true
-		choose_upgrade()
 		change_state('start')
 		change_coins = 5
+	elseif action_id == hash("fire") and action.released and gui.pick_node(ADD_MONEY_BOX, action.x, action.y) and gui.is_enabled(UPGRADE_BOX) then
+		change_money(300)
 	end
 end

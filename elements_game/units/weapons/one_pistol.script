@@ -3,10 +3,9 @@ require "elements_game.core.globals"
 function init(self)
 	msg.post(".", "acquire_input_focus")
 	self.fire = true
-	if self.ak47 then
-		sprite.play_flipbook("#sprite_pistol", "ak47_hand")
-		go.set_position(go.get_position(go.get_parent())+ vmath.vector3(-20, 20, 0))
-		print('add')
+	go.set(".", "euler.z", 90)
+	if CUCUMBER == "nik" then
+		sprite.play_flipbook("#sprite_pistol", hash("pistol2_hand"))
 	end
 end
 
@@ -32,6 +31,9 @@ local function shoot(target_position, gl , self)
 	sprite.set_vflip("#sprite_pistol", angle < 0 )
 	go.set_rotation(rota)
 	local bullet = factory.create("#bullet", nil,rota,{dir = vmath.normalize(dir), damage = DAMAGE_BULLET})
+	if CUCUMBER == "nik" then
+		timer.delay(0.1, false, function() factory.create("#bullet", nil,rota,{dir = vmath.normalize(dir), damage = DAMAGE_BULLET}) end)
+	end
 	timer.delay(SPEED_SHOOT, false, function()
 		self.fire = true
 	end)

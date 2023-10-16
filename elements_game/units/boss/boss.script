@@ -45,6 +45,7 @@ local function red_dead_monster(self)
 end
 
 local function hitted_monster(self, value)
+	KOL_DAMAGE = KOL_DAMAGE + value
 	self.health = self.health - value
 	if self.health <= 0 then
 		red_dead_monster(self)
@@ -121,6 +122,7 @@ local function spawn_enemy(target_position, gl, self)
 	end
 	local rota = vmath.quat_rotation_z(0)
 	for i = 1 , #directionx do
+		KOL_MONSTER = KOL_MONSTER + 1
 		local dir = vmath.vector3(target_position.x- gl.x, target_position.y - gl.y, 0)
 		dir = dir - vmath.vector3(directionx[i],directiony[i], 0)
 		local bullet = factory.create("#minis_factory", gl , rota, {dir = vmath.normalize(dir)})
