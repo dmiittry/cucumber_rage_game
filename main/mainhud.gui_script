@@ -55,6 +55,11 @@ function update(self, dt)
 		gui.set_text(REVIVE_TEXT, "возрадиться за "..self.money_rev)
 		gui.set_enabled(BTN_MENU, true)
 		gui.set_enabled(DEAD_MENU, true)
+		if MONEY < self.money_rev then
+			gui.set_color(REVIVE_BOX, RED_COLOR)
+		else
+			gui.set_color(REVIVE_BOX, GREY_COLOR)
+		end
 		stop()
 	elseif STATE == "next" then
 		gui.set_enabled(BTN_MENU, false)

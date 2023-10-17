@@ -40,7 +40,7 @@ function on_message(self, message_id, message, sender)
 	if message_id == hash("dead_monster") then
 		-- change_nearest_enemy()
 	elseif message_id == hash("collision_response") then
-		if message.other_group == hash("enemy") then
+		if message.other_group == hash("enemy") or message.other_group == hash("boss")  then
 			local pos = message.other_position
 			local target_position = vmath.vector3(pos.x, pos.y, 0)
 			local gl = go.get_position(go.get_parent()) + self.correct

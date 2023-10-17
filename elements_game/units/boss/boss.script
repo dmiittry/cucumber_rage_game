@@ -11,12 +11,11 @@ function init(self)
 	math.randomseed(os.time())
 	self.speed = SPEED_BOSS
 	self.health = HEALTH_BOSS * (DAMAGE_BULLET + KNIFE_DAMAGE + DAMAGE_UNIT) * (2 - SPEED_SHOOT + TIME_SHOOT_AK47)*2
-	print("BOSS HP", self.health)
 	self.time_shoot = TIME_SHOOT_BOSS
 	self.move = true
 	self.fire = false
 	self.spawn = false
-	self.spawn_time = 2000
+	self.spawn_time = 40
 	timer.delay(1, false, function() self.fire = true end)
 	self.damage = DAMAGE_BOSS
 	msg.post("#laser", "disable")
@@ -26,6 +25,8 @@ function init(self)
 	go.animate(".", "scale", go.PLAYBACK_LOOP_PINGPONG, vmath.vector3(1.3,1.3,1), go.EASING_LINEAR, 2)
 	local rad = go.get(".", "euler.z")
 	go.animate(".", "euler.z", go.PLAYBACK_LOOP_FORWARD, rad + 360, go.EASING_LINEAR, 13)
+	print("BOSS HP", self.health)
+	print("BOSS DAM", self.damage)
 end
 
 local function red_dead_monster(self)
@@ -47,6 +48,7 @@ end
 local function hitted_monster(self, value)
 	KOL_DAMAGE = KOL_DAMAGE + value
 	self.health = self.health - value
+	print("BOSS HP", self.health)
 	if self.health <= 0 then
 		red_dead_monster(self)
 	end
@@ -178,16 +180,16 @@ function update(self, dt)
 	end
 	if self.spawn_time < 0 then
 		self.spawn = true
-		self.spawn_time = 5
+		self.spawn_time = 15
 	end
 	if self.health < self.health - 1000 then
-		self.spawn_time = 20
+		self.damage = self.damage + 5
 	elseif self.health < self.health /2 then
-		self.spawn_time = 15
+		self.damage = self.damage + 15
 	elseif self.health < self.health /5 then
-		self.spawn_time = 10
+		self.damage = self.damage + 30
 	elseif self.health < self.health /10 then
-		self.spawn_time = 5
+		self.damage = self.damage * 2
 	end
 	if self.sfera < 0 then
 		self.fire = false
