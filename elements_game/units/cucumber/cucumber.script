@@ -41,6 +41,10 @@ function is_shield_player(self)
 	is_shield = true
 end
 
+local function set_color(self)
+	go.set("#sprite_cucumber", "tint", vmath.vector4(1,1,1,1)) 
+end
+
 local function player_hitted(self, damage)
 	local rota = vmath.quat_rotation_z(0)
 	is_shield = false
@@ -54,7 +58,7 @@ local function player_hitted(self, damage)
 	end
 	if dmg ~= 0 then
 		particlefx.play("#blood")
-		go.animate("#sprite_cucumber", "tint", go.PLAYBACK_LOOP_PINGPONG, vmath.vector4(1,0,0,1), go.EASING_INBOUNCE, 0.5)
+		go.animate("#sprite_cucumber", "tint", go.PLAYBACK_LOOP_PINGPONG, vmath.vector4(1,0,1,1), go.EASING_INBOUNCE, 0.5, 0, set_color)
 	end
 	timer.delay(0.3, false, function()
 		go.cancel_animations("#sprite_cucumber", "tint")

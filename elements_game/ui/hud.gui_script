@@ -99,6 +99,8 @@ function update(self, dt)
 		change_state("magazin")
 	elseif STATE == "magazin" then
 		gui.set_enabled(UPGRADE_BOX, true)
+	else
+		gui.set_enabled(UPGRADE_BOX, false)
 	end
 	if free_upgrade then
 		if CURRENT_KEY == 0 then
@@ -176,7 +178,15 @@ function choose_upgrade()
 		if povtor_skill > 2 then
 			povtor_skill = 0
 		end
-	end		
+	end	
+	if #upgrade < 5 then
+		upgrade = {}
+		print('clear')
+		for key,value in pairs(UPGRADE_LIST) do 
+			upgrade[key] = value
+			povtor_skill = 0
+		end
+	end
 	gui.set_enabled(BOX1, true)
 	gui.set_enabled(BOX2, true)
 	gui.set_enabled(BOX3, true)
@@ -297,7 +307,7 @@ function choose_upgrade()
 	KEY4 = fore.key
 end
 
-function select_box(key, value, box)
+local function select_box(key, value, box, self)
 	local list_box = {BOX1, BOX2, BOX3, BOX4}
 	CURRENT_KEY = key
 	CURRENT_VALUE = value
@@ -313,46 +323,46 @@ end
 function on_input(self, action_id, action)
 	if action_id == hash("fire") and action.released and gui.pick_node(BOX1, action.x, action.y) and gui.is_enabled(UPGRADE_BOX) and gui.is_enabled(BOX1) then
 		if free_upgrade then
-			select_box(KEY1, VALUE1, BOX1)
+			select_box(KEY1, VALUE1, BOX1, self)
 		else
 			if BUY1 <= MONEY then
 				BUY = BUY1
 				BOX = BOX1
-				select_box(KEY1, VALUE1, BOX1)
+				select_box(KEY1, VALUE1, BOX1, self)
 			end
 		end
 			
 		
 	elseif action_id == hash("fire") and action.released and gui.pick_node(BOX2, action.x, action.y) and gui.is_enabled(UPGRADE_BOX) and gui.is_enabled(BOX2)then
 		if free_upgrade then
-			select_box(KEY2, VALUE2, BOX2)
+			select_box(KEY2, VALUE2, BOX2, self)
 		else
 			if BUY2 <= MONEY then
 				BUY = BUY2
 				BOX = BOX2
-				select_box(KEY2, VALUE2, BOX2)
+				select_box(KEY2, VALUE2, BOX2, self)
 			end
 		end
 		
 	elseif action_id == hash("fire") and action.released and gui.pick_node(BOX3, action.x, action.y) and gui.is_enabled(UPGRADE_BOX) and gui.is_enabled(BOX3) then
 		if free_upgrade then
-			select_box(KEY3, VALUE3, BOX3)
+			select_box(KEY3, VALUE3, BOX3, self)
 		else
 			if BUY3 <= MONEY then
 				BUY = BUY3
 				BOX = BOX3
-				select_box(KEY3, VALUE3, BOX3)
+				select_box(KEY3, VALUE3, BOX3, self)
 			end
 		end
 		
 	elseif action_id == hash("fire") and action.released and gui.pick_node(BOX4, action.x, action.y) and gui.is_enabled(UPGRADE_BOX) and gui.is_enabled(BOX4)then
 		if free_upgrade then
-			select_box(KEY4, VALUE4, BOX4)
+			select_box(KEY4, VALUE4, BOX4, self)
 		else
 			if BUY4 <= MONEY then
 				BUY = BUY4
 				BOX = BOX4
-				select_box(KEY4, VALUE4, BOX4)
+				select_box(KEY4, VALUE4, BOX4, self)
 			end
 		end
 		

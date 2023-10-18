@@ -2,6 +2,8 @@ require "elements_game.core.globals"
 
 function init(self)
 	self.select_cucumber = 0
+	self.select_weapon = "pistol"
+	self.select_hard = "easy"
 	self.money_rev = 50
 	msg.post(".", "acquire_input_focus")
 	PAUSE_MENU = gui.get_node("pause_menu")
@@ -13,6 +15,13 @@ function init(self)
 
 	ADS_BOX = gui.get_node("ads_box")
 	ADS_TEXT = gui.get_node("ads_text")
+	
+	WEAPON_BOX = gui.get_node("weapon")
+	WEAPON_BOX1 = gui.get_node("weapon1")
+	WEAPON_BOX2 = gui.get_node("weapon2")
+	HARD_BOX = gui.get_node("hard")
+	HARD_BOX1 = gui.get_node("hard1")
+	HARD_BOX2 = gui.get_node("hard2")
 	
 	EXIT_BOX = gui.get_node("exit")
 	EXIT_BOX1 = gui.get_node("exit_box")
@@ -27,6 +36,9 @@ function init(self)
 	BOX_CUCUMBER2 = gui.get_node("cucumber2")
 	BOX_CUCUMBER3 = gui.get_node("cucumber3")
 	gui.set_enabled(MENU_BOX, true)
+	select_cucumber("xop", BOX_CUCUMBER, self)
+	select_hard("easy", HARD_BOX, self)
+	select_weapon("pistol", WEAPON_BOX, self)
 end
 function play()
 	msg.post("#gameproxy", "set_time_step", {factor = 1, mode = 0})
@@ -58,7 +70,7 @@ function update(self, dt)
 		if MONEY < self.money_rev then
 			gui.set_color(REVIVE_BOX, RED_COLOR)
 		else
-			gui.set_color(REVIVE_BOX, GREY_COLOR)
+			gui.set_color(REVIVE_BOX, GREEN_COLOR)
 		end
 		stop()
 	elseif STATE == "next" then
@@ -72,11 +84,16 @@ function update(self, dt)
 		gui.set_enabled(PAUSE_MENU, false)
 		gui.set_enabled(DEAD_MENU, false)
 		gui.set_enabled(BTN_MENU, false)
+		if not IS_MOUSE then
+			gui.set_text(MENU_AUTOFIRE_BUTTON, "авто-атака: вкл")
+		else
+			gui.set_text(MENU_AUTOFIRE_BUTTON, "авто-атака: выкл")
+		end
 		stop()
 	end
 end
 
-local function select_box(key, box, self)
+function select_cucumber(key, box, self)
 	local list_box = {BOX_CUCUMBER, BOX_CUCUMBER1, BOX_CUCUMBER2, BOX_CUCUMBER3}
 	self.select_cucumber = key
 	for i = 1, #list_box do
@@ -87,7 +104,28 @@ local function select_box(key, box, self)
 		end
 	end
 end
-
+function select_weapon(key, box, self)
+	local list_box = {WEAPON_BOX, WEAPON_BOX1, WEAPON_BOX2}
+	self.select_weapon = key
+	for i = 1, #list_box do
+		if list_box[i] == box then
+			gui.set_color(box, GREY_COLOR)
+		else
+			gui.set_color(list_box[i], BLACK_COLOR)
+		end
+	end
+end
+function select_hard(key, box, self)
+	local list_box = {HARD_BOX, HARD_BOX1, HARD_BOX2}
+	self.select_hard = key
+	for i = 1, #list_box do
+		if list_box[i] == box then
+			gui.set_color(box, GREY_COLOR)
+		else
+			gui.set_color(list_box[i], BLACK_COLOR)
+		end
+	end
+end
 function on_input(self, action_id, action)
 	if action_id == hash("esc") and action.released and gui.is_enabled(BTN_MENU) then
 		change_state("pause")
@@ -108,27 +146,46 @@ function on_input(self, action_id, action)
 		end
 
 	elseif action_id == hash("fire") and action.released and gui.pick_node(MENU_START_BUTTON,action.x, action.y) and gui.is_enabled(MENU_BOX) then
-
+		if self.select_cucumber == "xop" then
+			hop_cucumber()
+		elseif self.select_cucumber == "nik" then
+			nik_cucumber()
+		elseif self.select_cucumber == "drak" then
+			vampir_cucumber()
+		elseif self.select_cucumber == "arni" then
+			arni_cucumber()
+		end
+		HARD_GAME = self.select_hard
+		change_weapon(self.select_weapon)
 		gui.set_enabled(MENU_BOX, false)
 		change_state("start")
 		msg.post("#gameproxy", "load")
-	elseif action_id == hash("fire") and action.released and gui.pick_node(BOX_CUCUMBER,action.x, action.y) and gui.is_enabled(MENU_BOX) then
-		select_box("xop", BOX_CUCUMBER, self)
-		defold_monster()
-		hop_cucumber()
-	elseif action_id == hash("fire") and action.released and gui.pick_node(BOX_CUCUMBER1, action.x, action.y) and gui.is_enabled(MENU_BOX) then
-		select_box("nik", BOX_CUCUMBER1, self)
-		defold_monster()
-		nik_cucumber()
-	elseif action_id == hash("fire") and action.released and gui.pick_node(BOX_CUCUMBER2, action.x, action.y) and gui.is_enabled(MENU_BOX) then
-		select_box("drak", BOX_CUCUMBER2, self)
-		defold_monster()
-		vampir_cucumber()
-	elseif action_id == hash("fire") and action.released and gui.pick_node(BOX_CUCUMBER3, action.x, action.y) and gui.is_enabled(MENU_BOX) then
-		select_box("arni", BOX_CUCUMBER3, self)
-		defold_monster()
-		arni_cucumber()
 		
+	elseif action_id == hash("fire") and action.released and gui.pick_node(BOX_CUCUMBER,action.x, action.y) and gui.is_enabled(MENU_BOX) then
+		select_cucumber("xop", BOX_CUCUMBER, self)
+	elseif action_id == hash("fire") and action.released and gui.pick_node(BOX_CUCUMBER1, action.x, action.y) and gui.is_enabled(MENU_BOX) then
+		select_cucumber("nik", BOX_CUCUMBER1, self)
+	elseif action_id == hash("fire") and action.released and gui.pick_node(BOX_CUCUMBER2, action.x, action.y) and gui.is_enabled(MENU_BOX) then
+		select_cucumber("drak", BOX_CUCUMBER2, self)
+	elseif action_id == hash("fire") and action.released and gui.pick_node(BOX_CUCUMBER3, action.x, action.y) and gui.is_enabled(MENU_BOX) then
+		select_cucumber("arni", BOX_CUCUMBER3, self)
+
+	elseif action_id == hash("fire") and action.released and gui.pick_node(WEAPON_BOX,action.x, action.y) and gui.is_enabled(MENU_BOX) then
+		select_weapon("pistol", WEAPON_BOX, self)
+	elseif action_id == hash("fire") and action.released and gui.pick_node(WEAPON_BOX1, action.x, action.y) and gui.is_enabled(MENU_BOX) then
+		select_weapon("two-pistol", WEAPON_BOX1, self)
+	elseif action_id == hash("fire") and action.released and gui.pick_node(WEAPON_BOX2, action.x, action.y) and gui.is_enabled(MENU_BOX) then
+		select_weapon("ak47", WEAPON_BOX2, self)
+
+	elseif action_id == hash("fire") and action.released and gui.pick_node(HARD_BOX,action.x, action.y) and gui.is_enabled(MENU_BOX) then
+		select_hard("easy", HARD_BOX, self)
+	elseif action_id == hash("fire") and action.released and gui.pick_node(HARD_BOX1, action.x, action.y) and gui.is_enabled(MENU_BOX) then
+		select_hard("medium", HARD_BOX1, self)
+	elseif action_id == hash("fire") and action.released and gui.pick_node(HARD_BOX2, action.x, action.y) and gui.is_enabled(MENU_BOX) then
+		select_hard("hard", HARD_BOX2, self)
+		
+	elseif action_id == hash("fire") and action.released and gui.pick_node(MENU_AUTOFIRE_BUTTON, action.x, action.y) and gui.is_enabled(MENU_BOX) then
+		IS_MOUSE = not IS_MOUSE
 	elseif action_id == hash("fire") and action.released and gui.pick_node(EXIT_BOX, action.x, action.y) and gui.is_enabled(PAUSE_MENU) then
 		msg.post("#gameproxy", "unload")
 		gui.set_enabled(MENU_BOX, true)

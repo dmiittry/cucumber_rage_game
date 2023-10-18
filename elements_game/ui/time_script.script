@@ -8,7 +8,11 @@ local time = 0
 function update(self, dt)
 	time = time + dt
 	local hour = time / 60
-	local format = string.format("%01d:%02d", hour ,time)
+	local second = time
+	if second > 60 then
+		second = 0
+	end
+	local format = string.format("%01d:%02d", hour ,second)
 	label.set_text("#label", format)
 	label.set_text("#level_label", LEVEL)
 end

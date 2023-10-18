@@ -14,6 +14,8 @@ TIME_SPAWN_MOSTER = 0
 
 
 function init(self)
+	print(HARD_GAME)
+	self.boss_time = 50
 	self.level = 6
 	self.boost = 0
 	self.next_level = TIME_NEXT_LEVEL
@@ -85,7 +87,16 @@ function update(self, dt)
 		end
 	elseif self.level == 6 then
 		boss_spawn()
-		self.level = self.level + 1
+		self.level = 7
+	elseif self.level == 7 then
+		self.boss_time = self.boss_time - dt
+		if self.boss_time < 0 then
+			self.boss_time = 30
+			blue_spawn()
+			red_spawn()
+			yellow_spawn()
+			purple_spawn()
+		end
 	end
 	
 end
@@ -184,6 +195,15 @@ end
 function yellow_spawn()
 	spawn_yellow_monster(LIST_SPAWN_POSITION_X[math.random(1, 12)], LIST_SPAWN_POSITION_Y[math.random(1, 12)])
 	spawn_yellow_monster(LIST_SPAWN_POSITION_X[math.random(1, 12)], LIST_SPAWN_POSITION_Y[math.random(1, 12)])
+end
+function red_spawn()
+	spawn_red_monster(LIST_SPAWN_POSITION_X[math.random(1, 12)], LIST_SPAWN_POSITION_Y[math.random(1, 12)])
+	spawn_red_monster(LIST_SPAWN_POSITION_X[math.random(1, 12)], LIST_SPAWN_POSITION_Y[math.random(1, 12)])
+end
+function blue_spawn()
+	spawn_blue_monster(LIST_SPAWN_POSITION_X[math.random(1, 12)], LIST_SPAWN_POSITION_Y[math.random(1, 12)])
+	spawn_blue_monster(LIST_SPAWN_POSITION_X[math.random(1, 12)], LIST_SPAWN_POSITION_Y[math.random(1, 12)])
+	spawn_blue_monster(LIST_SPAWN_POSITION_X[math.random(1, 12)], LIST_SPAWN_POSITION_Y[math.random(1, 12)])
 end
 function boss_spawn()
 	spawn_boss(LIST_SPAWN_POSITION_X[math.random(1, 12)], LIST_SPAWN_POSITION_Y[math.random(1, 12)])

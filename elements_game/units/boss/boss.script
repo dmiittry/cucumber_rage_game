@@ -15,7 +15,7 @@ function init(self)
 	self.move = true
 	self.fire = false
 	self.spawn = false
-	self.spawn_time = 40
+	self.spawn_time = 30
 	timer.delay(1, false, function() self.fire = true end)
 	self.damage = DAMAGE_BOSS
 	msg.post("#laser", "disable")
@@ -180,7 +180,7 @@ function update(self, dt)
 	end
 	if self.spawn_time < 0 then
 		self.spawn = true
-		self.spawn_time = 15
+		self.spawn_time = 10
 	end
 	if self.health < self.health - 1000 then
 		self.damage = self.damage + 5
@@ -190,6 +190,7 @@ function update(self, dt)
 		self.damage = self.damage + 30
 	elseif self.health < self.health /10 then
 		self.damage = self.damage * 2
+		self.spawn_time = 5
 	end
 	if self.sfera < 0 then
 		self.fire = false

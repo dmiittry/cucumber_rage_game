@@ -23,7 +23,7 @@ CHAR_SPEED_SHOOT = {value = math.random(2,5), key = "speed_shoot", text1 = " у�
 SKILL_ADD_AK47 = {value = 0, key = "add_ak", text1 = "добавить ak47", text2 = "Добавляет ак47 которая стреляем самостоятельно", buy = math.random(200, 300), img = 'ak47'}
 SKILL_ADD_KNIFE = {value = 0, key = "add_knife", text1 = "добавить меч", text2 = "добавляет мечи которые вращаются вокруг оугрчика", buy = math.random(200, 300), img = 'knife' }
 SKILL_PROBITIE = {value = 0, key = "probitie", text1 = "пробивающие пули", text2 = "Ваши пули пробивают +1 врага", buy = math.random(200, 300), img = "img" }
-SKILL_HEADSHOT = {value = 0, key = "headshot", text1 = "HEADSHOT", text2 = "Ваша пуля с 5% вероятностью делает HEADSHOT, моментально убивают врагов", buy = math.random(200, 300), img = "img" }
+SKILL_HEADSHOT = {value = 0, key = "headshot", text1 = "HEADSHOT", text2 = "Ваша пуля с 5% вероятностью делает HEADSHOT, моментально убивают врагов", buy = math.random(350, 450), img = "img" }
 UP_DMG_KNIFE = {value = math.random(3,6), key = "up_dmg_knife", text1 = " увеличивает урон МЕЧА", text2 = "увеличивает урон меча", buy = math.random(100, 150), img =""}
 UP_SPEED_AK = {value =  math.random(2,6), key = "up_speed_ak", text1 = " увеличивает скорость АК47", text2 = "увеличивает скорость атаки АК47", buy = math.random(100, 150), img =""}
 UP_SPEED_KNIFE = {value =  math.random(2,6), key = "up_speed_knife", text1 = " увеличивает скорость меча", text2 = "увеличивает скорость меча", buy = math.random(100, 150), img =""}
@@ -336,20 +336,34 @@ end
 function change_level(value)
 	LEVEL = value
 end
-
+HARD_GAME = 1
+WEAPONS = "pistol"
+function change_weapon(value)
+	WEAPONS = value
+	if value == "pistol" then
+		DAMAGE_BULLET = 8
+		SPEED_SHOOT = 0.8
+	elseif value == "two-pistol" then
+		DAMAGE_BULLET = 9
+		SPEED_SHOOT = 0.5
+	elseif value == "ak47" then
+		DAMAGE_BULLET = 20
+		SPEED_SHOOT = 0.8
+	end
+	print(DAMAGE_BULLET)
+end
+		
 function hop_cucumber()
 	CUCUMBER = "hop"
 	HP_PLAYER = 100
 	MAX_HP_PLAYER = 100
 	REGEN_PLAYER = 0 -- /10 max 30
 	VAMPIR = 0 -- % max 9
-	DAMAGE_BULLET = 8
 	DAMAGE_UNIT = 30
 	CRITICAL = 3   -- %
 	ARMOR = 3 -- %
 	UKLON_PLAYER = 3 -- max 30 %
 	SPEED_PLAYER = 80
-	SPEED_SHOOT = 0.8 -- sekunda - max 0.2
 	-- AK47
 	TIME_SHOOT_AK47 = 1 -- max 0.3
 	AK = 0
@@ -373,13 +387,11 @@ function nik_cucumber()
 	MAX_HP_PLAYER = 80
 	REGEN_PLAYER = 0 -- /10 max 30
 	VAMPIR = 0 -- % max 9
-	DAMAGE_BULLET = 4
 	DAMAGE_UNIT = 30
 	CRITICAL = 0   -- %
 	ARMOR = 5 -- %
 	UKLON_PLAYER = 10 -- max 30 %
 	SPEED_PLAYER = 100
-	SPEED_SHOOT = 0.5 -- sekunda - max 0.2
 	-- AK47
 	TIME_SHOOT_AK47 = 1 -- max 0.3
 	AK = 0
@@ -404,13 +416,11 @@ function vampir_cucumber()
 	MAX_HP_PLAYER = 150
 	REGEN_PLAYER = 0 -- /10 max 30
 	VAMPIR = 30 -- % max 9
-	DAMAGE_BULLET = 4
 	DAMAGE_UNIT = 30
 	CRITICAL = 0   -- %
 	ARMOR = 0 -- %
 	UKLON_PLAYER = 30 -- max 30 %
 	SPEED_PLAYER = 100
-	SPEED_SHOOT = 0.5 -- sekunda - max 0.2
 	-- AK47
 	TIME_SHOOT_AK47 = 1 -- max 0.3
 	AK = 0
@@ -435,13 +445,11 @@ function arni_cucumber()
 	MAX_HP_PLAYER = 250
 	REGEN_PLAYER = 50 -- /10 max 30
 	VAMPIR = 0 -- % max 9
-	DAMAGE_BULLET = 8
 	DAMAGE_UNIT = 30
 	CRITICAL = 0   -- %
 	ARMOR = 30 -- %
 	UKLON_PLAYER = 0 -- max 30 %
 	SPEED_PLAYER = 70
-	SPEED_SHOOT = 0.9 -- sekunda - max 0.2
 	-- AK47
 	TIME_SHOOT_AK47 = 1 -- max 0.3
 	AK = 0
@@ -462,6 +470,7 @@ function arni_cucumber()
 end
 
 function defold_monster()
+	--SUNDUK
 	HP_SUNDUK = 50
 	TIME_SUNDUK = 60
 	MONEY_SUNDUK = 300
@@ -497,14 +506,14 @@ function defold_monster()
 	MONEY_BOSS = 500
 	SCORE_BOSS = 500
 	HEALTH_BOSS = 100
-	DAMAGE_BOSS = 50
+	DAMAGE_BOSS = MAX_HP_PLAYER + ARMOR
 	SPEED_BOSS = 15
 	TIME_SHOOT_BOSS = 0.8
 	--MINIS
 	MONEY_MINIS = 2
 	SCORE_MINIS = 2
-	HEALTH_MINIS = 100
-	DAMAGE_MINIS = 10
+	HEALTH_MINIS = DAMAGE_BULLET * 2
+	DAMAGE_MINIS = MAX_HP_PLAYER / 2
 	SPEED_MINIS = 80
 end
 
