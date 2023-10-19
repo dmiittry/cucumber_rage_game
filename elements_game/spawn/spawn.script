@@ -16,7 +16,7 @@ TIME_SPAWN_MOSTER = 0
 function init(self)
 	print(HARD_GAME)
 	self.boss_time = 50
-	self.level = 6
+	self.level = 1
 	self.boost = 0
 	self.next_level = TIME_NEXT_LEVEL
 	math.randomseed(os.time())

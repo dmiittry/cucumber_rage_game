@@ -388,7 +388,9 @@ function on_input(self, action_id, action)
 		free_upgrade = true
 		change_state('start')
 		change_coins = 5
+		sound.play("/interface#click")
 	elseif action_id == hash("fire") and action.released and gui.pick_node(ADD_MONEY_BOX, action.x, action.y) and gui.is_enabled(UPGRADE_BOX) then
 		change_money(300)
+		sound.play("/interface#click")
 	end
 end

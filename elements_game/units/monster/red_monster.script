@@ -2,6 +2,7 @@ require "elements_game.core.globals"
 
 local knife_dmg = true
 
+local sound_list = "#dead_monster1"
 function init(self)
 	math.randomseed(os.time())
 	self.speed = SPEED_RED
@@ -15,6 +16,7 @@ function init(self)
 end
 
 local function red_dead_monster(self)
+	sound.play(sound_list, { gain = 0.5, pan = 0 })
 	self.fire = false
 	msg.post("/player/one_pistol", "dead_monster")
 	-- msg.post("/player/ak471", "dead_monster")
@@ -29,6 +31,7 @@ local function red_dead_monster(self)
 end
 
 local function hitted_monster(self, value)
+	sound.play("#hit")
 	self.health = self.health - value
 	KOL_DAMAGE = KOL_DAMAGE + value
 	if self.health <= 0 then

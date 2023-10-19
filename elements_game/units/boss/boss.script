@@ -27,6 +27,7 @@ function init(self)
 	go.animate(".", "euler.z", go.PLAYBACK_LOOP_FORWARD, rad + 360, go.EASING_LINEAR, 13)
 	print("BOSS HP", self.health)
 	print("BOSS DAM", self.damage)
+	sound.play("#boss_fight")
 end
 
 local function red_dead_monster(self)
@@ -46,6 +47,7 @@ local function red_dead_monster(self)
 end
 
 local function hitted_monster(self, value)
+	sound.play("#hit2")
 	KOL_DAMAGE = KOL_DAMAGE + value
 	self.health = self.health - value
 	print("BOSS HP", self.health)

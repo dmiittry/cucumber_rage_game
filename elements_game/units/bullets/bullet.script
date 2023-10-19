@@ -31,9 +31,9 @@ function on_message(self, message_id, message, sender)
 			if message.other_group == hash("enemy") or message.other_group == hash("boss") then
 				local randi = math.random()
 				if message.other_group == hash("enemy") and HEADSHOT > 0 and randi <= HEADSHOT/100 then
+					sound.play("#headshot", { gain = 0.5, pan = 0 })
 					factory.create("#damage_tittle", nil, rota, {headshot = true})
 					msg.post(message.other_id, "hit", {value = 10000, dir = self.dir})
-					go.delete(message.other_id)
 					go.delete()
 				else
 					if self.probitie ~= KOL_PROBITIE then

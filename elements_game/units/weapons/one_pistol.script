@@ -4,11 +4,13 @@ function init(self)
 	msg.post(".", "acquire_input_focus")
 	self.fire = true
 	go.set(".", "euler.z", 90)
+	self.weap = "#fire"
 	if WEAPONS == "pistol" then
 		sprite.play_flipbook("#sprite_pistol", hash("pistol1_hand"))
 	elseif WEAPONS == "two-pistol" then
 		sprite.play_flipbook("#sprite_pistol", hash("pistol2_hand"))
 	elseif WEAPONS == "ak47" then
+		self.weap = "#ak47"
 		sprite.play_flipbook("#sprite_pistol", hash("ak47_hand"))
 	end
 end
@@ -34,9 +36,13 @@ local function shoot(target_position, gl , self)
 	go.animate(".", "rotation", go.PLAYBACK_ONCE_BACKWARD, otdacha, go.EASING_INBOUNCE, 0.5)
 	sprite.set_vflip("#sprite_pistol", angle < 0 )
 	go.set_rotation(rota)
+	sound.play(self.weap)
 	local bullet = factory.create("#bullet", nil,rota,{dir = vmath.normalize(dir), damage = DAMAGE_BULLET})
-	if CUCUMBER == "nik" then
-		timer.delay(0.1, false, function() factory.create("#bullet", nil,rota,{dir = vmath.normalize(dir), damage = DAMAGE_BULLET}) end)
+	if WEAPONS == "two-pistol" then
+		timer.delay(0.1, false, function() 
+			sound.play(self.weap)
+			factory.create("#bullet", nil,rota,{dir = vmath.normalize(dir), damage = DAMAGE_BULLET}) 
+		end)
 	end
 	timer.delay(SPEED_SHOOT, false, function()
 		self.fire = true

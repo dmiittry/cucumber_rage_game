@@ -262,7 +262,7 @@ function change_exp(value)
 		table.insert(EXP_LVL, EXP_LVL[#EXP_LVL] + 1200)
 	end
 	if EXP >= EXP_LVL[LEVEL] then
-		change_state("next")
+		msg.post("/player/cucumber#cucumber", "next_level")
 		LEVEL = LEVEL + 1
 		HEALTH_BLUE = HEALTH_BLUE + 2
 		HEALTH_RED = HEALTH_RED + 2
@@ -447,9 +447,9 @@ function arni_cucumber()
 	VAMPIR = 0 -- % max 9
 	DAMAGE_UNIT = 30
 	CRITICAL = 0   -- %
-	ARMOR = 30 -- %
+	ARMOR = 30 --
 	UKLON_PLAYER = 0 -- max 30 %
-	SPEED_PLAYER = 70
+	SPEED_PLAYER = 80
 	-- AK47
 	TIME_SHOOT_AK47 = 1 -- max 0.3
 	AK = 0

@@ -10,5 +10,10 @@ end
 function on_message(self, message_id, message, sender)
 	if message_id == hash("add_knife") then
 		msg.post(".", "enable")
+	elseif message_id == hash("trigger_response") then
+		if message.other_group == hash("enemy") or message.other_group == hash("boss") then
+			print(message.other_group)
+			sound.play("#knife_sound")
+		end
 	end
 end

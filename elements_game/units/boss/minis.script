@@ -27,6 +27,7 @@ local function blue_dead_monster(self)
 end
 
 local function hitted_monster(self, value)
+	sound.play("#hit")
 	self.health = self.health - value
 	KOL_DAMAGE = KOL_DAMAGE + value
 	if self.health <= 0 then

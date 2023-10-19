@@ -1,6 +1,7 @@
 require "elements_game.core.globals"
 
 function init(self)
+	sound.play("#bg")
 	self.select_cucumber = 0
 	self.select_weapon = "pistol"
 	self.select_hard = "easy"
@@ -128,18 +129,24 @@ function select_hard(key, box, self)
 end
 function on_input(self, action_id, action)
 	if action_id == hash("esc") and action.released and gui.is_enabled(BTN_MENU) then
+		sound.play("#click")
 		change_state("pause")
 	elseif action_id == hash("fire") and action.released and gui.pick_node(BTN_MENU, action.x, action.y) and gui.is_enabled(BTN_MENU) then
 		change_state("pause")
+		sound.play("#click")
 	elseif action_id == hash("fire") and action.released and gui.pick_node(BTN_CONTINUE,action.x, action.y) and gui.is_enabled(BTN_MENU) and gui.is_enabled(PAUSE_MENU) then
 		change_state("start")
+		sound.play("#click")
 	elseif action_id == hash("fire") and action.released and gui.pick_node(REVIVE_BOX,action.x, action.y) and gui.is_enabled(DEAD_MENU) then
 
+		
 		if MONEY < self.money_rev then
 			print("no money")
 		else
+			sound.play("#click")
 			change_money(-self.money_rev)
 			self.money_rev = self.money_rev + 50
+			HP_PLAYER = 0
 			change_hp(MAX_HP_PLAYER)
 			msg.post("main:/player/cucumber#cucumber", "comeback")
 			change_state("start")
@@ -155,6 +162,7 @@ function on_input(self, action_id, action)
 		elseif self.select_cucumber == "arni" then
 			arni_cucumber()
 		end
+		sound.play("#click")
 		HARD_GAME = self.select_hard
 		change_weapon(self.select_weapon)
 		gui.set_enabled(MENU_BOX, false)
@@ -163,39 +171,53 @@ function on_input(self, action_id, action)
 		
 	elseif action_id == hash("fire") and action.released and gui.pick_node(BOX_CUCUMBER,action.x, action.y) and gui.is_enabled(MENU_BOX) then
 		select_cucumber("xop", BOX_CUCUMBER, self)
+		sound.play("#click")
 	elseif action_id == hash("fire") and action.released and gui.pick_node(BOX_CUCUMBER1, action.x, action.y) and gui.is_enabled(MENU_BOX) then
 		select_cucumber("nik", BOX_CUCUMBER1, self)
+		sound.play("#click")
 	elseif action_id == hash("fire") and action.released and gui.pick_node(BOX_CUCUMBER2, action.x, action.y) and gui.is_enabled(MENU_BOX) then
 		select_cucumber("drak", BOX_CUCUMBER2, self)
+		sound.play("#click")
 	elseif action_id == hash("fire") and action.released and gui.pick_node(BOX_CUCUMBER3, action.x, action.y) and gui.is_enabled(MENU_BOX) then
 		select_cucumber("arni", BOX_CUCUMBER3, self)
+		sound.play("#click")
 
 	elseif action_id == hash("fire") and action.released and gui.pick_node(WEAPON_BOX,action.x, action.y) and gui.is_enabled(MENU_BOX) then
 		select_weapon("pistol", WEAPON_BOX, self)
+		sound.play("#click")
 	elseif action_id == hash("fire") and action.released and gui.pick_node(WEAPON_BOX1, action.x, action.y) and gui.is_enabled(MENU_BOX) then
 		select_weapon("two-pistol", WEAPON_BOX1, self)
+		sound.play("#click")
 	elseif action_id == hash("fire") and action.released and gui.pick_node(WEAPON_BOX2, action.x, action.y) and gui.is_enabled(MENU_BOX) then
 		select_weapon("ak47", WEAPON_BOX2, self)
+		sound.play("#click")
 
 	elseif action_id == hash("fire") and action.released and gui.pick_node(HARD_BOX,action.x, action.y) and gui.is_enabled(MENU_BOX) then
 		select_hard("easy", HARD_BOX, self)
+		sound.play("#click")
 	elseif action_id == hash("fire") and action.released and gui.pick_node(HARD_BOX1, action.x, action.y) and gui.is_enabled(MENU_BOX) then
 		select_hard("medium", HARD_BOX1, self)
+		sound.play("#click")
 	elseif action_id == hash("fire") and action.released and gui.pick_node(HARD_BOX2, action.x, action.y) and gui.is_enabled(MENU_BOX) then
 		select_hard("hard", HARD_BOX2, self)
+		sound.play("#click")
 		
 	elseif action_id == hash("fire") and action.released and gui.pick_node(MENU_AUTOFIRE_BUTTON, action.x, action.y) and gui.is_enabled(MENU_BOX) then
 		IS_MOUSE = not IS_MOUSE
+		sound.play("#click")
 	elseif action_id == hash("fire") and action.released and gui.pick_node(EXIT_BOX, action.x, action.y) and gui.is_enabled(PAUSE_MENU) then
 		msg.post("#gameproxy", "unload")
+		sound.play("#click")
 		gui.set_enabled(MENU_BOX, true)
 		change_state("menu")
 	elseif action_id == hash("fire") and action.released and gui.pick_node(EXIT_BOX1, action.x, action.y) and gui.is_enabled(DEAD_MENU) then
 		msg.post("#gameproxy", "unload")
+		sound.play("#click")
 		gui.set_enabled(MENU_BOX, true)
 		change_state("menu")
 
 	elseif action_id == hash("fire") and action.released and gui.pick_node(ADS_BOX, action.x, action.y) and gui.is_enabled(DEAD_MENU) then
 		change_money(300)
+		sound.play("#click")
 	end
 end

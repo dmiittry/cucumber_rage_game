@@ -2,6 +2,7 @@ require "elements_game.core.globals"
 
 is_shield = true
 
+local sound_list = {"#dead_song","#dead_song1"}
 function init(self)
 	if CUCUMBER == "hop" then
 		sprite.play_flipbook("#sprite_cucumber", hash("cucumber_walk"))
@@ -26,6 +27,7 @@ end
 
 
 local function dead_player(self)
+	sound.play(sound_list[math.random(1, #sound_list)])
 	go.cancel_animations(".", "position")
 	msg.post("#collisionobject", "disable")
 	go.animate(".", "scale", go.PLAYBACK_ONCE_FORWARD, vmath.vector3(0,0,0), go.EASING_INOUTSINE, 0.5)
@@ -102,12 +104,20 @@ function on_message(self, message_id, message, sender)
 		if is_shield then
 			local randomValue = math.random()
 			if randomValue <= UKLON_PLAYER/100 then
+				sound.play("#miss")
 				player_hitted(self, 0)
 			else
+				sound.play("#hit_player")
 				player_hitted(self, message.value)
 			end
 		end
+	elseif message_id == hash("next_level") then
+		sound.play("#next_level1")
+		particlefx.play("#levelup")
+		timer.delay(1, false, function() change_state("next") end)
+		
 	elseif message_id == hash("comeback") then
+		sound.play("#next_level1")
 		go.set("#sprite_cucumber", "tint", vmath.vector4(1,1,1,1))
 		msg.post(".", "enable")
 		go.set(".", "scale", vmath.vector3(0.85,1,1))

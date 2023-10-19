@@ -1,7 +1,6 @@
 require "elements_game.core.globals"
 
 function init(self)
-	
 end
 local time = 0
 

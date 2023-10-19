@@ -28,6 +28,126 @@ components {
     w: 1.0
   }
 }
+components {
+  id: "run"
+  component: "/elements_game/sfx/run.sound"
+  position {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+}
+components {
+  id: "hit_player"
+  component: "/elements_game/sfx/hit_player.sound"
+  position {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+}
+components {
+  id: "miss"
+  component: "/elements_game/sfx/miss.sound"
+  position {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+}
+components {
+  id: "next_level"
+  component: "/elements_game/sfx/next_level.sound"
+  position {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+}
+components {
+  id: "next_level1"
+  component: "/elements_game/sfx/next_level1.sound"
+  position {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+}
+components {
+  id: "dead_song"
+  component: "/elements_game/sfx/dead_song.sound"
+  position {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+}
+components {
+  id: "dead_song1"
+  component: "/assets/sfx/dead_song1.ogg"
+  position {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+}
+components {
+  id: "levelup"
+  component: "/elements_game/particle/levelup.particlefx"
+  position {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+}
 embedded_components {
   id: "sprite_cucumber"
   type: "sprite"

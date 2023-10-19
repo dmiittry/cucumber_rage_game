@@ -13,6 +13,36 @@ components {
     w: 1.0
   }
 }
+components {
+  id: "ak47"
+  component: "/elements_game/sfx/ak47.sound"
+  position {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+}
+components {
+  id: "fire"
+  component: "/elements_game/sfx/bullet.sound"
+  position {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+}
 embedded_components {
   id: "sprite_pistol"
   type: "sprite"

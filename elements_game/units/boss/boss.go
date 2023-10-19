@@ -13,6 +13,36 @@ components {
     w: 1.0
   }
 }
+components {
+  id: "boss_fight"
+  component: "/elements_game/sfx/boss_fight.sound"
+  position {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+}
+components {
+  id: "hit2"
+  component: "/elements_game/sfx/hit2.sound"
+  position {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+}
 embedded_components {
   id: "collisionobject"
   type: "collisionobject"

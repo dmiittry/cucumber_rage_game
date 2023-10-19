@@ -13,6 +13,66 @@ components {
     w: 1.0
   }
 }
+components {
+  id: "hit"
+  component: "/elements_game/sfx/hit.sound"
+  position {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+}
+components {
+  id: "dead_monster"
+  component: "/elements_game/sfx/dead_monster.sound"
+  position {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+}
+components {
+  id: "dead_monster1"
+  component: "/elements_game/sfx/dead_monster1.sound"
+  position {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+}
+components {
+  id: "dead_monster2"
+  component: "/elements_game/sfx/dead_monster2.sound"
+  position {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+}
 embedded_components {
   id: "sprite"
   type: "sprite"
