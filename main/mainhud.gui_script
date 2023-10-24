@@ -99,7 +99,7 @@ function select_cucumber(key, box, self)
 	self.select_cucumber = key
 	for i = 1, #list_box do
 		if list_box[i] == box then
-			gui.set_color(box, GREY_COLOR)
+			gui.set_color(box, WHITE_COLOR)
 		else
 			gui.set_color(list_box[i], BLACK_COLOR)
 		end
@@ -110,7 +110,7 @@ function select_weapon(key, box, self)
 	self.select_weapon = key
 	for i = 1, #list_box do
 		if list_box[i] == box then
-			gui.set_color(box, GREY_COLOR)
+			gui.set_color(box, WHITE_COLOR)
 		else
 			gui.set_color(list_box[i], BLACK_COLOR)
 		end
@@ -121,7 +121,7 @@ function select_hard(key, box, self)
 	self.select_hard = key
 	for i = 1, #list_box do
 		if list_box[i] == box then
-			gui.set_color(box, GREY_COLOR)
+			gui.set_color(box, WHITE_COLOR)
 		else
 			gui.set_color(list_box[i], BLACK_COLOR)
 		end
@@ -162,9 +162,11 @@ function on_input(self, action_id, action)
 		elseif self.select_cucumber == "arni" then
 			arni_cucumber()
 		end
+		LEVEL = 1
 		sound.play("#click")
 		HARD_GAME = self.select_hard
 		change_weapon(self.select_weapon)
+		defold_monster()
 		gui.set_enabled(MENU_BOX, false)
 		change_state("start")
 		msg.post("#gameproxy", "load")

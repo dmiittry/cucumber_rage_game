@@ -1,17 +1,19 @@
 require "elements_game.core.globals"
 
 function init(self)
+	print(CUCUMBER, LEVEL)
 end
 local time = 0
+local second = 0
 
 function update(self, dt)
 	time = time + dt
-	local hour = time / 60
-	local second = time
+	local minuta = time / 60
+	second = second + dt
 	if second > 60 then
 		second = 0
 	end
-	local format = string.format("%01d:%02d", hour ,second)
+	local format = string.format("%02d:%02d", minuta ,second)
 	label.set_text("#label", format)
 	label.set_text("#level_label", LEVEL)
 end

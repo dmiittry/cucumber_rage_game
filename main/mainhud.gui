@@ -73,7 +73,7 @@ nodes {
   layer: ""
   inherit_alpha: true
   alpha: 1.0
-  outline_alpha: 1.0
+  outline_alpha: 5.0
   shadow_alpha: 1.0
   template_node_child: false
   text_leading: 1.0
@@ -137,7 +137,7 @@ nodes {
   template_node_child: false
   size_mode: SIZE_MODE_AUTO
   custom_type: 0
-  enabled: false
+  enabled: true
   visible: true
   material: ""
 }
@@ -1017,7 +1017,7 @@ nodes {
   template_node_child: false
   size_mode: SIZE_MODE_MANUAL
   custom_type: 0
-  enabled: true
+  enabled: false
   visible: true
   material: ""
 }
@@ -1047,14 +1047,14 @@ nodes {
     w: 1.0
   }
   color {
-    x: 0.0
-    y: 0.0
-    z: 0.0
+    x: 1.0
+    y: 1.0
+    z: 1.0
     w: 1.0
   }
   type: TYPE_BOX
   blend_mode: BLEND_MODE_ALPHA
-  texture: ""
+  texture: "sprites/table_low"
   id: "cucumber"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
@@ -1299,14 +1299,14 @@ nodes {
     w: 1.0
   }
   color {
-    x: 0.0
-    y: 0.0
-    z: 0.0
+    x: 1.0
+    y: 1.0
+    z: 1.0
     w: 1.0
   }
   type: TYPE_BOX
   blend_mode: BLEND_MODE_ALPHA
-  texture: ""
+  texture: "sprites/table_low"
   id: "cucumber1"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
@@ -1551,14 +1551,14 @@ nodes {
     w: 1.0
   }
   color {
-    x: 0.0
-    y: 0.0
-    z: 0.0
+    x: 1.0
+    y: 1.0
+    z: 1.0
     w: 1.0
   }
   type: TYPE_BOX
   blend_mode: BLEND_MODE_ALPHA
-  texture: ""
+  texture: "sprites/table_low"
   id: "cucumber2"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
@@ -1804,14 +1804,14 @@ nodes {
     w: 1.0
   }
   color {
-    x: 0.0
-    y: 0.0
-    z: 0.0
+    x: 1.0
+    y: 1.0
+    z: 1.0
     w: 1.0
   }
   type: TYPE_BOX
   blend_mode: BLEND_MODE_ALPHA
-  texture: ""
+  texture: "sprites/table_low"
   id: "cucumber3"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
@@ -2502,14 +2502,14 @@ nodes {
     w: 1.0
   }
   color {
-    x: 0.0
-    y: 0.0
-    z: 0.0
+    x: 1.0
+    y: 1.0
+    z: 1.0
     w: 1.0
   }
   type: TYPE_BOX
   blend_mode: BLEND_MODE_ALPHA
-  texture: ""
+  texture: "sprites/button"
   id: "weapon"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
@@ -2620,14 +2620,14 @@ nodes {
     w: 1.0
   }
   color {
-    x: 0.0
-    y: 0.0
-    z: 0.0
+    x: 1.0
+    y: 1.0
+    z: 1.0
     w: 1.0
   }
   type: TYPE_BOX
   blend_mode: BLEND_MODE_ALPHA
-  texture: ""
+  texture: "sprites/button"
   id: "weapon1"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
@@ -2738,14 +2738,14 @@ nodes {
     w: 1.0
   }
   color {
-    x: 0.0
-    y: 0.0
-    z: 0.0
+    x: 1.0
+    y: 1.0
+    z: 1.0
     w: 1.0
   }
   type: TYPE_BOX
   blend_mode: BLEND_MODE_ALPHA
-  texture: ""
+  texture: "sprites/button"
   id: "weapon2"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
@@ -2856,14 +2856,14 @@ nodes {
     w: 1.0
   }
   color {
-    x: 0.0
-    y: 0.0
-    z: 0.0
+    x: 1.0
+    y: 1.0
+    z: 1.0
     w: 1.0
   }
   type: TYPE_BOX
   blend_mode: BLEND_MODE_ALPHA
-  texture: ""
+  texture: "sprites/button"
   id: "hard"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
@@ -3033,14 +3033,14 @@ nodes {
     w: 1.0
   }
   color {
-    x: 0.0
-    y: 0.0
-    z: 0.0
+    x: 1.0
+    y: 1.0
+    z: 1.0
     w: 1.0
   }
   type: TYPE_BOX
   blend_mode: BLEND_MODE_ALPHA
-  texture: ""
+  texture: "sprites/button"
   id: "hard1"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
@@ -3210,14 +3210,14 @@ nodes {
     w: 1.0
   }
   color {
-    x: 0.0
-    y: 0.0
-    z: 0.0
+    x: 1.0
+    y: 1.0
+    z: 1.0
     w: 1.0
   }
   type: TYPE_BOX
   blend_mode: BLEND_MODE_ALPHA
-  texture: ""
+  texture: "sprites/button"
   id: "hard2"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE

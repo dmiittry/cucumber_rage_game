@@ -31,6 +31,9 @@ UP_SPEED_KNIFE = {value =  math.random(2,6), key = "up_speed_knife", text1 = " Ñ
 UPGRADE_LIST = {CHAR_HP, CHAR_DMG_BULLET, CHAR_SPEED_PLR, CHAR_REGEN, CHAR_VAMPIR, CHAR_CRITICAL, CHAR_ARMOR,
 CHAR_UKLON, CHAR_SPEED_SHOOT, SKILL_ADD_AK47, SKILL_ADD_KNIFE, SKILL_PROBITIE}
 
+STARNDART_LIST = {CHAR_HP, CHAR_DMG_BULLET, CHAR_SPEED_PLR, CHAR_REGEN, CHAR_VAMPIR, CHAR_CRITICAL, CHAR_ARMOR,
+CHAR_UKLON, CHAR_SPEED_SHOOT, SKILL_ADD_AK47, SKILL_ADD_KNIFE, SKILL_PROBITIE}
+
 STATE = "menu"
 
 -- STATISTIKA
@@ -336,6 +339,7 @@ end
 function change_level(value)
 	LEVEL = value
 end
+
 HARD_GAME = 1
 WEAPONS = "pistol"
 function change_weapon(value)
@@ -345,7 +349,7 @@ function change_weapon(value)
 		SPEED_SHOOT = 0.8
 	elseif value == "two-pistol" then
 		DAMAGE_BULLET = 9
-		SPEED_SHOOT = 0.5
+		SPEED_SHOOT = 0.7
 	elseif value == "ak47" then
 		DAMAGE_BULLET = 20
 		SPEED_SHOOT = 0.8
@@ -470,6 +474,7 @@ function arni_cucumber()
 end
 
 function defold_monster()
+	UPGRADE_LIST = STARNDART_LIST
 	--SUNDUK
 	HP_SUNDUK = 50
 	TIME_SUNDUK = 60
