@@ -74,21 +74,6 @@ components {
   }
 }
 components {
-  id: "next_level"
-  component: "/elements_game/sfx/next_level.sound"
-  position {
-    x: 0.0
-    y: 0.0
-    z: 0.0
-  }
-  rotation {
-    x: 0.0
-    y: 0.0
-    z: 0.0
-    w: 1.0
-  }
-}
-components {
   id: "next_level1"
   component: "/elements_game/sfx/next_level1.sound"
   position {
@@ -196,6 +181,7 @@ embedded_components {
   "mask: \"bullet_sfera\"\n"
   "mask: \"laser\"\n"
   "mask: \"boss\"\n"
+  "mask: \"expo\"\n"
   "embedded_collision_shape {\n"
   "  shapes {\n"
   "    shape_type: TYPE_SPHERE\n"
@@ -343,5 +329,24 @@ embedded_components {
     x: 0.708082
     y: 0.900976
     z: 0.72
+  }
+}
+embedded_components {
+  id: "boom"
+  type: "factory"
+  data: "prototype: \"/elements_game/units/boss/explosion.go\"\n"
+  "load_dynamically: false\n"
+  "dynamic_prototype: false\n"
+  ""
+  position {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
   }
 }

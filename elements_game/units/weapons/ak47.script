@@ -45,7 +45,7 @@ function on_message(self, message_id, message, sender)
 			local target_position = vmath.vector3(pos.x, pos.y, 0)
 			local gl = go.get_position(go.get_parent()) + self.correct
 			if self.fire then
-				sound.play("#fire", { gain = 0.5, pan = 0 })
+				sound.play("#fire", { gain = 0.35, pan = 0 })
 				shoot(target_position, gl, self)
 				self.fire = false
 			end

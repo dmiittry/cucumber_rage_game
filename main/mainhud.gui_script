@@ -1,6 +1,7 @@
 require "elements_game.core.globals"
 
 function init(self)
+	-- sound.play("#helloween")
 	sound.play("#bg")
 	self.select_cucumber = 0
 	self.select_weapon = "pistol"
@@ -36,6 +37,24 @@ function init(self)
 	BOX_CUCUMBER1 = gui.get_node("cucumber1")
 	BOX_CUCUMBER2 = gui.get_node("cucumber2")
 	BOX_CUCUMBER3 = gui.get_node("cucumber3")
+
+	-- STATIC BOX
+	STATIC_BOX = gui.get_node("static_box")
+	STATIC_TEXT = gui.get_node("static_text")
+	STATIC_TEXT_KILL = gui.get_node("static_text_kill")
+	STATIC_TEXT_DAMAGE = gui.get_node("static_text_damage")
+	STATIC_TEXT_HIT = gui.get_node("static_text_hit")
+	STATIC_TEXT_ARMOR = gui.get_node("static_text_armor")
+	
+	-- WIN BOX
+	WIN_BOX = gui.get_node("win_menu")
+	EXIT_BOX2 = gui.get_node("exit_box1")
+	CONTINUE_BOX = gui.get_node("continue_box")
+	SCOREWIN_TEXT = gui.get_node("scorewin_text")
+	ALL_SCOREWIN_TEXT = gui.get_node("all_scorewin_text")
+
+	-- gui.set_text(STATIC_TEXT, text)
+	gui.set_enabled(STATIC_BOX, false)
 	gui.set_enabled(MENU_BOX, true)
 	select_cucumber("xop", BOX_CUCUMBER, self)
 	select_hard("easy", HARD_BOX, self)
@@ -45,6 +64,7 @@ function play()
 	msg.post("#gameproxy", "set_time_step", {factor = 1, mode = 0})
 end
 function stop()
+	static_text()
 	msg.post("#gameproxy", "set_time_step", {factor = 0, mode = 0})
 end
 
@@ -59,12 +79,23 @@ function update(self, dt)
 		gui.set_enabled(PAUSE_MENU, false)
 		gui.set_enabled(DEAD_MENU, false)
 		gui.set_enabled(BTN_MENU, true)
+		gui.set_enabled(WIN_BOX, false)
+		gui.set_enabled(STATIC_BOX, false)
 		play()
 	elseif STATE == "pause" then
+		gui.set_enabled(STATIC_BOX, true)
 		gui.set_enabled(BTN_MENU, true)
 		gui.set_enabled(PAUSE_MENU, true)
+		gui.set_enabled(WIN_BOX, false)
+		stop()
+	elseif STATE == "win_boss" then
+		gui.set_enabled(BTN_MENU, false)
+		gui.set_enabled(STATIC_BOX, true)
+		gui.set_enabled(WIN_BOX, true)
 		stop()
 	elseif STATE == "dead" then
+		gui.set_enabled(STATIC_BOX, true)
+		gui.set_enabled(WIN_BOX, false)
 		gui.set_text(REVIVE_TEXT, "возрадиться за "..self.money_rev)
 		gui.set_enabled(BTN_MENU, true)
 		gui.set_enabled(DEAD_MENU, true)
@@ -75,12 +106,18 @@ function update(self, dt)
 		end
 		stop()
 	elseif STATE == "next" then
+		gui.set_enabled(STATIC_BOX, false)
+		gui.set_enabled(WIN_BOX, false)
 		gui.set_enabled(BTN_MENU, false)
 		stop()
 	elseif STATE == "magazin" then
+		gui.set_enabled(STATIC_BOX, false)
+		gui.set_enabled(WIN_BOX, false)
 		gui.set_enabled(BTN_MENU, false)
 		stop()
 	elseif STATE == "menu" then
+		gui.set_enabled(STATIC_BOX, false)
+		gui.set_enabled(WIN_BOX, false)
 		self.money_rev = 50
 		gui.set_enabled(PAUSE_MENU, false)
 		gui.set_enabled(DEAD_MENU, false)
@@ -92,6 +129,15 @@ function update(self, dt)
 		end
 		stop()
 	end
+end
+function static_text()
+	gui.set_text(STATIC_TEXT, "статистика:")
+	gui.set_text(STATIC_TEXT_KILL, "убито монстров: " ..  KOL_MONSTER)
+	gui.set_text(STATIC_TEXT_DAMAGE, "нанесено урона: " ..  KOL_DAMAGE)
+	gui.set_text(STATIC_TEXT_HIT, "получено уронов: " ..  KOL_POL_URON)
+	gui.set_text(STATIC_TEXT_ARMOR, "поглашенный урон: " .. KOL_POGL_URON)
+	gui.set_text(SCOREWIN_TEXT, "счет за игру: " .. KOL_MONSTER)
+	gui.set_text(ALL_SCOREWIN_TEXT, "общий счет: " .. ALL_KILL_MONSTER + KOL_MONSTER)
 end
 
 function select_cucumber(key, box, self)
@@ -130,19 +176,36 @@ end
 function on_input(self, action_id, action)
 	if action_id == hash("esc") and action.released and gui.is_enabled(BTN_MENU) then
 		sound.play("#click")
-		change_state("pause")
-	elseif action_id == hash("fire") and action.released and gui.pick_node(BTN_MENU, action.x, action.y) and gui.is_enabled(BTN_MENU) then
-		change_state("pause")
-		sound.play("#click")
-	elseif action_id == hash("fire") and action.released and gui.pick_node(BTN_CONTINUE,action.x, action.y) and gui.is_enabled(BTN_MENU) and gui.is_enabled(PAUSE_MENU) then
+		if STATE == "pause" then
+			msg.post("main:/interface#hud", "char_enable", {value = false})
+			change_state("start")
+		else
+			change_state("pause")
+			msg.post("main:/interface#hud", "char_enable", {value = true})
+		end
+	elseif action_id == hash("fire") and action.released and gui.pick_node(CONTINUE_BOX, action.x, action.y) and gui.is_enabled(WIN_BOX) then
+		change_exp(SCORE_BOSS)
+		change_money(MONEY_BOSS)
 		change_state("start")
 		sound.play("#click")
+	elseif action_id == hash("fire") and action.released and gui.pick_node(EXIT_BOX2, action.x, action.y) and gui.is_enabled(WIN_BOX) then
+		ALL_KILL_MONSTER = ALL_KILL_MONSTER + KOL_MONSTER
+		msg.post("#gameproxy", "unload")
+		sound.play("#click")
+		gui.set_enabled(MENU_BOX, true)
+		change_state("menu")
+	-- BUTTON MENU
+	elseif action_id == hash("fire") and action.released and gui.pick_node(BTN_MENU, action.x, action.y) and gui.is_enabled(BTN_MENU) then
+		msg.post("main:/interface#hud", "char_enable", {value = true})
+		change_state("pause")
+		sound.play("#click")
+		static_text()
+	elseif action_id == hash("fire") and action.released and gui.pick_node(BTN_CONTINUE,action.x, action.y) and gui.is_enabled(BTN_MENU) and gui.is_enabled(PAUSE_MENU) then
+		change_state("start")
+		msg.post("main:/interface#hud", "char_enable", {value = false})
+		sound.play("#click")
 	elseif action_id == hash("fire") and action.released and gui.pick_node(REVIVE_BOX,action.x, action.y) and gui.is_enabled(DEAD_MENU) then
-
-		
-		if MONEY < self.money_rev then
-			print("no money")
-		else
+		if MONEY > self.money_rev then
 			sound.play("#click")
 			change_money(-self.money_rev)
 			self.money_rev = self.money_rev + 50
@@ -196,15 +259,18 @@ function on_input(self, action_id, action)
 
 	elseif action_id == hash("fire") and action.released and gui.pick_node(HARD_BOX,action.x, action.y) and gui.is_enabled(MENU_BOX) then
 		select_hard("easy", HARD_BOX, self)
+		TIME_HITTED = 0.3
 		sound.play("#click")
 	elseif action_id == hash("fire") and action.released and gui.pick_node(HARD_BOX1, action.x, action.y) and gui.is_enabled(MENU_BOX) then
 		select_hard("medium", HARD_BOX1, self)
+		TIME_HITTED = 0.2
 		sound.play("#click")
 	elseif action_id == hash("fire") and action.released and gui.pick_node(HARD_BOX2, action.x, action.y) and gui.is_enabled(MENU_BOX) then
 		select_hard("hard", HARD_BOX2, self)
+		TIME_HITTED = 0.1
 		sound.play("#click")
 		
-	elseif action_id == hash("fire") and action.released and gui.pick_node(MENU_AUTOFIRE_BUTTON, action.x, action.y) and gui.is_enabled(MENU_BOX) then
+	elseif action_id == hash("fire") and action.released and gui.pick_node(MENU_AUTOFIRE_BUTTON, action.x, action.y) and gui.is_enabled(MENU_AUTOFIRE_BUTTON) and gui.is_enabled(MENU_BOX) then
 		IS_MOUSE = not IS_MOUSE
 		sound.play("#click")
 	elseif action_id == hash("fire") and action.released and gui.pick_node(EXIT_BOX, action.x, action.y) and gui.is_enabled(PAUSE_MENU) then

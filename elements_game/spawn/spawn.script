@@ -9,140 +9,165 @@ require "elements_game.core.globals"
 LIST_SPAWN_POSITION_X = {40, 75, 110, 150, 188, 210, 440, 478, 512, 553, 586, 610}
 LIST_SPAWN_POSITION_Y = {40, 72, 90, 270, 298, 320, 95, 127, 162, 198, 241, 272}
 
-DURATION_SPAWN_MOSTER = 4
 TIME_SPAWN_MOSTER = 0
 
-
+-- HARD_GAME easy , medium , hard
 function init(self)
-	print(HARD_GAME)
-	self.boss_time = 50
+	self.boss_time = 30
 	self.level = 1
-	self.boost = 0
 	self.next_level = TIME_NEXT_LEVEL
 	math.randomseed(os.time())
 	self.index = 1
 	self.max_index = 4
 	self.time_spawn_sunduk = TIME_SUNDUK
+	if HARD_GAME == "hard" then
+		mini_boss_spawn()
+	end
 end
 
 function on_message(self, message_id, message, sender)
 	if message_id == hash("boss_dead") then
-		self.level = 1
-		print('boss dead')
+		change_state("win_boss")
+		DURATION_SPAWN_MOSTER = 4
 	end
 end
 
 function update(self, dt)
 	self.time_spawn_sunduk = self.time_spawn_sunduk - dt
-	if self.time_spawn_sunduk < 0 then
-		sunduk_spawn()
-		self.time_spawn_sunduk = TIME_SUNDUK
-	end
 	self.next_level = self.next_level - dt
-	if self.level < 6 then
-		TIME_SPAWN_MOSTER = TIME_SPAWN_MOSTER - dt
-		if TIME_SPAWN_MOSTER <= 0 then
-			first_level(self)
-			TIME_SPAWN_MOSTER = DURATION_SPAWN_MOSTER
-		end
-		if self.next_level < 0 then
-			self.boost = self.boost + 1
-			self.level = self.level + 1
-			if self.boost == 1 then
-				purple_spawn()
+	TIME_SPAWN_MOSTER = TIME_SPAWN_MOSTER - dt
+	
+	if TIME_SPAWN_MOSTER < 0 then
+		standrat_spawn()
+		TIME_SPAWN_MOSTER = DURATION_SPAWN_MOSTER
+	end
+	
+	if self.next_level < 0 then
+		if HARD_GAME == "easy" then
+			if self.level == 3 then
 				yellow_spawn()
-				red_spawn_horizontal_up()
-				print('boost = ', self.boost)
-				self.next_level = TIME_NEXT_LEVEL
-			elseif self.boost == 2 then
 				purple_spawn()
-				yellow_spawn()
-				red_spawn_horizontal_up()
-				print('boost = ', self.boost)
-				self.next_level = TIME_NEXT_LEVEL
-			elseif self.boost == 3 then
-				print('boost = ', self.boost)
-				blue_spawn_left()
-				purple_spawn()
-				yellow_spawn()
-				self.max_index = 5
-				self.next_level = TIME_NEXT_LEVEL
-			elseif self.boost == 4 then
-				print('boost = ', self.boost)
-				red_spawn_left()
-				blue_spawn_horizontal_up()
-				purple_spawn()
-				yellow_spawn()
-				self.next_level = TIME_NEXT_LEVEL
-			elseif self.boost == 5 then
-				print('boost = ', self.boost)
-				purple_spawn()
-				yellow_spawn()
-				red_spawn_horizontal_up()
-				red_spawn_right()
-				blue_spawn_horizontal_up()
-				self.boost = 0
-				self.next_level = TIME_NEXT_LEVEL
 			end
+			blue_spawn_horizontal_bottom()
+			red_spawn_horizontal_up()
+			blue_spawn_left()
+		elseif HARD_GAME == "medium" then
+			if self.level == 3 then
+				mini_boss_spawn()
+				purple_spawn()
+				yellow_spawn()
+			end
+			blue_spawn_horizontal_bottom()
+			red_spawn_horizontal_up()
+			red_spawn_horizontal_bottom()
+			yellow_spawn()
+			purple_spawn()
+		elseif HARD_GAME == "hard" then
+			if self.level == 3 then
+				mini_boss_spawn()
+				mini_boss_spawn()
+				purple_spawn()
+				yellow_spawn()
+			end
+			blue_spawn_horizontal_bottom()
+			red_spawn_horizontal_bottom()
+			blue_spawn()
+			blue_spawn()
+			purple_spawn()
+			purple_spawn()
 		end
-	elseif self.level == 6 then
+		self.level = self.level + 1
+		self.next_level = TIME_NEXT_LEVEL
+	end
+	-- SPAWN BOSS = 10 minuta
+	if self.level == 6 then
+		if HARD_GAME == "hard" then
+			mini_boss_spawn()
+		end
 		boss_spawn()
+		self.next_level = 10000
+		DURATION_SPAWN_MOSTER = 10000
 		self.level = 7
 	elseif self.level == 7 then
 		self.boss_time = self.boss_time - dt
 		if self.boss_time < 0 then
-			self.boss_time = 30
-			blue_spawn()
-			red_spawn()
-			yellow_spawn()
-			purple_spawn()
+			standrat_spawn()
+			self.boss_time = 6
 		end
+	end
+	-- SPAWN SUNDUK
+	if self.time_spawn_sunduk < 0 then
+		local spa_snd = math.random()
+		if HARD_GAME == "easy" then
+			if spa_snd < SPAWN_SUNDUK then
+				sunduk_spawn()
+			end
+		elseif HARD_GAME == "medium" then
+			if spa_snd < SPAWN_SUNDUK - 0.1 then
+				sunduk_spawn()
+			end
+		elseif HARD_GAME == "hard" then
+			if spa_snd < SPAWN_SUNDUK - 0.2 then
+				sunduk_spawn()
+			end
+		end
+		self.time_spawn_sunduk = TIME_SUNDUK
 	end
 	
 end
 
-function boost_spawn(col)
-	for i = 1, col do
-		purple_spawn()
-		yellow_spawn()
+function standrat_spawn()
+	local randi = math.random()
+	if randi > 0 and randi < 0.25 then
+		blue_spawn_horizontal_bottom()
+		red_spawn_left()
+		if HARD_GAME == "medium" then
+			purple_spawn()
+			purple_spawn()
+		elseif HARD_GAME == "hard" then
+			yellow_spawn()
+			yellow_spawn()
+			purple_spawn()
+		end
+	elseif randi > 0.25 and randi < 0.5 then
+		blue_spawn_horizontal_up()
+		red_spawn_right()
+		if HARD_GAME == "medium" then
+			yellow_spawn()
+			yellow_spawn()
+		elseif HARD_GAME == "hard" then
+			yellow_spawn()
+			yellow_spawn()
+			purple_spawn()
+			purple_spawn()
+		end
+	elseif randi > 0.5 and randi < 0.75 then
+		blue_spawn_left()
+		blue_spawn_right()
+		red_spawn_horizontal_bottom()
+		if HARD_GAME == "medium" then
+			yellow_spawn()
+			purple_spawn()
+		elseif HARD_GAME == "hard" then
+			yellow_spawn()
+			purple_spawn()
+			purple_spawn()
+		end
+	elseif randi > 0.75 and randi < 1 then
+		blue_spawn_right()
+		red_spawn_horizontal_up()
+		red_spawn_horizontal_bottom()
+		if HARD_GAME == "medium" then
+			yellow_spawn()
+			purple_spawn()
+		elseif HARD_GAME == "hard" then
+			yellow_spawn()
+			purple_spawn()
+			purple_spawn()
+		end
 	end
 end
 
-function first_level(self)
-	if self.boost == 1 then
-		boost_spawn(self.boost)
-	elseif self.boost == 2 then
-		boost_spawn(self.boost)
-	elseif self.boost == 3 then
-		boost_spawn(self.boost)
-	elseif self.boost == 4 then
-		boost_spawn(self.boost)
-	elseif self.boost == 5 then
-		boost_spawn(self.boost)
-	end
-	if self.index == 1 then
-		blue_spawn_left()
-		red_spawn_horizontal_bottom()
-	elseif self.index == 2 then
-		blue_spawn_horizontal_up()
-		red_spawn_left()
-	elseif self.index == 3 then
-		blue_spawn_horizontal_bottom()
-		red_spawn_right()
-	elseif self.index == 4 then
-		blue_spawn_right()
-		red_spawn_horizontal_up()
-	elseif self.index == 5 then
-		blue_spawn_right()
-		blue_spawn_horizontal_bottom()
-		red_spawn_horizontal_up()
-		red_spawn_left()
-	end
-	self.index = self.index + 1
-	if self.index > self.max_index then
-		self.index = 1
-	end
-end
 function blue_spawn_right()
 	spawn_blue_monster(LIST_SPAWN_POSITION_X[math.random(7, 12)], LIST_SPAWN_POSITION_Y[math.random(7, 12)])
 	spawn_blue_monster(LIST_SPAWN_POSITION_X[math.random(7, 12)], LIST_SPAWN_POSITION_Y[math.random(7, 12)])
@@ -205,6 +230,9 @@ function blue_spawn()
 	spawn_blue_monster(LIST_SPAWN_POSITION_X[math.random(1, 12)], LIST_SPAWN_POSITION_Y[math.random(1, 12)])
 	spawn_blue_monster(LIST_SPAWN_POSITION_X[math.random(1, 12)], LIST_SPAWN_POSITION_Y[math.random(1, 12)])
 end
+function mini_boss_spawn()
+	spawn_mini_boss(LIST_SPAWN_POSITION_X[math.random(1, 12)], LIST_SPAWN_POSITION_Y[math.random(1, 12)])
+end
 function boss_spawn()
 	spawn_boss(LIST_SPAWN_POSITION_X[math.random(1, 12)], LIST_SPAWN_POSITION_Y[math.random(1, 12)])
 end
@@ -247,6 +275,14 @@ function spawn_boss(pos_x, pos_y)
 	factory.create("#target",vmath.vector3(pos_x, pos_y, 0), rota, {scl = true})
 	timer.delay(1.5, false, function()
 		local id = factory.create("#boss_factory", vmath.vector3(pos_x, pos_y, 0))
+	end)
+end
+function spawn_mini_boss(pos_x, pos_y)
+	KOL_MONSTER = KOL_MONSTER + 1
+	local rota = vmath.quat_rotation_z(0)
+	factory.create("#target",vmath.vector3(pos_x, pos_y, 0), rota, {scl = true})
+	timer.delay(1.5, false, function()
+		local id = factory.create("#mini_boss", vmath.vector3(pos_x, pos_y, 0))
 	end)
 end
 function spawn_sunduk(pos_x, pos_y)

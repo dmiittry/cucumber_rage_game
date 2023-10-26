@@ -43,6 +43,36 @@ components {
     w: 1.0
   }
 }
+components {
+  id: "boss_dead"
+  component: "/elements_game/particle/boss_dead.particlefx"
+  position {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+}
+components {
+  id: "next_level"
+  component: "/elements_game/sfx/next_level.sound"
+  position {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+}
 embedded_components {
   id: "collisionobject"
   type: "collisionobject"
@@ -57,6 +87,7 @@ embedded_components {
   "mask: \"enemy\"\n"
   "mask: \"player\"\n"
   "mask: \"knife\"\n"
+  "mask: \"expo\"\n"
   "embedded_collision_shape {\n"
   "  shapes {\n"
   "    shape_type: TYPE_SPHERE\n"

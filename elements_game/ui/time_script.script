@@ -1,8 +1,5 @@
 require "elements_game.core.globals"
 
-function init(self)
-	print(CUCUMBER, LEVEL)
-end
 local time = 0
 local second = 0
 

@@ -1,3 +1,4 @@
+require "elements_game.core.const"
 math.randomseed(os.time())
 
 STATE_GAME = {"start", "pause", "menu", "dead", "next_level", "upgrade"} 
@@ -37,6 +38,7 @@ CHAR_UKLON, CHAR_SPEED_SHOOT, SKILL_ADD_AK47, SKILL_ADD_KNIFE, SKILL_PROBITIE}
 STATE = "menu"
 
 -- STATISTIKA
+ALL_KILL_MONSTER = 0
 KOL_MONSTER = 0
 KOL_MONEY = 0
 KOL_DAMAGE = 0
@@ -49,10 +51,11 @@ MONEY = 50
 IS_MOUSE = false
 CUCUMBER = "hop"
 -- SETTINGS
+DURATION_SPAWN_MOSTER = 4
 TIME_NEXT_LEVEL = 120
 PUSH_MONSTER = 50
 LEVEL = 1
-
+TIME_HITTED = 0.3
 
 -- CHAR PLAYER
 HP_PLAYER = 100
@@ -118,11 +121,18 @@ function upgrade_skills(key, value)
 		DAMAGE_BULLET = DAMAGE_BULLET + value
 	elseif key == "speed_pl" then
 		SPEED_PLAYER = SPEED_PLAYER + value
+		if SPEED_PLAYER >= MAX_SPEED_PLAYER then
+			for key, value in pairs(UPGRADE_LIST) do
+				if value == CHAR_SPEED_PLR then
+					table.remove(UPGRADE_LIST, key)
+				end
+			end
+		end
 	elseif key == "regen" then
 		REGEN_PLAYER = REGEN_PLAYER + value
 	elseif key == "vampir" then
 		VAMPIR = VAMPIR + value
-		if VAMPIR >= 9 then
+		if VAMPIR >= MAX_VAMPIR then
 			for key, value in pairs(UPGRADE_LIST) do
 				if value == CHAR_VAMPIR then
 					table.remove(UPGRADE_LIST, key)
@@ -133,7 +143,7 @@ function upgrade_skills(key, value)
 		DAMAGE_UNIT = DAMAGE_UNIT + value
 	elseif key == "critical" then
 		CRITICAL = CRITICAL + value
-		if CRITICAL > 40 then
+		if CRITICAL > MAX_CRITICAL then
 			for key, value in pairs(UPGRADE_LIST) do
 				if value == CHAR_CRITICAL then
 					table.remove(UPGRADE_LIST, key)
@@ -142,7 +152,7 @@ function upgrade_skills(key, value)
 		end
 	elseif key == "armor" then
 		ARMOR = ARMOR + value
-		if ARMOR > 30 then
+		if ARMOR > MAX_ARMOR then
 			for key, value in pairs(UPGRADE_LIST) do
 				if value == CHAR_ARMOR then
 					table.remove(UPGRADE_LIST, key)
@@ -151,7 +161,7 @@ function upgrade_skills(key, value)
 		end
 	elseif key == "uklon" then
 		UKLON_PLAYER = UKLON_PLAYER + value
-		if UKLON_PLAYER >= 30 then
+		if UKLON_PLAYER >= MAX_UKLON_PLAYER then
 			for key, value in pairs(UPGRADE_LIST) do
 				if value == CHAR_UKLON then
 					table.remove(UPGRADE_LIST, key)
@@ -160,8 +170,8 @@ function upgrade_skills(key, value)
 		end
 	elseif key == "speed_shoot" then
 		SPEED_SHOOT = SPEED_SHOOT - value/100
-		if SPEED_SHOOT < 0.3 then
-			SPEED_SHOOT = 0.29
+		if SPEED_SHOOT < MAX_SPEED_SHOOT then
+			-- SPEED_SHOOT = MAX_SPEED_SHOOT
 			for key, value in pairs(UPGRADE_LIST) do
 				if value == CHAR_SPEED_SHOOT then
 					table.remove(UPGRADE_LIST, key)
@@ -174,7 +184,7 @@ function upgrade_skills(key, value)
 		add_knife()
 	elseif key == "probitie" then
 		KOL_PROBITIE = KOL_PROBITIE + 1
-		if KOL_PROBITIE > 1 then
+		if KOL_PROBITIE >= MAX_KOL_PROBITIE then
 			for key, value in pairs(UPGRADE_LIST) do
 				if value == SKILL_PROBITIE then
 					table.remove(UPGRADE_LIST, key)
@@ -185,8 +195,8 @@ function upgrade_skills(key, value)
 		KNIFE_DAMAGE = KNIFE_DAMAGE + value
 	elseif key == "up_speed_ak" then
 		TIME_SHOOT_AK47 = TIME_SHOOT_AK47 - value/100
-		if TIME_SHOOT_AK47 <= 0.5 then
-			TIME_SHOOT_AK47 = 0.5
+		if TIME_SHOOT_AK47 <= MAX_TIME_SHOOT_AK47 then
+			-- TIME_SHOOT_AK47 = MAX_TIME_SHOOT_AK47
 			for key, value in pairs(UPGRADE_LIST) do
 				if value == UP_SPEED_AK then
 					table.remove(UPGRADE_LIST, key)
@@ -195,8 +205,8 @@ function upgrade_skills(key, value)
 		end
 	elseif key == "up_speed_knife" then
 		TIME_KNIFE = TIME_KNIFE - value/100
-		if TIME_KNIFE <= 0.8 then
-			TIME_KNIFE = 0.8
+		if TIME_KNIFE <= MAX_TIME_KNIFE then
+			-- TIME_KNIFE = MAX_TIME_KNIFE
 			for key, value in pairs(UPGRADE_LIST) do
 				if value == UP_SPEED_KNIFE then
 					table.remove(UPGRADE_LIST, key)
@@ -214,10 +224,10 @@ function upgrade_skills(key, value)
 end
 --SUNDUK
 HP_SUNDUK = 50
-TIME_SUNDUK = 60
-MONEY_SUNDUK = 300
+TIME_SUNDUK = 52
+MONEY_SUNDUK = math.random(150,300)
 SCORE_SUNDUK = 20
-SPAWN_SUNDUK = 51 --%
+SPAWN_SUNDUK = 0.51 --%
 --RED MONSTER
 MONEY_RED = 6
 SCORE_RED = 4
@@ -248,7 +258,7 @@ SPEED_YELLOW = 40
 MONEY_BOSS = 500
 SCORE_BOSS = 500
 HEALTH_BOSS = 100
-DAMAGE_BOSS = MAX_HP_PLAYER + ARMOR
+DAMAGE_BOSS = MAX_HP_PLAYER - 20
 SPEED_BOSS = 15
 TIME_SHOOT_BOSS = 0.8
 --MINIS
@@ -257,6 +267,13 @@ SCORE_MINIS = 2
 HEALTH_MINIS = DAMAGE_BULLET * 2
 DAMAGE_MINIS = MAX_HP_PLAYER / 2
 SPEED_MINIS = 80
+--BOSS TYKVA
+MONEY_BOSS_TYKVA = 150
+SCORE_BOSS_TYKVA = 100
+HEALTH_BOSS_TYKVA = 500
+DAMAGE_BOSS_TYKVA = 80
+SPEED_BOSS_TYKVA = 50
+TIME_SHOOT_BOSS_TYKVA = 2
 
 local max_level = 20
 function change_exp(value)
@@ -291,7 +308,11 @@ function change_exp(value)
 			MONEY_RED = 2
 			MONEY_PURPLE = 2
 			MONEY_YELLOW = 2.5 
-		elseif LEVEL % 11 == 10 then
+			HEALTH_BOSS_TYKVA = HEALTH_BOSS_TYKVA + 250
+			DAMAGE_BOSS_TYKVA = DAMAGE_BOSS_TYKVA + 10
+		elseif LEVEL % 11 == 0 then
+			HEALTH_BOSS_TYKVA = HEALTH_BOSS_TYKVA + 350
+			DAMAGE_BOSS_TYKVA = DAMAGE_BOSS_TYKVA + 20
 			HEALTH_BLUE = HEALTH_BLUE + 20
 			HEALTH_RED = HEALTH_RED + 20
 			HEALTH_PURPLE = HEALTH_PURPLE + 20
@@ -348,13 +369,12 @@ function change_weapon(value)
 		DAMAGE_BULLET = 8
 		SPEED_SHOOT = 0.8
 	elseif value == "two-pistol" then
-		DAMAGE_BULLET = 9
+		DAMAGE_BULLET = 6
 		SPEED_SHOOT = 0.7
 	elseif value == "ak47" then
 		DAMAGE_BULLET = 20
 		SPEED_SHOOT = 0.8
 	end
-	print(DAMAGE_BULLET)
 end
 		
 function hop_cucumber()
@@ -370,11 +390,13 @@ function hop_cucumber()
 	SPEED_PLAYER = 80
 	-- AK47
 	TIME_SHOOT_AK47 = 1 -- max 0.3
-	AK = 0
-	KNIFE = 0
 	KNIFE_DAMAGE = 15
 	TIME_KNIFE = 1.5 -- max 1 sek
 	HEADSHOT = 0
+	-- add ak47 and knife
+	AK = 0
+	KNIFE = 0
+	-- STATISTIKA
 	KOL_PROBITIE = 0
 	KOL_MONSTER = 0
 	KOL_MONEY = 0
@@ -383,26 +405,49 @@ function hop_cucumber()
 	KOL_POL_URON = 0
 	KOL_POGL_URON = 0
 	EXP = 0
-	MONEY = 50
+	MONEY = 150
+	-- MAX CHAR PLAYER
+	MAX_VAMPIR = 9 -- % max 9
+	MAX_CRITICAL = 25
+	MAX_ARMOR = 25   -- %
+	MAX_UKLON_PLAYER = 30 -- max 30 %
+	MAX_SPEED_PLAYER = 100
+	MAX_SPEED_SHOOT = 0.3 -- sekunda - max 0.2
+	-- AK47 and KNIFE
+	MAX_TIME_SHOOT_AK47 = 0.5 -- max 0.3
+	MAX_TIME_KNIFE = 0.5 -- max 1 sek
+	MAX_KOL_PROBITIE = 2
+	--------
 end
 function nik_cucumber()
 	CUCUMBER = "nik"
-	HP_PLAYER = 80
-	MAX_HP_PLAYER = 80
+	HP_PLAYER = 150
+	MAX_HP_PLAYER = 150
 	REGEN_PLAYER = 0 -- /10 max 30
 	VAMPIR = 0 -- % max 9
 	DAMAGE_UNIT = 30
-	CRITICAL = 0   -- %
-	ARMOR = 5 -- %
+	CRITICAL = 5   -- %
+	ARMOR = 3 -- %
 	UKLON_PLAYER = 10 -- max 30 %
-	SPEED_PLAYER = 100
+	SPEED_PLAYER = 90
 	-- AK47
 	TIME_SHOOT_AK47 = 1 -- max 0.3
 	AK = 0
 	KNIFE = 0
 	KNIFE_DAMAGE = 15
 	TIME_KNIFE = 1.5 -- max 1 sek
-
+	-- MAX CHAR PLAYER
+	MAX_VAMPIR = 9 -- % max 9
+	MAX_CRITICAL = 40
+	MAX_ARMOR = 20   -- %
+	MAX_UKLON_PLAYER = 40 -- max 30 %
+	MAX_SPEED_PLAYER = 120
+	MAX_SPEED_SHOOT = 0.25 -- sekunda - max 0.2
+	-- AK47 and KNIFE
+	MAX_TIME_SHOOT_AK47 = 0.45 -- max 0.3
+	MAX_TIME_KNIFE = 0.8 -- max 1 sek
+	MAX_KOL_PROBITIE = 2
+	--------
 	HEADSHOT = 0
 	KOL_PROBITIE = 0
 	KOL_MONSTER = 0
@@ -416,14 +461,14 @@ function nik_cucumber()
 end
 function vampir_cucumber()
 	CUCUMBER = "vampir"
-	HP_PLAYER = 150
-	MAX_HP_PLAYER = 150
+	HP_PLAYER = 90
+	MAX_HP_PLAYER = 90
 	REGEN_PLAYER = 0 -- /10 max 30
 	VAMPIR = 30 -- % max 9
 	DAMAGE_UNIT = 30
 	CRITICAL = 0   -- %
-	ARMOR = 0 -- %
-	UKLON_PLAYER = 30 -- max 30 %
+	ARMOR = 1 -- %
+	UKLON_PLAYER = 0 -- max 30 %
 	SPEED_PLAYER = 100
 	-- AK47
 	TIME_SHOOT_AK47 = 1 -- max 0.3
@@ -431,6 +476,18 @@ function vampir_cucumber()
 	KNIFE = 0
 	KNIFE_DAMAGE = 15
 	TIME_KNIFE = 1.5 -- max 1 sek
+	-- MAX CHAR PLAYER
+	MAX_VAMPIR = 40 -- % max 9
+	MAX_CRITICAL = 40
+	MAX_ARMOR = 20   -- %
+	MAX_UKLON_PLAYER = 30 -- max 30 %
+	MAX_SPEED_PLAYER = 140
+	MAX_SPEED_SHOOT = 0.25 -- sekunda - max 0.2
+	-- AK47 and KNIFE
+	MAX_TIME_SHOOT_AK47 = 0.4 -- max 0.3
+	MAX_TIME_KNIFE = 0.7 -- max 1 sek
+	MAX_KOL_PROBITIE = 2
+	--------
 
 	HEADSHOT = 0
 	KOL_PROBITIE = 0
@@ -441,7 +498,7 @@ function vampir_cucumber()
 	KOL_POL_URON = 0
 	KOL_POGL_URON = 0
 	EXP = 0
-	MONEY = 50
+	MONEY = 100
 end
 function arni_cucumber()
 	CUCUMBER = "arni"
@@ -455,13 +512,25 @@ function arni_cucumber()
 	UKLON_PLAYER = 0 -- max 30 %
 	SPEED_PLAYER = 80
 	-- AK47
-	TIME_SHOOT_AK47 = 1 -- max 0.3
+	TIME_SHOOT_AK47 = 0.8 -- max 0.3
 	AK = 0
 	KNIFE = 0
-	KNIFE_DAMAGE = 15
-	TIME_KNIFE = 1.5 -- max 1 sek
-
+	KNIFE_DAMAGE = 25
+	TIME_KNIFE = 1.1 -- max 1 sek
 	HEADSHOT = 0
+	-- MAX CHAR PLAYER
+	MAX_VAMPIR = 9 -- % max 9
+	MAX_CRITICAL = 40
+	MAX_ARMOR = 60   -- %
+	MAX_UKLON_PLAYER = 25 -- max 30 %
+	MAX_SPEED_PLAYER = 100
+	MAX_SPEED_SHOOT = 0.4 -- sekunda - max 0.2
+	-- AK47 and KNIFE
+	MAX_TIME_SHOOT_AK47 = 0.25 -- max 0.3
+	MAX_TIME_KNIFE = 0.5 -- max 1 sek
+	MAX_KOL_PROBITIE = 2
+	--------
+	
 	KOL_PROBITIE = 0
 	KOL_MONSTER = 0
 	KOL_MONEY = 0
@@ -470,11 +539,21 @@ function arni_cucumber()
 	KOL_POL_URON = 0
 	KOL_POGL_URON = 0
 	EXP = 0
-	MONEY = 50
+	MONEY = 100
 end
 
 function defold_monster()
-	UPGRADE_LIST = STARNDART_LIST
+	DURATION_SPAWN_MOSTER = 4
+	UPGRADE_LIST = {}
+	for key,value in pairs(STARNDART_LIST) do 
+		UPGRADE_LIST[key] = value
+	end
+	MONEY_BOSS_TYKVA = 150
+	SCORE_BOSS_TYKVA = 100
+	HEALTH_BOSS_TYKVA = 500
+	DAMAGE_BOSS_TYKVA = 80
+	SPEED_BOSS_TYKVA = 50
+	TIME_SHOOT_BOSS_TYKVA = 2
 	--SUNDUK
 	HP_SUNDUK = 50
 	TIME_SUNDUK = 60

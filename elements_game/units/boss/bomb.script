@@ -1,0 +1,25 @@
+require "elements_game.core.globals"
+go.property('dir', vmath.vector3())
+go.property('damage', 0)
+
+function init(self)
+	math.randomseed(os.time())
+	self.speed = 150
+	self.time_life = math.random(1.5,2.5)
+	go.set(".", "scale", vmath.vector3(1,1,1))
+	go.animate(".", "scale", go.PLAYBACK_LOOP_PINGPONG, vmath.vector3(1.3,1.3,1.3), go.EASING_LINEAR, 0.5)
+end
+
+function update(self, dt)
+	self.time_life = self.time_life - dt
+	if self.time_life > 1 then
+		local pos = go.get_position()
+		local new_pos = pos + dt * self.speed * self.dir
+		go.set_position(new_pos)
+	elseif self.time_life < 1  and self.time_life > 0 then
+		go.animate("#sprite", "tint", go.PLAYBACK_ONCE_PINGPONG, vmath.vector4(150,255,55,1), go.EASING_LINEAR, 1, 0)
+	elseif self.time_life < 0 then
+		factory.create("#factory")
+		go.delete()
+	end
+end

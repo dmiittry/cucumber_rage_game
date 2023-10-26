@@ -87,6 +87,7 @@ embedded_components {
   "mask: \"enemy\"\n"
   "mask: \"player\"\n"
   "mask: \"knife\"\n"
+  "mask: \"expo\"\n"
   "embedded_collision_shape {\n"
   "  shapes {\n"
   "    shape_type: TYPE_BOX\n"

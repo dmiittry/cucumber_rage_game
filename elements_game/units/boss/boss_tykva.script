@@ -4,46 +4,29 @@ local knife_dmg = true
 
 function init(self)
 	self.sfera = 5
-	self.laser = 2
-	self.laser_shoot = 1.5
-	self.laser_time = 3.5
 	self.speed_time = 5
 	math.randomseed(os.time())
-	self.speed = SPEED_BOSS
-	self.health = HEALTH_BOSS * (DAMAGE_BULLET + KNIFE_DAMAGE + DAMAGE_UNIT) * (2 - SPEED_SHOOT + TIME_SHOOT_AK47)*2
-	self.health_in = HEALTH_BOSS * (DAMAGE_BULLET + KNIFE_DAMAGE + DAMAGE_UNIT) * (2 - SPEED_SHOOT + TIME_SHOOT_AK47)*2
-	-- self.health = 100
-	-- self.health_in = 100
-	self.time_shoot = TIME_SHOOT_BOSS
+	self.speed = SPEED_BOSS_TYKVA
+	self.health = HEALTH_BOSS_TYKVA
+	self.health_in = HEALTH_BOSS_TYKVA
+	self.time_shoot = TIME_SHOOT_BOSS_TYKVA
 	self.move = true
 	self.fire = false
-	self.spawn = false
-	self.spawn_time = 15
 	timer.delay(1, false, function() self.fire = true end)
-	self.damage = DAMAGE_BOSS - 20
-	msg.post("#laser", "disable")
-	msg.post("#laser_v", "disable")
-	msg.post("#laser_v1", "disable")
-	msg.post("#laser_h", "disable")
-	go.animate(".", "scale", go.PLAYBACK_LOOP_PINGPONG, vmath.vector3(1.3,1.3,1), go.EASING_LINEAR, 2)
-	local rad = go.get(".", "euler.z")
-	go.animate(".", "euler.z", go.PLAYBACK_LOOP_FORWARD, rad + 360, go.EASING_LINEAR, 13)
-	sound.play("#boss_fight")
-	print("HP", self.health)
-	print("DMG", self.damage, MAX_HP_PLAYER, DAMAGE_BOSS)
+	self.damage = DAMAGE_BOSS_TYKVA
+	go.animate(".", "scale", go.PLAYBACK_LOOP_PINGPONG, vmath.vector3(1.2,1.2,1), go.EASING_LINEAR, 2)
 end
 
 local function red_dead_monster(self)
-	self.move = false
 	self.fire = false
-	sound.play("#next_level")
-	particlefx.play("#boss_dead")
+	msg.post("/player/one_pistol", "dead_monster")
+	change_exp(SCORE_BOSS_TYKVA)
+	change_money(MONEY_BOSS_TYKVA)
 	go.cancel_animations(".", "position")
 	msg.post("#collisionobject", "disable")
 	go.animate(".", "scale", go.PLAYBACK_ONCE_FORWARD, vmath.vector3(0,0,0), go.EASING_OUTSINE, 0.5)
 	go.animate(".", "rotation", go.PLAYBACK_ONCE_FORWARD, vmath.quat(0,0,1,1), go.EASING_OUTSINE, 0.5)
-	timer.delay(1.8, false, function()
-		msg.post("main:/spawn_monster/go#spawn", "boss_dead")
+	timer.delay(0.7, false, function()
 		go.delete()
 	end)
 end
@@ -105,8 +88,8 @@ local function red_move_monster(tg, self)
 	go.animate(".", "position", go.PLAYBACK_ONCE_FORWARD, target_pos, go.EASING_LINEAR, duration, 0)
 end
 
-local directionx = {0, 30, 60, 90, 120, -30, -60, -90, -120}
-local directiony = {0, 30, 60, 90, 120, -30, -60, -90, -120}
+local directionx = {30, 60, 90, 120, -30, -60, -90, -120}
+local directiony = {30, 60, 90, 120, -30, -60, -90, -120}
 
 local function shoot(target_position, gl , self)
 	if target_position == gl then
@@ -120,20 +103,6 @@ local function shoot(target_position, gl , self)
 	end
 	timer.delay(self.time_shoot, false, function() self.fire = true end)
 end
-
-local function spawn_enemy(target_position, gl, self)
-	if target_position == gl then
-		target_position = target_position + vmath.vector3(0.1,0.1,0)
-	end
-	local rota = vmath.quat_rotation_z(0)
-	for i = 1 , #directionx do
-		KOL_MONSTER = KOL_MONSTER + 1
-		local dir = vmath.vector3(target_position.x- gl.x, target_position.y - gl.y, 0)
-		dir = dir - vmath.vector3(directionx[i],directiony[i], 0)
-		local bullet = factory.create("#minis_factory", gl , rota, {dir = vmath.normalize(dir)})
-	end
-end
-
 function on_message(self, message_id, message, sender)
 	if message_id == hash("hit") then
 		hitted_animate(self)
@@ -151,7 +120,7 @@ function on_message(self, message_id, message, sender)
 				msg.post(message.other_id, "hit_player", {value = self.damage})
 			end
 		end
-		
+
 	elseif message_id == hash("collision_response") then
 		if message.other_group == hash("trigger") then
 			local tg = message.other_position
@@ -161,10 +130,6 @@ function on_message(self, message_id, message, sender)
 				shoot(target_position, gl, self)
 				self.fire = false
 			end
-			if self.spawn then
-				spawn_enemy(target_position, gl, self)
-				self.spawn = false
-			end
 			red_move_monster(tg, self)
 		end
 	elseif message_id == hash("contact_point_response") then
@@ -173,64 +138,16 @@ function on_message(self, message_id, message, sender)
 		end
 	end
 end
-	
+
 function update(self, dt)
-	self.spawn_time = self.spawn_time - dt
-	self.speed_time = self.speed_time - dt
-	self.sfera = self.sfera - dt
-	if self.speed_time < 0 then
-		self.speed = 20
-	end
-	if self.spawn_time < 0 then
-		self.spawn = true
-		self.spawn_time = 10
-	end
-	if self.health < self.health_in - 1000 then
-		self.spawn_time = 8
+	if self.health < self.health_in - 200 then
+		self.damage = self.damage + 5
 	elseif self.health < self.health_in /2 then
-		self.spawn_time = 7
+		self.damage = self.damage + 15
 	elseif self.health < self.health_in /5 then
-		self.spawn_time = 6
+		self.damage = self.damage + 30
 	elseif self.health < self.health_in /10 then
-		self.damage = 200
-		self.spawn_time = 5
-	end
-	if self.sfera < 0 then
-		self.fire = false
-		self.laser = self.laser - dt
-		if self.laser < 0 then
-			go.set("#laser_h", "size", vmath.vector3(1280, 2, 0))
-			go.set("#laser_v1", "size", vmath.vector3(1280, 2, 0))
-			go.set("#laser_v", "size", vmath.vector3(1280, 2, 0))
-			msg.post("#laser_v", "enable")
-			msg.post("#laser_v1", "enable")
-			msg.post("#laser_h", "enable")
-			self.laser_shoot = self.laser_shoot - dt
-			if self.laser_shoot < 0 then
-				go.set("#laser_h", "size", vmath.vector3(1280, 10, 0))
-				go.set("#laser_v1", "size", vmath.vector3(1280, 10, 0))
-				go.set("#laser_v", "size", vmath.vector3(1280, 10, 0))
-				msg.post("#laser", "enable")
-				go.animate("#laser_v", "size", go.PLAYBACK_LOOP_PINGPONG, vmath.vector3(1280, 15, 0), go.EASING_LINEAR, 0.2)
-				go.animate("#laser_v1", "size", go.PLAYBACK_LOOP_PINGPONG, vmath.vector3(1280, 15, 0), go.EASING_LINEAR, 0.2)
-				go.animate("#laser_h", "size", go.PLAYBACK_LOOP_PINGPONG, vmath.vector3(1280, 15, 0), go.EASING_LINEAR, 0.2)
-				self.laser_time = self.laser_time - dt
-				if self.laser_time < 0 then
-					msg.post("#laser", "disable")
-					msg.post("#laser_v", "disable")
-					msg.post("#laser_v1", "disable")
-					msg.post("#laser_h", "disable")
-					go.cancel_animations("#laser_v", "size")
-					go.cancel_animations("#laser_v1", "size")
-					go.cancel_animations("#laser_h", "size")
-					self.sfera = 5
-					self.fire = true
-					self.laser_time = 3.5
-					self.laser_shoot = 1.5
-					self.laser = 2
-				end
-			end
-		end
+		self.damage = self.damage * 2
 	end
 end
 
