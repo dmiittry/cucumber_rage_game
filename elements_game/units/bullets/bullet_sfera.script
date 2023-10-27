@@ -3,6 +3,7 @@ go.property('dir', vmath.vector3())
 go.property('damage', 0)
 
 function init(self)
+	sound.play("#shoot_monster")
 	self.speed = 100
 	self.time_life = 5
 	go.set(".", "scale", vmath.vector3(1,1,1))

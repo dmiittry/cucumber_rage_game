@@ -45,6 +45,7 @@ KOL_DAMAGE = 0
 KOL_REGEN_HP = 0
 KOL_POL_URON = 0
 KOL_POGL_URON = 0
+KOL_REV = 0
 EXP = 0
 MONEY = 50
 
@@ -56,6 +57,7 @@ TIME_NEXT_LEVEL = 120
 PUSH_MONSTER = 50
 LEVEL = 1
 TIME_HITTED = 0.3
+LANG_RUS = true
 
 -- CHAR PLAYER
 HP_PLAYER = 100
@@ -257,8 +259,8 @@ SPEED_YELLOW = 40
 --BOSS
 MONEY_BOSS = 500
 SCORE_BOSS = 500
-HEALTH_BOSS = 100
-DAMAGE_BOSS = MAX_HP_PLAYER - 20
+HEALTH_BOSS = 200
+DAMAGE_BOSS = MAX_HP_PLAYER 
 SPEED_BOSS = 15
 TIME_SHOOT_BOSS = 0.8
 --MINIS
@@ -275,8 +277,25 @@ DAMAGE_BOSS_TYKVA = 80
 SPEED_BOSS_TYKVA = 50
 TIME_SHOOT_BOSS_TYKVA = 2
 
+local add_every = 2
+local add_five_level = 20
+local add_ten_level = 40
 local max_level = 20
 function change_exp(value)
+	if HARD_GAME == "easy" then
+		add_every = 2
+		add_five_level = 10
+		add_ten_level = 20
+	elseif HARD_GAME == "medium" then
+		add_every = 3
+		add_five_level = 20
+		add_ten_level = 30
+	elseif HARD_GAME == "hard" then
+		add_every = 4
+		add_five_level = 20
+		add_ten_level = 40
+	end
+		
 	EXP = EXP + value
 	if max_level == LEVEL then
 		table.insert(EXP_LVL, EXP_LVL[#EXP_LVL] + 1200)
@@ -284,47 +303,51 @@ function change_exp(value)
 	if EXP >= EXP_LVL[LEVEL] then
 		msg.post("/player/cucumber#cucumber", "next_level")
 		LEVEL = LEVEL + 1
-		HEALTH_BLUE = HEALTH_BLUE + 2
-		HEALTH_RED = HEALTH_RED + 2
-		HEALTH_PURPLE = HEALTH_PURPLE + 2
-		HEALTH_YELLOW = HEALTH_YELLOW + 2
-		DAMAGE_BLUE = DAMAGE_BLUE + 2
-		DAMAGE_RED = DAMAGE_RED + 2
-		DAMAGE_PURPLE = DAMAGE_PURPLE + 2
-		DAMAGE_YELLOW = DAMAGE_YELLOW + 2
+		HEALTH_BLUE = HEALTH_BLUE + add_every
+		HEALTH_RED = HEALTH_RED + add_every
+		HEALTH_PURPLE = HEALTH_PURPLE + add_every
+		HEALTH_YELLOW = HEALTH_YELLOW + add_every
+		DAMAGE_BLUE = DAMAGE_BLUE + add_every
+		DAMAGE_RED = DAMAGE_RED + add_every
+		DAMAGE_PURPLE = DAMAGE_PURPLE + add_every
+		DAMAGE_YELLOW = DAMAGE_YELLOW + add_every
 		if LEVEL % 5 == 0 then
 			if LEVEL == 5 then
 				table.insert(UPGRADE_LIST, SKILL_HEADSHOT)
 			end
-			HEALTH_BLUE = HEALTH_BLUE + 10
-			HEALTH_RED = HEALTH_RED + 10
-			HEALTH_PURPLE = HEALTH_PURPLE + 10
-			HEALTH_YELLOW = HEALTH_YELLOW + 20
-			DAMAGE_BLUE = DAMAGE_BLUE + 10
-			DAMAGE_RED = DAMAGE_RED + 10
-			DAMAGE_PURPLE = DAMAGE_PURPLE + 10
-			DAMAGE_YELLOW = DAMAGE_YELLOW + 20
+			HEALTH_BLUE = HEALTH_BLUE + add_five_level
+			HEALTH_RED = HEALTH_RED + add_five_level
+			HEALTH_PURPLE = HEALTH_PURPLE + add_five_level
+			HEALTH_YELLOW = HEALTH_YELLOW + add_five_level + 20
+			DAMAGE_BLUE = DAMAGE_BLUE + add_five_level
+			DAMAGE_RED = DAMAGE_RED + add_five_level
+			DAMAGE_PURPLE = DAMAGE_PURPLE + add_five_level
+			DAMAGE_YELLOW = DAMAGE_YELLOW + add_five_level + 20
 			MONEY_BLUE = 1.5
 			MONEY_RED = 2
 			MONEY_PURPLE = 2
 			MONEY_YELLOW = 2.5 
-			HEALTH_BOSS_TYKVA = HEALTH_BOSS_TYKVA + 250
-			DAMAGE_BOSS_TYKVA = DAMAGE_BOSS_TYKVA + 10
-		elseif LEVEL % 11 == 0 then
-			HEALTH_BOSS_TYKVA = HEALTH_BOSS_TYKVA + 350
-			DAMAGE_BOSS_TYKVA = DAMAGE_BOSS_TYKVA + 20
-			HEALTH_BLUE = HEALTH_BLUE + 20
-			HEALTH_RED = HEALTH_RED + 20
-			HEALTH_PURPLE = HEALTH_PURPLE + 20
-			HEALTH_YELLOW = HEALTH_YELLOW + 40
-			DAMAGE_BLUE = DAMAGE_BLUE + 20
-			DAMAGE_RED = DAMAGE_RED + 20
-			DAMAGE_PURPLE = DAMAGE_PURPLE + 20
-			DAMAGE_YELLOW = DAMAGE_YELLOW + 50
+			HEALTH_BOSS_TYKVA = HEALTH_BOSS_TYKVA + 250 + add_five_level
+			DAMAGE_BOSS_TYKVA = DAMAGE_BOSS_TYKVA + 10 + add_five_level
+		elseif LEVEL == 10 or LEVEL == 20 then
+			HEALTH_BOSS_TYKVA = HEALTH_BOSS_TYKVA + add_ten_level
+			DAMAGE_BOSS_TYKVA = DAMAGE_BOSS_TYKVA + add_ten_level
+			HEALTH_BLUE = HEALTH_BLUE + add_ten_level
+			HEALTH_RED = HEALTH_RED + add_ten_level
+			HEALTH_PURPLE = HEALTH_PURPLE + add_ten_level
+			HEALTH_YELLOW = HEALTH_YELLOW + add_ten_level + 20
+			DAMAGE_BLUE = DAMAGE_BLUE + add_ten_level
+			DAMAGE_RED = DAMAGE_RED + add_ten_level
+			DAMAGE_PURPLE = DAMAGE_PURPLE + add_ten_level
+			DAMAGE_YELLOW = DAMAGE_YELLOW + add_ten_level + 20
 			MONEY_BLUE = 1
 			MONEY_RED = 1
 			MONEY_PURPLE = 1
 			MONEY_YELLOW = 2
+		elseif LEVEL > 20 then
+			add_every = 5
+		elseif LEVEL > 25 then
+			add_every = 10
 		end
 	end
 end
@@ -543,6 +566,10 @@ function arni_cucumber()
 end
 
 function defold_monster()
+	KOL_REV = 0
+	add_every = 2
+	add_five_level = 10
+	add_ten_level = 20
 	DURATION_SPAWN_MOSTER = 4
 	UPGRADE_LIST = {}
 	for key,value in pairs(STARNDART_LIST) do 

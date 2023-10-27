@@ -73,6 +73,21 @@ components {
     w: 1.0
   }
 }
+components {
+  id: "laser1"
+  component: "/elements_game/sfx/laser.sound"
+  position {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+}
 embedded_components {
   id: "collisionobject"
   type: "collisionobject"

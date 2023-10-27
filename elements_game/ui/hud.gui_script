@@ -4,9 +4,12 @@ local change_coins = 5
 local free_upgrade = true
 
 
+local text_upgrade = " LVL - магазин"
 function init(self)
+	print(msg.url())
 	change_state('next')
 	math.randomseed(os.time())
+	msg.post(".", "change_lang")
 	msg.post(".", "acquire_input_focus")
 	ADD_MONEY_BOX = gui.get_node("add_money")
 	ADD_MONEY_TEXT = gui.get_node("add_money_text")
@@ -87,7 +90,7 @@ function init(self)
 	elseif CUCUMBER == "arni" then
 		gui.play_flipbook(ICON, "armor1")
 	end
-	text_update()
+	text_update(self)
 	gui.set_enabled(CHAR_BOX, true)
 end
 
@@ -185,8 +188,8 @@ function update(self, dt)
 end
 
 		
-function text_update()
-	gui.set_text(UPGRADE_TEXT, LEVEL .. " LVL - магазин")
+function text_update(self)
+	gui.set_text(UPGRADE_TEXT, LEVEL .. text_upgrade)
 	gui.set_text(SPEED_TEXT, "скорость: ".. SPEED_PLAYER .. "/" .. MAX_SPEED_PLAYER)
 	if CONST_SPEED_PLAYER >= SPEED_PLAYER then
 		gui.set_color(SPEED_TEXT, WHITE_COLOR)
@@ -322,7 +325,7 @@ function choose_upgrade()
 	end
 		
 	if VALUE1 >= 5 then
-		BUY1 = BUY1 + math.random(15, 25)
+		BUY1 = BUY1 + 3
 		gui.set_color(TEXT1, GREEN_COLOR)
 	end
 	if first.value == 0 then
@@ -346,7 +349,7 @@ function choose_upgrade()
 		end
 	end
 	if VALUE2 >= 5 then
-		BUY2 = BUY2 + math.random(20, 30)
+		BUY2 = BUY2 * 3
 		gui.set_color(TEXT2, GREEN_COLOR)
 	end
 
@@ -371,7 +374,7 @@ function choose_upgrade()
 		end
 	end
 	if VALUE3 >= 5 then
-		BUY3 = BUY3 + math.random(15, 25)
+		BUY3 = BUY3 * 3
 		gui.set_color(TEXT3, GREEN_COLOR)
 	end
 
@@ -396,7 +399,7 @@ function choose_upgrade()
 		end
 	end
 	if VALUE4 >= 5 then
-		BUY4 = BUY4 + math.random(15, 25)
+		BUY4 = BUY4 * 3
 		gui.set_color(TEXT4, GREEN_COLOR)
 	end
 	if fore.value == 0 then
@@ -484,10 +487,10 @@ function on_input(self, action_id, action)
 			gui.set_enabled(BOX, false)
 		end
 		BUY = 0
-		text_update()
+		text_update(self)
 	elseif action_id == hash("fire") and action.released and gui.pick_node(CLOSE_BOX, action.x, action.y) and gui.is_enabled(UPGRADE_BOX) and gui.is_enabled(CLOSE_BOX) then
 		gui.set_enabled(UPGRADE_BOX, false)
-		text_update()
+		text_update(self)
 		free_upgrade = true
 		change_state('start')
 		change_coins = 5
@@ -505,6 +508,14 @@ function on_message(self, message_id, message, sender)
 			gui.set_enabled(CHAR_BOX, not gui.is_enabled(CHAR_BOX))
 		else
 			gui.set_enabled(CHAR_BOX, message.value)
+		end
+	elseif message_id == hash("change_lang") then
+		print(LANG_RUS)
+		if LANG_RUS then
+			text_upgrade = " LVL - магазин"
+		else
+			text_upgrade = " LVL - shop"
+
 		end
 	end
 end

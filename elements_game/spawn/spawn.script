@@ -20,6 +20,7 @@ function init(self)
 	self.index = 1
 	self.max_index = 4
 	self.time_spawn_sunduk = TIME_SUNDUK
+	-- mini_boss_spawn()
 	if HARD_GAME == "hard" then
 		mini_boss_spawn()
 	end

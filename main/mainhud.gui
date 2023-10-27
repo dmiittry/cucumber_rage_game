@@ -302,7 +302,7 @@ nodes {
   blend_mode: BLEND_MODE_ALPHA
   text: "continue"
   font: "cirillic"
-  id: "text"
+  id: "continue_text"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
   pivot: PIVOT_CENTER
@@ -428,7 +428,7 @@ nodes {
   blend_mode: BLEND_MODE_ALPHA
   text: "exit"
   font: "cirillic"
-  id: "text1"
+  id: "exit_text"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
   pivot: PIVOT_CENTER
@@ -481,7 +481,7 @@ nodes {
   }
   size {
     x: 250.0
-    y: 200.0
+    y: 250.0
     z: 0.0
     w: 1.0
   }
@@ -514,14 +514,14 @@ nodes {
   template_node_child: false
   size_mode: SIZE_MODE_MANUAL
   custom_type: 0
-  enabled: true
+  enabled: false
   visible: true
   material: ""
 }
 nodes {
   position {
     x: 0.0
-    y: 66.0129
+    y: 78.0129
     z: 0.0
     w: 1.0
   }
@@ -588,7 +588,7 @@ nodes {
 nodes {
   position {
     x: 0.652598
-    y: 20.4249
+    y: 29.4249
     z: 0.0
     w: 1.0
   }
@@ -714,7 +714,7 @@ nodes {
 nodes {
   position {
     x: 0.652598
-    y: -81.77255
+    y: -96.77255
     z: 0.0
     w: 1.0
   }
@@ -805,7 +805,7 @@ nodes {
   blend_mode: BLEND_MODE_ALPHA
   text: "\321\201\320\264\320\260\321\202\321\214\321\201\321\217!"
   font: "cirillic"
-  id: "text3"
+  id: "exit_text3"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
   pivot: PIVOT_CENTER
@@ -840,7 +840,7 @@ nodes {
 nodes {
   position {
     x: 0.652598
-    y: -13.081551
+    y: -4.081551
     z: 0.0
     w: 1.0
   }
@@ -1017,7 +1017,7 @@ nodes {
   template_node_child: false
   size_mode: SIZE_MODE_MANUAL
   custom_type: 0
-  enabled: false
+  enabled: true
   visible: true
   material: ""
 }
@@ -1172,7 +1172,7 @@ nodes {
   }
   type: TYPE_TEXT
   blend_mode: BLEND_MODE_ALPHA
-  text: "\320\245\320\236\320\237"
+  text: "RIK"
   font: "cirillic"
   id: "char_name"
   xanchor: XANCHOR_NONE
@@ -1220,8 +1220,8 @@ nodes {
     w: 1.0
   }
   scale {
-    x: 0.2
-    y: 0.2
+    x: 0.18
+    y: 0.18
     z: 1.0
     w: 1.0
   }
@@ -1424,7 +1424,7 @@ nodes {
   }
   type: TYPE_TEXT
   blend_mode: BLEND_MODE_ALPHA
-  text: "\320\235\320\230\320\232"
+  text: "NICK"
   font: "cirillic"
   id: "char_name1"
   xanchor: XANCHOR_NONE
@@ -1472,8 +1472,8 @@ nodes {
     w: 1.0
   }
   scale {
-    x: 0.2
-    y: 0.2
+    x: 0.18
+    y: 0.18
     z: 1.0
     w: 1.0
   }
@@ -1676,7 +1676,7 @@ nodes {
   }
   type: TYPE_TEXT
   blend_mode: BLEND_MODE_ALPHA
-  text: "\320\264\321\200\320\260\320\272"
+  text: "DRAK"
   font: "cirillic"
   id: "char_name2"
   xanchor: XANCHOR_NONE
@@ -1724,8 +1724,8 @@ nodes {
     w: 1.0
   }
   scale {
-    x: 0.2
-    y: 0.2
+    x: 0.18
+    y: 0.18
     z: 1.0
     w: 1.0
   }
@@ -1929,8 +1929,7 @@ nodes {
   }
   type: TYPE_TEXT
   blend_mode: BLEND_MODE_ALPHA
-  text: "\321\215\321\200\320\275\320\270\n"
-  ""
+  text: "ARNI"
   font: "cirillic"
   id: "char_name3"
   xanchor: XANCHOR_NONE
@@ -1978,13 +1977,13 @@ nodes {
     w: 1.0
   }
   scale {
-    x: 0.2
-    y: 0.2
+    x: 0.18
+    y: 0.18
     z: 1.0
     w: 1.0
   }
   size {
-    x: 550.0
+    x: 630.0
     y: 300.0
     z: 0.0
     w: 1.0
@@ -2065,7 +2064,7 @@ nodes {
   type: TYPE_BOX
   blend_mode: BLEND_MODE_ALPHA
   texture: "sprites/shadow"
-  id: "box8"
+  id: "lang"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
   pivot: PIVOT_CENTER
@@ -2295,7 +2294,7 @@ nodes {
     w: 1.0
   }
   size {
-    x: 650.0
+    x: 800.0
     y: 40.0
     z: 0.0
     w: 1.0
@@ -3279,7 +3278,7 @@ nodes {
   text: "2x \320\261\320\276\320\273\321\214\321\210\320\265\n"
   "2\321\205 \321\201\320\270\320\273\321\214\320\275\320\265\320\265"
   font: "cirillic"
-  id: "text2"
+  id: "hard_text"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
   pivot: PIVOT_CENTER
@@ -3346,7 +3345,7 @@ nodes {
   blend_mode: BLEND_MODE_ALPHA
   text: "\320\262\321\213\320\261\320\265\321\200\320\270 \320\276\321\200\321\203\320\266\321\214\320\265 >"
   font: "cirillic"
-  id: "text4"
+  id: "select_weap"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
   pivot: PIVOT_E
@@ -3413,7 +3412,7 @@ nodes {
   blend_mode: BLEND_MODE_ALPHA
   text: "\320\262\321\213\320\261\320\265\321\200\320\270 \321\201\320\273\320\276\320\266\320\275\320\276\321\201\321\202\321\214>"
   font: "cirillic"
-  id: "text5"
+  id: "select_dif"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
   pivot: PIVOT_E
@@ -3539,7 +3538,7 @@ nodes {
   blend_mode: BLEND_MODE_ALPHA
   text: "\320\272\320\260\320\272 \320\270\320\263\321\200\320\260\321\202\321\214?"
   font: "cirillic"
-  id: "text6"
+  id: "how_game"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
   pivot: PIVOT_CENTER
@@ -4050,7 +4049,7 @@ nodes {
   blend_mode: BLEND_MODE_ALPHA
   text: "\320\237\320\240\320\236\320\224\320\236\320\233\320\226\320\270\321\202\321\214 \320\261\320\270\321\202\320\262\321\203"
   font: "cirillic"
-  id: "continue_text"
+  id: "continue_text1"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
   pivot: PIVOT_CENTER
@@ -4448,6 +4447,74 @@ nodes {
   ""
   font: "cirillic"
   id: "static_text_armor"
+  xanchor: XANCHOR_NONE
+  yanchor: YANCHOR_NONE
+  pivot: PIVOT_CENTER
+  outline {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  shadow {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+    w: 1.0
+  }
+  adjust_mode: ADJUST_MODE_FIT
+  line_break: false
+  parent: "static_box"
+  layer: ""
+  inherit_alpha: true
+  alpha: 1.0
+  outline_alpha: 1.0
+  shadow_alpha: 1.0
+  template_node_child: false
+  text_leading: 1.0
+  text_tracking: 0.0
+  custom_type: 0
+  enabled: true
+  visible: true
+  material: ""
+}
+nodes {
+  position {
+    x: 0.0
+    y: -96.0
+    z: 0.1
+    w: 1.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale {
+    x: 0.25
+    y: 0.25
+    z: 1.0
+    w: 1.0
+  }
+  size {
+    x: 300.0
+    y: 60.0
+    z: 0.0
+    w: 1.0
+  }
+  color {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+    w: 1.0
+  }
+  type: TYPE_TEXT
+  blend_mode: BLEND_MODE_ALPHA
+  text: "\320\277\320\276\320\263\320\273\320\260\321\210\320\265\320\275\320\275\321\213\320\271 \321\203\321\200\320\276\320\275:\n"
+  ""
+  font: "cirillic"
+  id: "static_text_rev"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
   pivot: PIVOT_CENTER

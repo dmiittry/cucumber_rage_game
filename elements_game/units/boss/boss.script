@@ -20,7 +20,7 @@ function init(self)
 	self.spawn = false
 	self.spawn_time = 15
 	timer.delay(1, false, function() self.fire = true end)
-	self.damage = DAMAGE_BOSS - 20
+	self.damage = DAMAGE_BOSS 
 	msg.post("#laser", "disable")
 	msg.post("#laser_v", "disable")
 	msg.post("#laser_v1", "disable")
@@ -207,6 +207,7 @@ function update(self, dt)
 			msg.post("#laser_h", "enable")
 			self.laser_shoot = self.laser_shoot - dt
 			if self.laser_shoot < 0 then
+				sound.play("#laser1")
 				go.set("#laser_h", "size", vmath.vector3(1280, 10, 0))
 				go.set("#laser_v1", "size", vmath.vector3(1280, 10, 0))
 				go.set("#laser_v", "size", vmath.vector3(1280, 10, 0))
@@ -216,6 +217,7 @@ function update(self, dt)
 				go.animate("#laser_h", "size", go.PLAYBACK_LOOP_PINGPONG, vmath.vector3(1280, 15, 0), go.EASING_LINEAR, 0.2)
 				self.laser_time = self.laser_time - dt
 				if self.laser_time < 0 then
+					sound.stop("#laser1")
 					msg.post("#laser", "disable")
 					msg.post("#laser_v", "disable")
 					msg.post("#laser_v1", "disable")
