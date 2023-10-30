@@ -397,7 +397,7 @@ nodes {
 }
 nodes {
   position {
-    x: -25.0
+    x: -29.0
     y: 0.0
     z: 0.0
     w: 1.0
@@ -776,7 +776,7 @@ nodes {
 }
 nodes {
   position {
-    x: -25.0
+    x: -29.0
     y: 0.0
     z: 0.0
     w: 1.0
@@ -1155,7 +1155,7 @@ nodes {
 }
 nodes {
   position {
-    x: -25.0
+    x: -29.0
     y: 0.0
     z: 0.0
     w: 1.0
@@ -1534,7 +1534,7 @@ nodes {
 }
 nodes {
   position {
-    x: -25.0
+    x: -29.0
     y: 0.0
     z: 0.0
     w: 1.0
@@ -2343,7 +2343,7 @@ nodes {
 }
 nodes {
   position {
-    x: -65.0
+    x: 0.0
     y: 0.0
     z: 0.0
     w: 1.0
@@ -2379,7 +2379,7 @@ nodes {
   id: "add_money_text"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
-  pivot: PIVOT_W
+  pivot: PIVOT_CENTER
   outline {
     x: 0.0
     y: 0.0

@@ -11,23 +11,57 @@ RED_COLOR = vmath.vector4(0.8,0.3,0.3,1)
 GREY_COLOR = vmath.vector4(0.3,0.3,0.3,1)
 WHITE_COLOR = vmath.vector4(1,1,1,1)
 
-CHAR_HP = {value = math.random(3,5), key = "hp", text1 = " hp", text2 = "увеличивает максимальное здоровье", img = 'img', buy = math.random(20,32)}
-CHAR_DMG_BULLET = {value = math.random(2,5), key = "dmg_bullet", text1 = " урона пистолета", text2 = "увеличивает урон от пистолета", img = 'img', buy = math.random(20,32)}
-CHAR_SPEED_PLR = {value = math.random(2,5), key = "speed_pl", text1 = " скорость огурчика", text2 = "увеличивает скорость бега", img = 'img', buy = math.random(20,32)}
-CHAR_REGEN = {value = math.random(3,5), key = "regen", text1 = " востанавливает hp", text2 = "увеличивает восстанавление здоровья в секунду", img = 'img', buy = math.random(20,32)}
-CHAR_VAMPIR = {value = math.random(1,3), key = "vampir", text1 = " вампиризм", text2 = "увеличивает кражу здоровья, нанесенный урон от пули преобразуется в здоровье", img = 'img', buy = math.random(20,32)}
-CHAR_DMG_UNIT = {value = math.random(2,5), key = "dmg_unit", text1 = " урона АК47", text2 = "увеличивает урон всех юнитов", img = 'img', buy = math.random(100,150)}
-CHAR_CRITICAL = {value = math.random(1,5), key = "critical", text1 = "% критический урон", text2 = "увеличивает критическую атаку, наносить на 300% больше урона", img = 'img', buy = math.random(20,32)}
-CHAR_ARMOR = {value = math.random(1,5), key = "armor", text1 = " повысить броню", text2 = "увеличивает бронью, броня уменьшает урон", img = 'img', buy = math.random(20,32)}
-CHAR_UKLON = {value = math.random(1,5), key = "uklon", text1 = "% повысить уклонение", text2 = "будешь уклонятся от атак как бог", img = 'img', buy = math.random(20,32)}
-CHAR_SPEED_SHOOT = {value = math.random(2,5), key = "speed_shoot", text1 = " увеличивает скорость атаки", text2 = "увеличивает скорость стрельбы из пистолета", img = 'img', buy = math.random(20,32)}
-SKILL_ADD_AK47 = {value = 0, key = "add_ak", text1 = "добавить ak47", text2 = "Добавляет ак47 которая стреляем самостоятельно", buy = math.random(200, 300), img = 'ak47'}
-SKILL_ADD_KNIFE = {value = 0, key = "add_knife", text1 = "добавить меч", text2 = "добавляет мечи которые вращаются вокруг оугрчика", buy = math.random(200, 300), img = 'knife' }
-SKILL_PROBITIE = {value = 0, key = "probitie", text1 = "пробивающие пули", text2 = "Ваши пули пробивают +1 врага", buy = math.random(200, 300), img = "img" }
-SKILL_HEADSHOT = {value = 0, key = "headshot", text1 = "HEADSHOT", text2 = "Ваша пуля с 5% вероятностью делает HEADSHOT, моментально убивают врагов", buy = math.random(350, 450), img = "img" }
-UP_DMG_KNIFE = {value = math.random(3,6), key = "up_dmg_knife", text1 = " увеличивает урон МЕЧА", text2 = "увеличивает урон меча", buy = math.random(100, 150), img =""}
-UP_SPEED_AK = {value =  math.random(2,6), key = "up_speed_ak", text1 = " увеличивает скорость АК47", text2 = "увеличивает скорость атаки АК47", buy = math.random(100, 150), img =""}
-UP_SPEED_KNIFE = {value =  math.random(2,6), key = "up_speed_knife", text1 = " увеличивает скорость меча", text2 = "увеличивает скорость меча", buy = math.random(100, 150), img =""}
+CHAR_HP = {value = math.random(3,5), key = "hp", 
+text1 = " hp", text2 = "увеличивает максимальное здоровье", text11 = " hp", text22 = "maximizes health", 
+img = 'img', buy = math.random(20,32)}
+CHAR_DMG_BULLET = {value = math.random(2,5), key = "dmg_bullet", 
+text1 = " к урону ружья", text2 = "увеличивает урон основного ружья", text11 = " to gun damage", text22 = "increases the damage of the main shotgun",
+ img = 'img', buy = math.random(20,32)}
+CHAR_SPEED_PLR = {value = math.random(2,5), key = "speed_pl", 
+text1 = " к скорости огурчика", text2 = "увеличивает скорость бега", text11 = " to the speed of a pickle", text22 = "increases running speed.", 
+img = 'img', buy = math.random(20,32)}
+CHAR_REGEN = {value = math.random(3,5), key = "regen", 
+text1 = " к регенерации HP", text2 = "увеличивает скорость регенерации здоровья в секунду", text11 = " to HP regeneration", text22 = "increases the rate of health regeneration per second",
+ img = 'img', buy = math.random(20,32)}
+CHAR_VAMPIR = {value = math.random(1,3), key = "vampir", 
+text1 = " к вампиризму", text2 = "увеличивает кражу здоровья, получаемый урон от пуль конвертируется в здоровье",  text11 = " to vampirism", text22 = "increases health steal, bullet damage received is converted to health",
+img = 'img', buy = math.random(20,32)}
+CHAR_DMG_UNIT = {value = math.random(2,5), key = "dmg_unit", 
+text1 = " к урону дополнительного оружия", text2 = "увеличивает урон дополнительного оружия",text11 = " to additional weapon damage", text22 = "increases additional weapon damage",
+ img = 'img', buy = math.random(100,150)}
+CHAR_CRITICAL = {value = math.random(1,5), key = "critical", 
+text1 = "% критического урона", text2 = "увеличивает критическую атаку, наносит на 300% больше урона", text11 = "% critical damage", text22 = "increases critical attack, deals 300% more damage",
+img = 'img', buy = math.random(20,32)}
+CHAR_ARMOR = {value = math.random(1,5), key = "armor", 
+text1 = " увеличить броню", text2 = "увеличить броню, броня уменьшает урон", text11 = "increase armor", text22 = " increase armor, armor reduces damage",
+ img = 'img', buy = math.random(20,32)}
+CHAR_UKLON = {value = math.random(1,5), key = "uklon",
+text1 = "% увеличения уклонения", text2 = "Вы будете уклоняться от атак как бог", text11 = "% dodge increase", text22 = "You will dodge attacks like a god",
+ img = 'img', buy = math.random(20,32)}
+CHAR_SPEED_SHOOT = {value = math.random(2,5), key = "speed_shoot", 
+text1 = " увеличивает скорость атаки", text2 = "увеличивает скорострельность главного орудия", text11 = " increases attack speed", text22 = "increases main gun speed", 
+ img = 'img', buy = math.random(20,32)}
+SKILL_ADD_AK47 = {value = 0, key = "add_ak", 
+text1 = "Добавить ak47", text2 = "Добавляет ak47, который стреляет сам по себе", text11 = "Add ak47", text22 = "Adds an ak47 that shoots by itself",
+buy = math.random(200, 300), img = 'ak47'}
+SKILL_ADD_KNIFE = {value = 0, key = "add_knife", 
+text1 = "добавить меч", text2 = "добавляет мечи, вращающиеся вокруг оугрчика", text11 = "add sword", text22 = "adds swords revolving around the ougrchik",
+buy = math.random(200, 300), img = 'knife' }
+SKILL_PROBITIE = {value = 0, key = "probitie", 
+text1 = "Пробивные пули", text2 = "Ваши пули пробивают +1 противника", text11 = "piercing bullets", text22 = "Your bullets pierce +1 enemy",
+ buy = math.random(200, 300), img = "img" }
+SKILL_HEADSHOT = {value = 0, key = "headshot", 
+text1 = "HEADSHOT", text2 = "Ваша пуля имеет 5% шанс сделать HEADSHOT, мгновенно убивая врагов", text11 = "HEADSHOT", text22 = "Your bullet has a 5% chance of doing a HEADSHOT, instantly killing enemies",
+buy = math.random(350, 450), img = "img" }
+UP_DMG_KNIFE = {value = math.random(3,6), key = "up_dmg_knife",
+text1 = " увеличивает урон от меча", text2 = "увеличивает урон от меча", text11 = " increases sword damage", text22 = "increases sword damage", 
+buy = math.random(100, 150), img =""}
+UP_SPEED_AK = {value =  math.random(2,6), key = "up_speed_ak", 
+text1 = " увеличивает скорость дополнительного оружия", text2 = "увеличивает скорость атаки дополнительного оружия", text11 = " increases the speed of an additional weapon", text22 = "increases the attack speed of an additional weapon",
+buy = math.random(100, 150), img =""}
+UP_SPEED_KNIFE = {value =  math.random(2,6), key = "up_speed_knife", 
+text1 = " к скорости меча", text2 = "увеличивает скорость меча", text11 = " to sword speed", text22 = "increases sword speed",
+buy = math.random(100, 150), img =""}
 
 UPGRADE_LIST = {CHAR_HP, CHAR_DMG_BULLET, CHAR_SPEED_PLR, CHAR_REGEN, CHAR_VAMPIR, CHAR_CRITICAL, CHAR_ARMOR,
 CHAR_UKLON, CHAR_SPEED_SHOOT, SKILL_ADD_AK47, SKILL_ADD_KNIFE, SKILL_PROBITIE}
@@ -345,9 +379,13 @@ function change_exp(value)
 			MONEY_PURPLE = 1
 			MONEY_YELLOW = 2
 		elseif LEVEL > 20 then
+			DURATION_SPAWN_MOSTER = 3
 			add_every = 5
 		elseif LEVEL > 25 then
+			DURATION_SPAWN_MOSTER = 2
 			add_every = 10
+		elseif LEVEL > 30 then
+			DURATION_SPAWN_MOSTER = 1
 		end
 	end
 end

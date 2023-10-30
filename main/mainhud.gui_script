@@ -1,4 +1,5 @@
 require "elements_game.core.globals"
+require "elements_game.core.const"
 
 function init(self)
 	-- sound.play("#helloween")
@@ -293,6 +294,7 @@ function on_input(self, action_id, action)
 	elseif action_id == hash("fire") and action.released and gui.pick_node(LANG_BOX, action.x, action.y) and gui.is_enabled(MENU_BOX) then
 		LANG_RUS = not LANG_RUS
 		msg.post(".", "change_lang")
+		change_langugage(LANG_RUS)
 	elseif action_id == hash("fire") and action.released and gui.pick_node(CONTINUE_BOX, action.x, action.y) and gui.is_enabled(WIN_BOX) then
 		change_exp(SCORE_BOSS)
 		change_money(MONEY_BOSS)

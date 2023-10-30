@@ -20,6 +20,7 @@ function init(self)
 	self.index = 1
 	self.max_index = 4
 	self.time_spawn_sunduk = TIME_SUNDUK
+	self.boss_dead = false
 	-- mini_boss_spawn()
 	if HARD_GAME == "hard" then
 		mini_boss_spawn()
@@ -28,8 +29,85 @@ end
 
 function on_message(self, message_id, message, sender)
 	if message_id == hash("boss_dead") then
+		DURATION_SPAWN_MOSTER = 2
+		self.boss_dead = true
+		self.next_level = 1
 		change_state("win_boss")
-		DURATION_SPAWN_MOSTER = 4
+	end
+end
+local function standrat_spawn(self)
+	local randi = math.random()
+	if randi > 0 and randi < 0.25 then
+		blue_spawn_horizontal_bottom()
+		red_spawn_left()
+		if HARD_GAME == "medium" then
+			purple_spawn()
+			purple_spawn()
+		elseif HARD_GAME == "hard" then
+			yellow_spawn()
+			yellow_spawn()
+			purple_spawn()
+		end
+		if self.boss_dead then
+			red_spawn()
+			blue_spawn()
+			purple_spawn()
+			yellow_spawn()
+		end
+	elseif randi > 0.25 and randi < 0.5 then
+		blue_spawn_horizontal_up()
+		red_spawn_right()
+		if HARD_GAME == "medium" then
+			yellow_spawn()
+			yellow_spawn()
+		elseif HARD_GAME == "hard" then
+			yellow_spawn()
+			yellow_spawn()
+			purple_spawn()
+			purple_spawn()
+		end
+		if self.boss_dead then
+			red_spawn()
+			blue_spawn()
+			purple_spawn()
+			yellow_spawn()
+		end
+	elseif randi > 0.5 and randi < 0.75 then
+		blue_spawn_left()
+		blue_spawn_right()
+		red_spawn_horizontal_bottom()
+		if HARD_GAME == "medium" then
+			yellow_spawn()
+			purple_spawn()
+		elseif HARD_GAME == "hard" then
+			yellow_spawn()
+			purple_spawn()
+			purple_spawn()
+		end
+		if self.boss_dead then
+			red_spawn()
+			blue_spawn()
+			purple_spawn()
+			yellow_spawn()
+		end
+	elseif randi > 0.75 and randi < 1 then
+		blue_spawn_right()
+		red_spawn_horizontal_up()
+		red_spawn_horizontal_bottom()
+		if HARD_GAME == "medium" then
+			yellow_spawn()
+			purple_spawn()
+		elseif HARD_GAME == "hard" then
+			yellow_spawn()
+			purple_spawn()
+			purple_spawn()
+		end
+		if self.boss_dead then
+			red_spawn()
+			blue_spawn()
+			purple_spawn()
+			yellow_spawn()
+		end
 	end
 end
 
@@ -39,7 +117,7 @@ function update(self, dt)
 	TIME_SPAWN_MOSTER = TIME_SPAWN_MOSTER - dt
 	
 	if TIME_SPAWN_MOSTER < 0 then
-		standrat_spawn()
+		standrat_spawn(self)
 		TIME_SPAWN_MOSTER = DURATION_SPAWN_MOSTER
 	end
 	
@@ -52,6 +130,11 @@ function update(self, dt)
 			blue_spawn_horizontal_bottom()
 			red_spawn_horizontal_up()
 			blue_spawn_left()
+			if self.boss_dead then
+				red_spawn_horizontal_bottom()
+				purple_spawn()
+				yellow_spawn()
+			end
 		elseif HARD_GAME == "medium" then
 			if self.level == 3 then
 				mini_boss_spawn()
@@ -63,6 +146,11 @@ function update(self, dt)
 			red_spawn_horizontal_bottom()
 			yellow_spawn()
 			purple_spawn()
+			if self.boss_dead then
+				red_spawn_horizontal_bottom()
+				purple_spawn()
+				yellow_spawn()
+			end
 		elseif HARD_GAME == "hard" then
 			if self.level == 3 then
 				mini_boss_spawn()
@@ -76,6 +164,11 @@ function update(self, dt)
 			blue_spawn()
 			purple_spawn()
 			purple_spawn()
+			if self.boss_dead then
+				red_spawn_horizontal_bottom()
+				purple_spawn()
+				yellow_spawn()
+			end
 		end
 		self.level = self.level + 1
 		self.next_level = TIME_NEXT_LEVEL
@@ -85,6 +178,9 @@ function update(self, dt)
 		if HARD_GAME == "hard" then
 			mini_boss_spawn()
 		end
+		if self.boss_dead then
+			boss_spawn()
+		end
 		boss_spawn()
 		self.next_level = 10000
 		DURATION_SPAWN_MOSTER = 10000
@@ -92,7 +188,7 @@ function update(self, dt)
 	elseif self.level == 7 then
 		self.boss_time = self.boss_time - dt
 		if self.boss_time < 0 then
-			standrat_spawn()
+			standrat_spawn(self)
 			self.boss_time = 6
 		end
 	end
@@ -117,57 +213,6 @@ function update(self, dt)
 	
 end
 
-function standrat_spawn()
-	local randi = math.random()
-	if randi > 0 and randi < 0.25 then
-		blue_spawn_horizontal_bottom()
-		red_spawn_left()
-		if HARD_GAME == "medium" then
-			purple_spawn()
-			purple_spawn()
-		elseif HARD_GAME == "hard" then
-			yellow_spawn()
-			yellow_spawn()
-			purple_spawn()
-		end
-	elseif randi > 0.25 and randi < 0.5 then
-		blue_spawn_horizontal_up()
-		red_spawn_right()
-		if HARD_GAME == "medium" then
-			yellow_spawn()
-			yellow_spawn()
-		elseif HARD_GAME == "hard" then
-			yellow_spawn()
-			yellow_spawn()
-			purple_spawn()
-			purple_spawn()
-		end
-	elseif randi > 0.5 and randi < 0.75 then
-		blue_spawn_left()
-		blue_spawn_right()
-		red_spawn_horizontal_bottom()
-		if HARD_GAME == "medium" then
-			yellow_spawn()
-			purple_spawn()
-		elseif HARD_GAME == "hard" then
-			yellow_spawn()
-			purple_spawn()
-			purple_spawn()
-		end
-	elseif randi > 0.75 and randi < 1 then
-		blue_spawn_right()
-		red_spawn_horizontal_up()
-		red_spawn_horizontal_bottom()
-		if HARD_GAME == "medium" then
-			yellow_spawn()
-			purple_spawn()
-		elseif HARD_GAME == "hard" then
-			yellow_spawn()
-			purple_spawn()
-			purple_spawn()
-		end
-	end
-end
 
 function blue_spawn_right()
 	spawn_blue_monster(LIST_SPAWN_POSITION_X[math.random(7, 12)], LIST_SPAWN_POSITION_Y[math.random(7, 12)])

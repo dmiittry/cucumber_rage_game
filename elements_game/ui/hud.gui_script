@@ -4,12 +4,10 @@ local change_coins = 5
 local free_upgrade = true
 
 
-local text_upgrade = " LVL - магазин"
 function init(self)
-	print(msg.url())
+	msg.post(".", "change_lang")
 	change_state('next')
 	math.randomseed(os.time())
-	msg.post(".", "change_lang")
 	msg.post(".", "acquire_input_focus")
 	ADD_MONEY_BOX = gui.get_node("add_money")
 	ADD_MONEY_TEXT = gui.get_node("add_money_text")
@@ -20,6 +18,8 @@ function init(self)
 	CURRENT_BOX = gui.get_node("current_box")
 	CURRENT_TEXT = gui.get_node("current_text")
 	CLOSE_BOX = gui.get_node("close_box")
+	CLOSE_TEXT = gui.get_node("close_text")
+	ADS_TEXT = gui.get_node("add_money_text")
 	BOX1 = gui.get_node("box1")
 	BOX2 = gui.get_node("box2")
 	BOX3 = gui.get_node("box3")
@@ -76,6 +76,7 @@ function init(self)
 	SPEED_KNIFE_TEXT = gui.get_node("speed_knife_text")
 
 	CHAR_BOX = gui.get_node("char_box")
+	CHAR_TEXT = gui.get_node("char")
 	EXP_BAR = gui.get_node("expbar1")
 	HP_BAR = gui.get_node("hpbar1")
 	ICON_CUCUMBER = gui.get_node("icon_cucumber")
@@ -92,6 +93,10 @@ function init(self)
 	end
 	text_update(self)
 	gui.set_enabled(CHAR_BOX, true)
+
+	gui.set_text(CLOSE_TEXT, LANG_TEXT_CLOSE)
+	gui.set_text(ADS_TEXT, LANG_TEXT_ADS)
+	gui.set_text(CHAR_TEXT, LANG_TEXT_CHAR)
 end
 
 function update(self, dt)
@@ -154,7 +159,7 @@ function update(self, dt)
 		gui.set_enabled(BUY_BOX3, false)
 		gui.set_enabled(BUY_BOX4, false)
 		-- gui.set_text(UPGRADE_TEXT, "free upgrade")
-		gui.set_text(CURRENT_TEXT, "Выбрать")
+		gui.set_text(CURRENT_TEXT, LANG_TEXT_SELECT)
 	else
 		gui.set_enabled(CLOSE_BOX, true)
 		gui.set_enabled(BUY_BOX1, true)
@@ -162,7 +167,7 @@ function update(self, dt)
 		gui.set_enabled(BUY_BOX3, true)
 		gui.set_enabled(BUY_BOX4, true)
 		-- gui.set_text(UPGRADE_TEXT, "buy upgrade")
-		gui.set_text(CURRENT_TEXT, "Купить")
+		gui.set_text(CURRENT_TEXT, LANG_TEXT_BUY)
 	end
 	if BUY1 > MONEY then
 		gui.set_color(BUY_BOX1, RED_COLOR)
@@ -189,80 +194,80 @@ end
 
 		
 function text_update(self)
-	gui.set_text(UPGRADE_TEXT, LEVEL .. text_upgrade)
-	gui.set_text(SPEED_TEXT, "скорость: ".. SPEED_PLAYER .. "/" .. MAX_SPEED_PLAYER)
+	gui.set_text(UPGRADE_TEXT, LEVEL .. LANG_TEXT_LVL_SHOP)
+	gui.set_text(SPEED_TEXT, LANG_TEXT_CHAR_SPEED .. SPEED_PLAYER .. "/" .. MAX_SPEED_PLAYER)
 	if CONST_SPEED_PLAYER >= SPEED_PLAYER then
 		gui.set_color(SPEED_TEXT, WHITE_COLOR)
 	else
 		gui.set_color(SPEED_TEXT, GREEN_COLOR)
 	end
-	gui.set_text(DAMAGE_TEXT, "урон: ".. DAMAGE_BULLET)
+	gui.set_text(DAMAGE_TEXT, LANG_TEXT_CHAR_DMG .. DAMAGE_BULLET)
 	if CONST_DAMAGE_BULLET >= DAMAGE_BULLET then
 		gui.set_color(DAMAGE_TEXT, WHITE_COLOR)
 	else
 		gui.set_color(DAMAGE_TEXT, GREEN_COLOR)
 	end
-	gui.set_text(REGEN_TEXT, "регенерация: 0." .. REGEN_PLAYER)
+	gui.set_text(REGEN_TEXT, LANG_TEXT_CHAR_REGEN .. REGEN_PLAYER)
 	if CONST_REGEN_PLAYER >= REGEN_PLAYER then
 		gui.set_color(REGEN_TEXT, WHITE_COLOR)
 	else
 		gui.set_color(REGEN_TEXT, GREEN_COLOR)
 	end
-	gui.set_text(VAMPIR_TEXT, "вампиризм: ".. VAMPIR.. "/" .. MAX_VAMPIR)
+	gui.set_text(VAMPIR_TEXT, LANG_TEXT_CHAR_VAMPIR .. VAMPIR.. "/" .. MAX_VAMPIR)
 	if CONST_VAMPIR >= VAMPIR then
 		gui.set_color(VAMPIR_TEXT, WHITE_COLOR)
 	else
 		gui.set_color(VAMPIR_TEXT, GREEN_COLOR)
 	end
-	gui.set_text(DAMAGE_UNIT_TEXT, "урон юнитов: ".. DAMAGE_UNIT)
+	gui.set_text(DAMAGE_UNIT_TEXT, LANG_TEXT_CHAR_UNIT .. DAMAGE_UNIT)
 	if CONST_DAMAGE_UNIT >= DAMAGE_UNIT then
 		gui.set_color(DAMAGE_UNIT_TEXT, WHITE_COLOR)
 	else
 		gui.set_color(DAMAGE_UNIT_TEXT, GREEN_COLOR)
 	end
-	gui.set_text(CRITICAL_TEXT, "критический урон %: ".. CRITICAL.. "/" .. MAX_CRITICAL)
+	gui.set_text(CRITICAL_TEXT, LANG_TEXT_CHAR_CRIT .. CRITICAL.. "/" .. MAX_CRITICAL)
 	if CONST_CRITICAL >= CRITICAL then
 		gui.set_color(CRITICAL_TEXT, WHITE_COLOR)
 	else
 		gui.set_color(CRITICAL_TEXT, GREEN_COLOR)
 	end
-	gui.set_text(ARMOR_TEXT, "броня: ".. ARMOR.. "/" .. MAX_ARMOR)
+	gui.set_text(ARMOR_TEXT, LANG_TEXT_CHAR_ARMOR .. ARMOR.. "/" .. MAX_ARMOR)
 	if CONST_ARMOR >= ARMOR then
 		gui.set_color(ARMOR_TEXT, WHITE_COLOR)
 	else
 		gui.set_color(ARMOR_TEXT, GREEN_COLOR)
 	end
-	gui.set_text(UKLON_TEXT, "уклонение %: ".. UKLON_PLAYER.. "/" .. MAX_UKLON_PLAYER)
+	gui.set_text(UKLON_TEXT,LANG_TEXT_CHAR_UKLON .. UKLON_PLAYER.. "/" .. MAX_UKLON_PLAYER)
 	if CONST_UKLON_PLAYER >= UKLON_PLAYER then
 		gui.set_color(UKLON_TEXT, WHITE_COLOR)
 	else
 		gui.set_color(UKLON_TEXT, GREEN_COLOR)
 	end
-	gui.set_text(TIME_SHOOT_TEXT, "скорость атаки: ".. SPEED_SHOOT.. "/" .. MAX_SPEED_SHOOT)
+	gui.set_text(TIME_SHOOT_TEXT,LANG_TEXT_CHAR_SPD_SHOT .. SPEED_SHOOT.. "/" .. MAX_SPEED_SHOOT)
 	if CONST_SPEED_SHOOT <= SPEED_SHOOT then
 		gui.set_color(TIME_SHOOT_TEXT, WHITE_COLOR)
 	else
 		gui.set_color(TIME_SHOOT_TEXT, GREEN_COLOR)
 	end
-	gui.set_text(PROBITIE_TEXT, "пробитие: ".. KOL_PROBITIE.. "/" .. MAX_KOL_PROBITIE)
+	gui.set_text(PROBITIE_TEXT, LANG_TEXT_CHAR_PROB.. KOL_PROBITIE.. "/" .. MAX_KOL_PROBITIE)
 	if CONST_KOL_PROBITIE >= KOL_PROBITIE then
 		gui.set_color(PROBITIE_TEXT, WHITE_COLOR)
 	else
 		gui.set_color(PROBITIE_TEXT, GREEN_COLOR)
 	end
-	gui.set_text(SPEED_AK_TEXT, "скорость АК47: ".. TIME_SHOOT_AK47.. "/" .. MAX_TIME_SHOOT_AK47)
+	gui.set_text(SPEED_AK_TEXT, LANG_TEXT_CHAR_SPD_UNIT .. TIME_SHOOT_AK47.. "/" .. MAX_TIME_SHOOT_AK47)
 	if CONST_TIME_SHOOT_AK47 <= TIME_SHOOT_AK47 then
 		gui.set_color(SPEED_AK_TEXT, WHITE_COLOR)
 	else
 		gui.set_color(SPEED_AK_TEXT, GREEN_COLOR)
 	end
-	gui.set_text(SPEED_KNIFE_TEXT, "скорость меча: ".. TIME_KNIFE.. "/" .. MAX_TIME_KNIFE)
+	gui.set_text(SPEED_KNIFE_TEXT, LANG_TEXT_CHAR_SPD_KNIFE .. TIME_KNIFE.. "/" .. MAX_TIME_KNIFE)
 	if CONST_TIME_KNIFE <= TIME_KNIFE then
 		gui.set_color(SPEED_KNIFE_TEXT, WHITE_COLOR)
 	else
 		gui.set_color(SPEED_KNIFE_TEXT, GREEN_COLOR)
 	end
-	gui.set_text(DAMAGE_KNIFE_TEXT, "урон меча: ".. KNIFE_DAMAGE)
+	gui.set_text(DAMAGE_KNIFE_TEXT, LANG_TEXT_CHAR_DMG_KNIFE .. KNIFE_DAMAGE)
 	if CONST_KNIFE_DAMAGE >= KNIFE_DAMAGE then
 		gui.set_color(DAMAGE_KNIFE_TEXT, WHITE_COLOR)
 	else
@@ -296,7 +301,7 @@ function choose_upgrade()
 	gui.set_enabled(BOX2, true)
 	gui.set_enabled(BOX3, true)
 	gui.set_enabled(BOX4, true)
-	gui.set_text(CHANGE_TEXT, "Поменять - " .. change_coins)
+	gui.set_text(CHANGE_TEXT, LANG_TEXT_CHANGE .. change_coins)
 	CURRENT_KEY = 0
 	BUY = 0
 	BUY1 = 0
@@ -312,6 +317,14 @@ function choose_upgrade()
 	gui.set_color(TEXT2, WHITE_COLOR)
 	gui.set_color(TEXT3, WHITE_COLOR)
 	gui.set_color(TEXT4, WHITE_COLOR)
+	local lang_text1 = ""
+	local lang_text2 = ""
+	local lang_text3 = ""
+	local lang_text4 = ""
+	local lang_text11 = ""
+	local lang_text22 = ""
+	local lang_text33 = ""
+	local lang_text44 = ""
 	local rand1 = math.random(1, #upgrade)
 	local first = upgrade[rand1]
 	table.remove(upgrade, rand1)
@@ -328,12 +341,19 @@ function choose_upgrade()
 		BUY1 = BUY1 + 3
 		gui.set_color(TEXT1, GREEN_COLOR)
 	end
-	if first.value == 0 then
-		gui.set_text(TEXT1, first.text1)
+	if LANG_RUS then
+		lang_text1 = first.text1
+		lang_text11 = first.text2
 	else
-		gui.set_text(TEXT1, "+" .. VALUE1 .. first.text1)
+		lang_text1 = first.text11
+		lang_text11 = first.text22
 	end
-	gui.set_text(TEXT11, first.text2)
+	if first.value == 0 then
+		gui.set_text(TEXT1, lang_text1)
+	else
+		gui.set_text(TEXT1, "+" .. VALUE1 .. lang_text1)
+	end
+	gui.set_text(TEXT11, lang_text11)
 	gui.set_text(BUY_TEXT1, BUY1)
 	KEY1 = first.key
 
@@ -353,12 +373,19 @@ function choose_upgrade()
 		gui.set_color(TEXT2, GREEN_COLOR)
 	end
 
-	if second.value == 0 then
-		gui.set_text(TEXT2, second.text1)
+	if LANG_RUS then
+		lang_text2 = second.text1
+		lang_text22 = second.text2
 	else
-		gui.set_text(TEXT2,  "+" .. VALUE2 .. second.text1)
+		lang_text2 = second.text11
+		lang_text22 = second.text22
 	end
-	gui.set_text(TEXT22, second.text2)
+	if second.value == 0 then
+		gui.set_text(TEXT2, lang_text2)
+	else
+		gui.set_text(TEXT2,  "+" .. VALUE2 .. lang_text2)
+	end
+	gui.set_text(TEXT22, lang_text22)
 	gui.set_text(BUY_TEXT2, BUY2)
 	KEY2 = second.key
 
@@ -378,12 +405,19 @@ function choose_upgrade()
 		gui.set_color(TEXT3, GREEN_COLOR)
 	end
 
-	if three.value == 0 then
-		gui.set_text(TEXT3, three.text1)
+	if LANG_RUS then
+		lang_text3 = three.text1
+		lang_text33 = three.text2
 	else
-		gui.set_text(TEXT3, "+" .. VALUE3 .. three.text1)
+		lang_text3  = three.text11
+		lang_text33 = three.text22
 	end
-	gui.set_text(TEXT33, three.text2)
+	if three.value == 0 then
+		gui.set_text(TEXT3, lang_text3)
+	else
+		gui.set_text(TEXT3, "+" .. VALUE3 .. lang_text3)
+	end
+	gui.set_text(TEXT33, lang_text33)
 	gui.set_text(BUY_TEXT3, BUY3)
 	KEY3 = three.key
 
@@ -402,12 +436,19 @@ function choose_upgrade()
 		BUY4 = BUY4 * 3
 		gui.set_color(TEXT4, GREEN_COLOR)
 	end
-	if fore.value == 0 then
-		gui.set_text(TEXT4, fore.text1)
+	if LANG_RUS then
+		lang_text4 = fore.text1
+		lang_text44 = fore.text2
 	else
-		gui.set_text(TEXT4, "+" .. VALUE4 .. fore.text1)
+		lang_text4 = fore.text11
+		lang_text44 = fore.text22
 	end
-	gui.set_text(TEXT44, fore.text2)
+	if fore.value == 0 then
+		gui.set_text(TEXT4, lang_text4)
+	else
+		gui.set_text(TEXT4, "+" .. VALUE4 .. lang_text4)
+	end
+	gui.set_text(TEXT44, lang_text44)
 	gui.set_text(BUY_TEXT4, BUY4)
 	KEY4 = fore.key
 end
@@ -508,14 +549,6 @@ function on_message(self, message_id, message, sender)
 			gui.set_enabled(CHAR_BOX, not gui.is_enabled(CHAR_BOX))
 		else
 			gui.set_enabled(CHAR_BOX, message.value)
-		end
-	elseif message_id == hash("change_lang") then
-		print(LANG_RUS)
-		if LANG_RUS then
-			text_upgrade = " LVL - магазин"
-		else
-			text_upgrade = " LVL - shop"
-
 		end
 	end
 end
