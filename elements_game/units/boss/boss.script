@@ -186,14 +186,12 @@ function update(self, dt)
 		self.spawn_time = 10
 	end
 	if self.health < self.health_in - 1000 then
-		self.spawn_time = 8
 	elseif self.health < self.health_in /2 then
-		self.spawn_time = 7
+		self.damage = 150
 	elseif self.health < self.health_in /5 then
-		self.spawn_time = 6
-	elseif self.health < self.health_in /10 then
 		self.damage = 200
-		self.spawn_time = 5
+	elseif self.health < self.health_in /10 then
+		self.damage = 250
 	end
 	if self.sfera < 0 then
 		self.fire = false

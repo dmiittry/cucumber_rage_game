@@ -14,7 +14,7 @@ TIME_SPAWN_MOSTER = 0
 -- HARD_GAME easy , medium , hard
 function init(self)
 	self.boss_time = 30
-	self.level = 1
+	self.level = 6
 	self.next_level = TIME_NEXT_LEVEL
 	math.randomseed(os.time())
 	self.index = 1
@@ -29,10 +29,12 @@ end
 
 function on_message(self, message_id, message, sender)
 	if message_id == hash("boss_dead") then
+		change_state("win_boss")
 		DURATION_SPAWN_MOSTER = 2
+		TIME_SPAWN_MOSTER = 1
 		self.boss_dead = true
 		self.next_level = 1
-		change_state("win_boss")
+		self.level = 1
 	end
 end
 local function standrat_spawn(self)
@@ -40,7 +42,10 @@ local function standrat_spawn(self)
 	if randi > 0 and randi < 0.25 then
 		blue_spawn_horizontal_bottom()
 		red_spawn_left()
-		if HARD_GAME == "medium" then
+		if HARD_GAME == "easy" then
+			red_spawn_right()
+			red_spawn_right()
+		elseif HARD_GAME == "medium" then
 			purple_spawn()
 			purple_spawn()
 		elseif HARD_GAME == "hard" then
@@ -51,13 +56,13 @@ local function standrat_spawn(self)
 		if self.boss_dead then
 			red_spawn()
 			blue_spawn()
-			purple_spawn()
-			yellow_spawn()
 		end
 	elseif randi > 0.25 and randi < 0.5 then
 		blue_spawn_horizontal_up()
 		red_spawn_right()
-		if HARD_GAME == "medium" then
+		if HARD_GAME == "easy" then
+			red_spawn_right()
+		elseif HARD_GAME == "medium" then
 			yellow_spawn()
 			yellow_spawn()
 		elseif HARD_GAME == "hard" then
@@ -67,8 +72,6 @@ local function standrat_spawn(self)
 			purple_spawn()
 		end
 		if self.boss_dead then
-			red_spawn()
-			blue_spawn()
 			purple_spawn()
 			yellow_spawn()
 		end
@@ -76,7 +79,10 @@ local function standrat_spawn(self)
 		blue_spawn_left()
 		blue_spawn_right()
 		red_spawn_horizontal_bottom()
-		if HARD_GAME == "medium" then
+		if HARD_GAME == "easy" then
+			blue_spawn_right()
+			red_spawn_horizontal_up()
+		elseif HARD_GAME == "medium" then
 			yellow_spawn()
 			purple_spawn()
 		elseif HARD_GAME == "hard" then
@@ -86,15 +92,16 @@ local function standrat_spawn(self)
 		end
 		if self.boss_dead then
 			red_spawn()
-			blue_spawn()
 			purple_spawn()
-			yellow_spawn()
 		end
 	elseif randi > 0.75 and randi < 1 then
 		blue_spawn_right()
 		red_spawn_horizontal_up()
 		red_spawn_horizontal_bottom()
-		if HARD_GAME == "medium" then
+		if HARD_GAME == "easy" then
+			blue_spawn_right()
+			red_spawn_horizontal_up()
+		elseif HARD_GAME == "medium" then
 			yellow_spawn()
 			purple_spawn()
 		elseif HARD_GAME == "hard" then
@@ -103,9 +110,7 @@ local function standrat_spawn(self)
 			purple_spawn()
 		end
 		if self.boss_dead then
-			red_spawn()
 			blue_spawn()
-			purple_spawn()
 			yellow_spawn()
 		end
 	end

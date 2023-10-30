@@ -291,7 +291,6 @@ function choose_upgrade()
 	end	
 	if #upgrade < 5 then
 		upgrade = {}
-		print('clear')
 		for key,value in pairs(UPGRADE_LIST) do 
 			upgrade[key] = value
 			povtor_skill = 0
@@ -332,7 +331,7 @@ function choose_upgrade()
 	VALUE1 = first.value
 	if free_upgrade then
 		VALUE1 = math.random(10,12)
-		if LEVEL == 20 then
+		if LEVEL == 20 or LEVEL == 10  then
 			VALUE1 = math.random(20,23)
 		end
 	end
@@ -364,7 +363,7 @@ function choose_upgrade()
 	VALUE2 = second.value
 	if free_upgrade then
 		VALUE2 = math.random(10,12)
-		if LEVEL == 20 then
+		if LEVEL == 20 or LEVEL == 10 then
 			VALUE2 = math.random(20,23)
 		end
 	end
@@ -396,7 +395,7 @@ function choose_upgrade()
 	VALUE3 = three.value
 	if free_upgrade then
 		VALUE3 = math.random(10,12)
-		if LEVEL == 20 then
+		if LEVEL == 20 or LEVEL == 10 then
 			VALUE3 = math.random(20,23)
 		end
 	end
@@ -428,7 +427,7 @@ function choose_upgrade()
 	VALUE4 = fore.value
 	if free_upgrade then
 		VALUE4 = math.random(10,12)
-		if LEVEL == 20 then
+		if LEVEL == 20 or LEVEL == 10 then
 			VALUE4 = math.random(20,23)
 		end
 	end

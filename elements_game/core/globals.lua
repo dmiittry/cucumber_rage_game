@@ -57,7 +57,7 @@ UP_DMG_KNIFE = {value = math.random(3,6), key = "up_dmg_knife",
 text1 = " увеличивает урон от меча", text2 = "увеличивает урон от меча", text11 = " increases sword damage", text22 = "increases sword damage", 
 buy = math.random(100, 150), img =""}
 UP_SPEED_AK = {value =  math.random(2,6), key = "up_speed_ak", 
-text1 = " увеличивает скорость дополнительного оружия", text2 = "увеличивает скорость атаки дополнительного оружия", text11 = " increases the speed of an additional weapon", text22 = "increases the attack speed of an additional weapon",
+text1 = " увеличивает скорость доп. оружия", text2 = "увеличивает скорость атаки дополнительного оружия", text11 = " increases the speed of an additional weapon", text22 = "increases the attack speed of an additional weapon",
 buy = math.random(100, 150), img =""}
 UP_SPEED_KNIFE = {value =  math.random(2,6), key = "up_speed_knife", 
 text1 = " к скорости меча", text2 = "увеличивает скорость меча", text11 = " to sword speed", text22 = "increases sword speed",
@@ -292,7 +292,7 @@ DAMAGE_YELLOW = 25
 SPEED_YELLOW = 40
 --BOSS
 MONEY_BOSS = 500
-SCORE_BOSS = 500
+SCORE_BOSS = 1
 HEALTH_BOSS = 200
 DAMAGE_BOSS = MAX_HP_PLAYER 
 SPEED_BOSS = 15
@@ -306,7 +306,7 @@ SPEED_MINIS = 80
 --BOSS TYKVA
 MONEY_BOSS_TYKVA = 150
 SCORE_BOSS_TYKVA = 100
-HEALTH_BOSS_TYKVA = 500
+HEALTH_BOSS_TYKVA = 1000
 DAMAGE_BOSS_TYKVA = 80
 SPEED_BOSS_TYKVA = 50
 TIME_SHOOT_BOSS_TYKVA = 2
@@ -317,15 +317,15 @@ local add_ten_level = 40
 local max_level = 20
 function change_exp(value)
 	if HARD_GAME == "easy" then
-		add_every = 2
+		add_every = 1
 		add_five_level = 10
 		add_ten_level = 20
 	elseif HARD_GAME == "medium" then
-		add_every = 3
+		add_every = 2
 		add_five_level = 20
 		add_ten_level = 30
 	elseif HARD_GAME == "hard" then
-		add_every = 4
+		add_every = 3
 		add_five_level = 20
 		add_ten_level = 40
 	end
@@ -450,9 +450,9 @@ function hop_cucumber()
 	UKLON_PLAYER = 3 -- max 30 %
 	SPEED_PLAYER = 80
 	-- AK47
-	TIME_SHOOT_AK47 = 1 -- max 0.3
-	KNIFE_DAMAGE = 15
-	TIME_KNIFE = 1.5 -- max 1 sek
+	TIME_SHOOT_AK47 = 1--1 -- max 0.3
+	KNIFE_DAMAGE = 15--15
+	TIME_KNIFE = 1.5 --1.5 -- max 1 sek
 	HEADSHOT = 0
 	-- add ak47 and knife
 	AK = 0
@@ -475,7 +475,7 @@ function hop_cucumber()
 	MAX_SPEED_PLAYER = 100
 	MAX_SPEED_SHOOT = 0.3 -- sekunda - max 0.2
 	-- AK47 and KNIFE
-	MAX_TIME_SHOOT_AK47 = 0.5 -- max 0.3
+	MAX_TIME_SHOOT_AK47 = 0.3 -- max 0.3
 	MAX_TIME_KNIFE = 0.5 -- max 1 sek
 	MAX_KOL_PROBITIE = 2
 	--------
@@ -505,7 +505,7 @@ function nik_cucumber()
 	MAX_SPEED_PLAYER = 120
 	MAX_SPEED_SHOOT = 0.25 -- sekunda - max 0.2
 	-- AK47 and KNIFE
-	MAX_TIME_SHOOT_AK47 = 0.45 -- max 0.3
+	MAX_TIME_SHOOT_AK47 = 0.3 -- max 0.3
 	MAX_TIME_KNIFE = 0.8 -- max 1 sek
 	MAX_KOL_PROBITIE = 2
 	--------
@@ -545,7 +545,7 @@ function vampir_cucumber()
 	MAX_SPEED_PLAYER = 140
 	MAX_SPEED_SHOOT = 0.25 -- sekunda - max 0.2
 	-- AK47 and KNIFE
-	MAX_TIME_SHOOT_AK47 = 0.4 -- max 0.3
+	MAX_TIME_SHOOT_AK47 = 0.3 -- max 0.3
 	MAX_TIME_KNIFE = 0.7 -- max 1 sek
 	MAX_KOL_PROBITIE = 2
 	--------
@@ -585,7 +585,7 @@ function arni_cucumber()
 	MAX_ARMOR = 60   -- %
 	MAX_UKLON_PLAYER = 25 -- max 30 %
 	MAX_SPEED_PLAYER = 100
-	MAX_SPEED_SHOOT = 0.4 -- sekunda - max 0.2
+	MAX_SPEED_SHOOT = 0.3 -- sekunda - max 0.2
 	-- AK47 and KNIFE
 	MAX_TIME_SHOOT_AK47 = 0.25 -- max 0.3
 	MAX_TIME_KNIFE = 0.5 -- max 1 sek
@@ -615,7 +615,7 @@ function defold_monster()
 	end
 	MONEY_BOSS_TYKVA = 150
 	SCORE_BOSS_TYKVA = 100
-	HEALTH_BOSS_TYKVA = 500
+	HEALTH_BOSS_TYKVA = 1500
 	DAMAGE_BOSS_TYKVA = 80
 	SPEED_BOSS_TYKVA = 50
 	TIME_SHOOT_BOSS_TYKVA = 2
@@ -653,7 +653,7 @@ function defold_monster()
 	SPEED_YELLOW = 40
 	--BOSS
 	MONEY_BOSS = 500
-	SCORE_BOSS = 500
+	SCORE_BOSS = 1
 	HEALTH_BOSS = 100
 	DAMAGE_BOSS = MAX_HP_PLAYER + ARMOR
 	SPEED_BOSS = 15
