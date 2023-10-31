@@ -123,6 +123,15 @@ function on_message(self, message_id, message, sender)
 		msg.post(".", "enable")
 		go.set(".", "scale", vmath.vector3(0.85,1,1))
 		go.set(".", "rotation", vmath.quat(0, 0, 0.1, -0.2))
+		local spd = SPEED_SHOOT
+		local spd2 = TIME_SHOOT_AK47
+		SPEED_SHOOT = 0.1
+		TIME_SHOOT_AK47 = 0.1
+		timer.delay(BOOS_TIME, false, 
+		function() 
+			SPEED_SHOOT = spd 
+			TIME_SHOOT_AK47 = spd2
+		end)
 	end
 end
 

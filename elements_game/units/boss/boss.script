@@ -171,6 +171,10 @@ function on_message(self, message_id, message, sender)
 		if message.other_group == hash("player") then
 			msg.post(message.other_id, "hit_player", {value = self.damage})
 		end
+	elseif message_id == hash("player_dead") then
+		sound.stop("#laser1")
+		sound.stop("#boss_fight")
+		sound.stop("#hit2")
 	end
 end
 	
@@ -185,14 +189,7 @@ function update(self, dt)
 		self.spawn = true
 		self.spawn_time = 10
 	end
-	if self.health < self.health_in - 1000 then
-	elseif self.health < self.health_in /2 then
-		self.damage = 150
-	elseif self.health < self.health_in /5 then
-		self.damage = 200
-	elseif self.health < self.health_in /10 then
-		self.damage = 250
-	end
+	
 	if self.sfera < 0 then
 		self.fire = false
 		self.laser = self.laser - dt
@@ -205,14 +202,16 @@ function update(self, dt)
 			msg.post("#laser_h", "enable")
 			self.laser_shoot = self.laser_shoot - dt
 			if self.laser_shoot < 0 then
-				sound.play("#laser1")
-				go.set("#laser_h", "size", vmath.vector3(1280, 10, 0))
-				go.set("#laser_v1", "size", vmath.vector3(1280, 10, 0))
-				go.set("#laser_v", "size", vmath.vector3(1280, 10, 0))
-				msg.post("#laser", "enable")
-				go.animate("#laser_v", "size", go.PLAYBACK_LOOP_PINGPONG, vmath.vector3(1280, 15, 0), go.EASING_LINEAR, 0.2)
-				go.animate("#laser_v1", "size", go.PLAYBACK_LOOP_PINGPONG, vmath.vector3(1280, 15, 0), go.EASING_LINEAR, 0.2)
-				go.animate("#laser_h", "size", go.PLAYBACK_LOOP_PINGPONG, vmath.vector3(1280, 15, 0), go.EASING_LINEAR, 0.2)
+				if self.laser_shoot < 0 and self.laser_shoot > -0.1 then
+					sound.play("#laser1")
+					go.set("#laser_h", "size", vmath.vector3(1280, 10, 0))
+					go.set("#laser_v1", "size", vmath.vector3(1280, 10, 0))
+					go.set("#laser_v", "size", vmath.vector3(1280, 10, 0))
+					msg.post("#laser", "enable")
+					go.animate("#laser_v", "size", go.PLAYBACK_LOOP_PINGPONG, vmath.vector3(1280, 15, 0), go.EASING_LINEAR, 0.2)
+					go.animate("#laser_v1", "size", go.PLAYBACK_LOOP_PINGPONG, vmath.vector3(1280, 15, 0), go.EASING_LINEAR, 0.2)
+					go.animate("#laser_h", "size", go.PLAYBACK_LOOP_PINGPONG, vmath.vector3(1280, 15, 0), go.EASING_LINEAR, 0.2)
+				end
 				self.laser_time = self.laser_time - dt
 				if self.laser_time < 0 then
 					sound.stop("#laser1")

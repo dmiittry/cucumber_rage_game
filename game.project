@@ -41,3 +41,6 @@ max_count = 500
 max_sound_buffers = 128
 max_component_count = 999
 
+[label]
+max_count = 999
+

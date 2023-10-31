@@ -28,9 +28,12 @@ text1 = " к вампиризму", text2 = "увеличивает кражу �
 img = 'img', buy = math.random(20,32)}
 CHAR_DMG_UNIT = {value = math.random(2,5), key = "dmg_unit", 
 text1 = " к урону дополнительного оружия", text2 = "увеличивает урон дополнительного оружия",text11 = " to additional weapon damage", text22 = "increases additional weapon damage",
- img = 'img', buy = math.random(100,150)}
+img = 'img', buy = math.random(100,150)}
+CHAR_DMG_CRITICAL = {value = math.random(5,10), key = "dmg_critical", 
+text1 = "% критического урона", text2 = "увеличивает критический урон", text11 = "% critical damage", text22 = "increases critical damage",
+img = 'img', buy = math.random(20,32)}
 CHAR_CRITICAL = {value = math.random(1,5), key = "critical", 
-text1 = "% критического урона", text2 = "увеличивает критическую атаку, наносит на 300% больше урона", text11 = "% critical damage", text22 = "increases critical attack, deals 300% more damage",
+text1 = "% шанса критической атаки", text2 = "увеличивает шанс критической атаки",text11 = "% critical attack chance", text22 = "increases critical attack chance",
 img = 'img', buy = math.random(20,32)}
 CHAR_ARMOR = {value = math.random(1,5), key = "armor", 
 text1 = " увеличить броню", text2 = "увеличить броню, броня уменьшает урон", text11 = "increase armor", text22 = " increase armor, armor reduces damage",
@@ -64,10 +67,10 @@ text1 = " к скорости меча", text2 = "увеличивает ско�
 buy = math.random(100, 150), img =""}
 
 UPGRADE_LIST = {CHAR_HP, CHAR_DMG_BULLET, CHAR_SPEED_PLR, CHAR_REGEN, CHAR_VAMPIR, CHAR_CRITICAL, CHAR_ARMOR,
-CHAR_UKLON, CHAR_SPEED_SHOOT, SKILL_ADD_AK47, SKILL_ADD_KNIFE, SKILL_PROBITIE}
+CHAR_UKLON, CHAR_SPEED_SHOOT, SKILL_ADD_AK47, SKILL_ADD_KNIFE, SKILL_PROBITIE, CHAR_DMG_CRITICAL}
 
 STARNDART_LIST = {CHAR_HP, CHAR_DMG_BULLET, CHAR_SPEED_PLR, CHAR_REGEN, CHAR_VAMPIR, CHAR_CRITICAL, CHAR_ARMOR,
-CHAR_UKLON, CHAR_SPEED_SHOOT, SKILL_ADD_AK47, SKILL_ADD_KNIFE, SKILL_PROBITIE}
+CHAR_UKLON, CHAR_SPEED_SHOOT, SKILL_ADD_AK47, SKILL_ADD_KNIFE, SKILL_PROBITIE, CHAR_DMG_CRITICAL}
 
 STATE = "menu"
 
@@ -92,7 +95,7 @@ PUSH_MONSTER = 50
 LEVEL = 1
 TIME_HITTED = 0.3
 LANG_RUS = true
-
+BOOS_TIME = 3
 -- CHAR PLAYER
 HP_PLAYER = 100
 MAX_HP_PLAYER = 100
@@ -101,6 +104,7 @@ VAMPIR = 0 -- % max 9
 DAMAGE_BULLET = 8
 DAMAGE_UNIT = 30
 CRITICAL = 3   -- %
+DMG_CRITICAL = 150 
 ARMOR = 3 -- %
 UKLON_PLAYER = 3 -- max 30 %
 SPEED_PLAYER = 80
@@ -177,6 +181,8 @@ function upgrade_skills(key, value)
 		end
 	elseif key == "dmg_unit" then
 		DAMAGE_UNIT = DAMAGE_UNIT + value
+	elseif key == "dmg_critical" then
+		DMG_CRITICAL = DMG_CRITICAL + value
 	elseif key == "critical" then
 		CRITICAL = CRITICAL + value
 		if CRITICAL > MAX_CRITICAL then
@@ -207,7 +213,7 @@ function upgrade_skills(key, value)
 	elseif key == "speed_shoot" then
 		SPEED_SHOOT = SPEED_SHOOT - value/100
 		if SPEED_SHOOT < MAX_SPEED_SHOOT then
-			-- SPEED_SHOOT = MAX_SPEED_SHOOT
+			SPEED_SHOOT = MAX_SPEED_SHOOT
 			for key, value in pairs(UPGRADE_LIST) do
 				if value == CHAR_SPEED_SHOOT then
 					table.remove(UPGRADE_LIST, key)
@@ -232,7 +238,7 @@ function upgrade_skills(key, value)
 	elseif key == "up_speed_ak" then
 		TIME_SHOOT_AK47 = TIME_SHOOT_AK47 - value/100
 		if TIME_SHOOT_AK47 <= MAX_TIME_SHOOT_AK47 then
-			-- TIME_SHOOT_AK47 = MAX_TIME_SHOOT_AK47
+			TIME_SHOOT_AK47 = MAX_TIME_SHOOT_AK47
 			for key, value in pairs(UPGRADE_LIST) do
 				if value == UP_SPEED_AK then
 					table.remove(UPGRADE_LIST, key)
@@ -242,7 +248,7 @@ function upgrade_skills(key, value)
 	elseif key == "up_speed_knife" then
 		TIME_KNIFE = TIME_KNIFE - value/100
 		if TIME_KNIFE <= MAX_TIME_KNIFE then
-			-- TIME_KNIFE = MAX_TIME_KNIFE
+			TIME_KNIFE = MAX_TIME_KNIFE
 			for key, value in pairs(UPGRADE_LIST) do
 				if value == UP_SPEED_KNIFE then
 					table.remove(UPGRADE_LIST, key)
@@ -390,6 +396,47 @@ function change_exp(value)
 	end
 end
 
+function imba_mode()
+	-- MAX CHAR PLAYER
+	MAX_VAMPIR = 50 -- % max 9
+	MAX_CRITICAL = 50
+	MAX_ARMOR = 150   -- %
+	MAX_UKLON_PLAYER = 60 -- max 30 %
+	MAX_SPEED_PLAYER = 200
+	MAX_SPEED_SHOOT = 0.1 -- sekunda - max 0.2
+	-- AK47 and KNIFE
+	MAX_TIME_SHOOT_AK47 = 0.1 -- max 0.3
+	MAX_TIME_KNIFE = 0.1 -- max 1 sek
+	MAX_KOL_PROBITIE = 5
+	--------
+	UPGRADE_LIST = STARNDART_LIST
+
+	if KNIFE == 3 then
+		table.insert(UPGRADE_LIST, UP_DMG_KNIFE)
+		table.insert(UPGRADE_LIST, UP_SPEED_KNIFE)
+		for key, value in pairs(UPGRADE_LIST) do
+			if value == SKILL_ADD_KNIFE then
+				table.remove(UPGRADE_LIST, key)
+			end
+		end
+	elseif KNIFE < 3 and KNIFE > 0 then
+		table.insert(UPGRADE_LIST, UP_DMG_KNIFE)
+		table.insert(UPGRADE_LIST, UP_SPEED_KNIFE)
+	end
+
+	if AK == 1 then
+		table.insert(UPGRADE_LIST, UP_SPEED_AK)
+		table.insert(UPGRADE_LIST, CHAR_DMG_UNIT)
+	elseif AK == 2 then
+		table.insert(UPGRADE_LIST, UP_SPEED_AK)
+		table.insert(UPGRADE_LIST, CHAR_DMG_UNIT)
+		for key, value in pairs(UPGRADE_LIST) do
+			if value == SKILL_ADD_AK47 then
+				table.remove(UPGRADE_LIST, key)
+			end
+		end
+	end
+end
 function change_hp(value)
 	if value > 0 then
 		KOL_REGEN_HP = KOL_REGEN_HP + value
@@ -429,12 +476,15 @@ function change_weapon(value)
 	if value == "pistol" then
 		DAMAGE_BULLET = 8
 		SPEED_SHOOT = 0.8
+		KOL_PROBITIE = 0
 	elseif value == "two-pistol" then
 		DAMAGE_BULLET = 6
-		SPEED_SHOOT = 0.7
+		SPEED_SHOOT = 0.9
+		KOL_PROBITIE = 0
 	elseif value == "ak47" then
 		DAMAGE_BULLET = 20
 		SPEED_SHOOT = 0.8
+		KOL_PROBITIE = 1
 	end
 end
 		
@@ -445,6 +495,7 @@ function hop_cucumber()
 	REGEN_PLAYER = 0 -- /10 max 30
 	VAMPIR = 0 -- % max 9
 	DAMAGE_UNIT = 30
+	DMG_CRITICAL = 150 
 	CRITICAL = 3   -- %
 	ARMOR = 3 -- %
 	UKLON_PLAYER = 3 -- max 30 %
@@ -458,7 +509,6 @@ function hop_cucumber()
 	AK = 0
 	KNIFE = 0
 	-- STATISTIKA
-	KOL_PROBITIE = 0
 	KOL_MONSTER = 0
 	KOL_MONEY = 0
 	KOL_DAMAGE = 0
@@ -487,6 +537,7 @@ function nik_cucumber()
 	REGEN_PLAYER = 0 -- /10 max 30
 	VAMPIR = 0 -- % max 9
 	DAMAGE_UNIT = 30
+	DMG_CRITICAL = 150 
 	CRITICAL = 5   -- %
 	ARMOR = 3 -- %
 	UKLON_PLAYER = 10 -- max 30 %
@@ -510,7 +561,6 @@ function nik_cucumber()
 	MAX_KOL_PROBITIE = 2
 	--------
 	HEADSHOT = 0
-	KOL_PROBITIE = 0
 	KOL_MONSTER = 0
 	KOL_MONEY = 0
 	KOL_DAMAGE = 0
@@ -527,6 +577,7 @@ function vampir_cucumber()
 	REGEN_PLAYER = 0 -- /10 max 30
 	VAMPIR = 30 -- % max 9
 	DAMAGE_UNIT = 30
+	DMG_CRITICAL = 150 
 	CRITICAL = 0   -- %
 	ARMOR = 1 -- %
 	UKLON_PLAYER = 0 -- max 30 %
@@ -551,7 +602,6 @@ function vampir_cucumber()
 	--------
 
 	HEADSHOT = 0
-	KOL_PROBITIE = 0
 	KOL_MONSTER = 0
 	KOL_MONEY = 0
 	KOL_DAMAGE = 0
@@ -568,6 +618,7 @@ function arni_cucumber()
 	REGEN_PLAYER = 50 -- /10 max 30
 	VAMPIR = 0 -- % max 9
 	DAMAGE_UNIT = 30
+	DMG_CRITICAL = 150 
 	CRITICAL = 0   -- %
 	ARMOR = 30 --
 	UKLON_PLAYER = 0 -- max 30 %
@@ -592,7 +643,6 @@ function arni_cucumber()
 	MAX_KOL_PROBITIE = 2
 	--------
 	
-	KOL_PROBITIE = 0
 	KOL_MONSTER = 0
 	KOL_MONEY = 0
 	KOL_DAMAGE = 0
@@ -609,16 +659,17 @@ function defold_monster()
 	add_five_level = 10
 	add_ten_level = 20
 	DURATION_SPAWN_MOSTER = 4
+	TIME_NEXT_LEVEL = 120
 	UPGRADE_LIST = {}
 	for key,value in pairs(STARNDART_LIST) do 
 		UPGRADE_LIST[key] = value
 	end
 	MONEY_BOSS_TYKVA = 150
 	SCORE_BOSS_TYKVA = 100
-	HEALTH_BOSS_TYKVA = 1500
-	DAMAGE_BOSS_TYKVA = 80
-	SPEED_BOSS_TYKVA = 50
-	TIME_SHOOT_BOSS_TYKVA = 2
+	HEALTH_BOSS_TYKVA = DAMAGE_BULLET * 100
+	DAMAGE_BOSS_TYKVA = MAX_HP_PLAYER *2/3
+	SPEED_BOSS_TYKVA = 90
+	TIME_SHOOT_BOSS_TYKVA = 1.5
 	--SUNDUK
 	HP_SUNDUK = 50
 	TIME_SUNDUK = 60
@@ -629,7 +680,7 @@ function defold_monster()
 	MONEY_RED = 6
 	SCORE_RED = 4
 	DAMAGE_RED = 10
-	SPEED_RED = 40
+	SPEED_RED = 30
 	TIME_SHOOT_RED = 1.5
 	HEALTH_RED = 10
 	--BLUE MONSTER
@@ -643,14 +694,14 @@ function defold_monster()
 	SCORE_PURPLE = 5
 	HEALTH_PURPLE = 10
 	DAMAGE_PURPLE = 10
-	SPEED_PURPLE = 60
+	SPEED_PURPLE = 50
 	TIME_SHOOT_PURPLE = 2.5
 	--YELLOW MONSTER
 	MONEY_YELLOW = 7
 	SCORE_YELLOW = 6
 	HEALTH_YELLOW = 60
 	DAMAGE_YELLOW = 25
-	SPEED_YELLOW = 40
+	SPEED_YELLOW = 35
 	--BOSS
 	MONEY_BOSS = 500
 	SCORE_BOSS = 1
@@ -661,9 +712,9 @@ function defold_monster()
 	--MINIS
 	MONEY_MINIS = 2
 	SCORE_MINIS = 2
-	HEALTH_MINIS = DAMAGE_BULLET * 2
+	HEALTH_MINIS = DAMAGE_BULLET * 4
 	DAMAGE_MINIS = MAX_HP_PLAYER / 2
-	SPEED_MINIS = 80
+	SPEED_MINIS = 100
 end
 
 

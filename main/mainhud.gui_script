@@ -1,10 +1,19 @@
 require "elements_game.core.globals"
 require "elements_game.core.const"
 
+local sound_effect = true
+local sound_bg = false
+local sound_hell = true
+
+-- for key, value in pairs(sound.get_groups()) do
+-- 	sound.set_group_gain(value, 0)
+-- end
+
 function init(self)
-	-- sound.play("#helloween")
-	sound.play("#bg")
 	msg.post(".", "change_lang")
+	msg.post(".", "sound_off", {value = sound_effect})
+	msg.post(".", "sound_off1", {value = sound_bg})
+	msg.post(".", "sound_off2", {value = sound_hell})
 	self.select_cucumber = 0
 	self.select_weapon = "pistol"
 	self.select_hard = "easy"
@@ -84,17 +93,35 @@ function init(self)
 	CONTINUE_TEXT = gui.get_node("continue_text")
 	CONTINUE_TEXT1 = gui.get_node("continue_text1")
 	YOU_WIN_TEXT = gui.get_node("you_win")
-	
+	TOTAL_SCORE_TEXT = gui.get_node("total_score_text")
+	--- HOW TO PLAY
+	HOW_TO_BOX = gui.get_node("how_to_play")
+	HOW_TEXT = gui.get_node("how_text")
+	HOW_TEXT1 = gui.get_node("how_text1")
+	HOW_TEXT2 = gui.get_node("how_text2")
+	HOW_TEXT3 = gui.get_node("how_text3")
+	HOW_TEXT4 = gui.get_node("how_text4")
+	HOW_TEXT5 = gui.get_node("how_text5")
+	HOW_TEXT6 = gui.get_node("how_text6")
+	HOW_TEXT7 = gui.get_node("how_text7")
+	HOW_TEXT8 = gui.get_node("how_text8")
+	BACK_TEXT = gui.get_node("back_text")
 	-- gui.set_text(STATIC_TEXT, text)
+	SOUND_OFF = gui.get_node("sound_off")
+	SOUND_OFF1 = gui.get_node("sound_off1")
+	SOUND_OFF2 = gui.get_node("sound_off2")
 	gui.set_enabled(STATIC_BOX, false)
+	gui.set_enabled(HOW_TO_BOX, false)
 	gui.set_enabled(MENU_BOX, true)
 	select_cucumber("xop", BOX_CUCUMBER, self)
 	select_hard("easy", HARD_BOX, self)
 	select_weapon("pistol", WEAPON_BOX, self)
 end
+
 function play()
 	msg.post("#gameproxy", "set_time_step", {factor = 1, mode = 0})
 end
+
 function stop()
 	static_text()
 	msg.post("#gameproxy", "set_time_step", {factor = 0, mode = 0})
@@ -103,6 +130,30 @@ end
 function on_message(self, message_id, message, sender)
 	if message_id == hash("proxy_loaded") then
 		msg.post(sender, "enable")
+	elseif message_id == hash("sound_off") then
+		if message.value then
+			sound.set_group_gain("effect", 1)
+			gui.play_flipbook(SOUND_OFF, "sound_on")
+		else
+			sound.set_group_gain("effect", 0)
+			gui.play_flipbook(SOUND_OFF, "sound_off")
+		end
+	elseif message_id == hash("sound_off1") then
+		if message.value then
+			msg.post("#bg", "play_sound")
+			gui.play_flipbook(SOUND_OFF1, "sound_on")
+		else
+			msg.post("#bg", "stop_sound")
+			gui.play_flipbook(SOUND_OFF1, "sound_off")
+		end
+	elseif message_id == hash("sound_off2") then
+		if message.value then
+			msg.post("#helloween", "play_sound")
+			gui.play_flipbook(SOUND_OFF2, "sound_on")
+		else
+			msg.post("#helloween", "stop_sound")
+			gui.play_flipbook(SOUND_OFF2, "sound_off")
+		end
 	elseif message_id == hash("change_lang") then
 		if LANG_RUS then
 			gui.set_text(BTN_MENU, "меню")
@@ -114,11 +165,11 @@ function on_message(self, message_id, message, sender)
 			gui.set_text(SELECT_DIF, "выбери сложность>")
 			gui.set_text(SELECT_WEAP, "выбери оружье >")
 			gui.set_text(HOW_GAME, "как играть?")
-			gui.set_text(MENU_TEXT, "выбери огурчика и начни бой!")
-			gui.set_text(CHAR_TEXT, "огурчик рик. сбалансированные характеристики, отлично владеет мечом")
-			gui.set_text(CHAR_TEXT1, "Огурчик НИК - одноглазый ловкий и сильный, стреляет очень быстро")
-			gui.set_text(CHAR_TEXT2, "огурчик драк. увеличенный вампиризм и скорость как у дракулы")
-			gui.set_text(CHAR_TEXT3, "мощный огурчик - железный арни. бронированный как танк. имеет увеличенную скорость дополнительных оружий")
+			gui.set_text(MENU_TEXT, "выбери огурчика и начни бой!")			
+			gui.set_text(CHAR_TEXT, "огурец рик. сбалансированные характеристики, отличное владение мечом")
+			gui.set_text(CHAR_TEXT1, "Огурец НИК - одноглазый, ловкий и сильный, очень быстро стреляет")
+			gui.set_text(CHAR_TEXT2, "огуречный бой - повышенный вампиризм и скорость как у Дракулы")
+			gui.set_text(CHAR_TEXT3, "мощный огурец - железный эрни. бронирован как танк. имеет повышенную скорострельность дополнительного оружия")
 			gui.set_text(CHAR_NAME, "РИК")
 			gui.set_text(CHAR_NAME1, "НИК")
 			gui.set_text(CHAR_NAME2, "ДРАК")
@@ -140,6 +191,17 @@ function on_message(self, message_id, message, sender)
 			count_pol_uron = "получено уронов: "
 			count_pogl_uron = "поглашенный урон: "
 			count_rev = "воскрес: "
+			gui.set_text(HOW_TEXT, "движение:  WASD или джойстик")
+			gui.set_text(HOW_TEXT1, "атака: автоматический атакует ближайшего врага")
+			gui.set_text(HOW_TEXT2, "монстры становятся сильнее с каждым уровнем LVL")
+			gui.set_text(HOW_TEXT3, "Вы зарабатываете ресурсы, убивая монстров")
+			gui.set_text(HOW_TEXT4, "использовать заработанные ресурсы для модернизации огурца.")
+			gui.set_text(HOW_TEXT5, "Правильно рассчитывайте свои ресурсы, после смерти вы сможете вернуться и нанести большой урон.")
+			gui.set_text(HOW_TEXT6, "Разбейте сундук, чтобы получить больше ресурсов")
+			gui.set_text(HOW_TEXT7, "цель игры - убить боссов")
+			gui.set_text(HOW_TEXT8, "как играть?")
+			gui.set_text(BACK_TEXT, "назад")
+			gui.set_text(TOTAL_SCORE_TEXT, "общий счет: ".. ALL_KILL_MONSTER)
 		else 
 			gui.set_text(BTN_MENU, "MENU")
 			gui.set_text(LANG_TEXT, "lang: english")
@@ -176,6 +238,17 @@ function on_message(self, message_id, message, sender)
 			count_pol_uron = "damage received: "
 			count_pogl_uron = "damage absorbed: "
 			count_rev = "resurrected: "
+			gui.set_text(HOW_TEXT, "movement: WASD or joystick")
+			gui.set_text(HOW_TEXT1, "attack: automatic attack of the nearest enemy")
+			gui.set_text(HOW_TEXT2, "monsters get stronger with each LVL level")
+			gui.set_text(HOW_TEXT3, "You earn resources by killing monsters")
+			gui.set_text(HOW_TEXT4, "Use the resources you earn to improve the cucumber")
+			gui.set_text(HOW_TEXT5, "Calculate your resources correctly, after you die you can come back and do a lot of damage")
+			gui.set_text(HOW_TEXT6, "Break the chest to get more resources")
+			gui.set_text(HOW_TEXT7, "The goal of the game is to kill bosses")
+			gui.set_text(HOW_TEXT8, "how to play?")
+			gui.set_text(BACK_TEXT, "back")
+			gui.set_text(TOTAL_SCORE_TEXT, "total score: ".. ALL_KILL_MONSTER)
 		end
 		
 	end
@@ -291,6 +364,23 @@ function on_input(self, action_id, action)
 			change_state("pause")
 			msg.post("main:/interface#hud", "char_enable", {value = true})
 		end
+	elseif action_id == hash("fire") and action.released and gui.pick_node(BACK_TEXT, action.x, action.y) and gui.is_enabled(HOW_TO_BOX) then
+		sound.play("#click")
+		gui.set_enabled(HOW_TO_BOX, false)
+		gui.set_enabled(MENU_BOX, true)
+	elseif action_id == hash("fire") and action.released and gui.pick_node(SOUND_OFF, action.x, action.y) and gui.is_enabled(MENU_BOX) then
+		msg.post(".", "sound_off", {value = not sound_effect})
+		sound_effect = not sound_effect
+	elseif action_id == hash("fire") and action.released and gui.pick_node(SOUND_OFF1, action.x, action.y) and gui.is_enabled(MENU_BOX) then
+		msg.post(".", "sound_off1", {value = not sound_bg})
+		sound_bg = not sound_bg
+	elseif action_id == hash("fire") and action.released and gui.pick_node(SOUND_OFF2, action.x, action.y) and gui.is_enabled(MENU_BOX) then
+		msg.post(".", "sound_off2", {value = not sound_hell})
+		sound_hell = not sound_hell 
+	elseif action_id == hash("fire") and action.released and gui.pick_node(HOW_GAME, action.x, action.y) and gui.is_enabled(MENU_BOX) then
+		sound.play("#click")
+		gui.set_enabled(MENU_BOX, false)
+		gui.set_enabled(HOW_TO_BOX, true)
 	elseif action_id == hash("fire") and action.released and gui.pick_node(LANG_BOX, action.x, action.y) and gui.is_enabled(MENU_BOX) then
 		LANG_RUS = not LANG_RUS
 		msg.post(".", "change_lang")
