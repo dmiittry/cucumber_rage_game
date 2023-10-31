@@ -503,7 +503,7 @@ function hop_cucumber()
 	-- AK47
 	TIME_SHOOT_AK47 = 1--1 -- max 0.3
 	KNIFE_DAMAGE = 15--15
-	TIME_KNIFE = 1.5 --1.5 -- max 1 sek
+	TIME_KNIFE = 1 --1.5 -- max 1 sek
 	HEADSHOT = 0
 	-- add ak47 and knife
 	AK = 0
