@@ -1,6 +1,6 @@
 require "elements_game.core.globals"
 go.property('dir', vmath.vector3())
-go.property('damage', 0)
+go.property('boom', 0)
 go.property('player', false)
 
 function init(self)
@@ -30,7 +30,7 @@ function on_message(self, message_id, message, sender)
 				end
 			elseif message.other_group == hash("enemy") then
 				if self.player then
-					msg.post(message.other_id, "hit", {value = 500, dir = self.dir})
+					msg.post(message.other_id, "hit", {value = self.boom, dir = self.dir})
 				end
 			end
 		end

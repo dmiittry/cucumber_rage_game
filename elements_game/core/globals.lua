@@ -52,7 +52,10 @@ text1 = "добавить меч", text2 = "добавляет мечи, вра�
 buy = math.random(200, 300), img = 'knife' }
 SKILL_PROBITIE = {value = 0, key = "probitie", 
 text1 = "Пробивные пули", text2 = "Ваши пули пробивают +1 противника", text11 = "piercing bullets", text22 = "Your bullets pierce +1 enemy",
- buy = math.random(200, 300), img = "img" }
+buy = math.random(200, 300), img = "img" }
+SKILL_BOOM = {value = 0, key = "boom", 
+text1 = "добавить взрыв", text2 = "регулярно огурец выпускает взрывную волну, которая наносит урон ближайшим врагам", text11 = "add blast", text22 = "regular pickle releases a blast wave that damages nearby enemies",
+buy = math.random(350, 450), img = "img" }
 SKILL_HEADSHOT = {value = 0, key = "headshot", 
 text1 = "HEADSHOT", text2 = "Ваша пуля имеет 5% шанс сделать HEADSHOT, мгновенно убивая врагов", text11 = "HEADSHOT", text22 = "Your bullet has a 5% chance of doing a HEADSHOT, instantly killing enemies",
 buy = math.random(350, 450), img = "img" }
@@ -65,17 +68,20 @@ buy = math.random(100, 150), img =""}
 UP_SPEED_KNIFE = {value =  math.random(2,6), key = "up_speed_knife", 
 text1 = " к скорости меча", text2 = "увеличивает скорость меча", text11 = " to sword speed", text22 = "increases sword speed",
 buy = math.random(100, 150), img =""}
+UP_DMG_BOOM = {value =  math.random(2,6), key = "dmg_boom", 
+text1 = " к урону взрыва", text2 = "увеличивает урон регулярного взрыва", text11 = " to blast damage", text22 = "increases regular blast damage",
+buy = math.random(100, 150), img =""}
 
 UPGRADE_LIST = {CHAR_HP, CHAR_DMG_BULLET, CHAR_SPEED_PLR, CHAR_REGEN, CHAR_VAMPIR, CHAR_CRITICAL, CHAR_ARMOR,
-CHAR_UKLON, CHAR_SPEED_SHOOT, SKILL_ADD_AK47, SKILL_ADD_KNIFE, SKILL_PROBITIE, CHAR_DMG_CRITICAL}
+CHAR_UKLON, CHAR_SPEED_SHOOT, SKILL_ADD_AK47, SKILL_ADD_KNIFE, SKILL_PROBITIE, CHAR_DMG_CRITICAL, SKILL_BOOM}
 
 STARNDART_LIST = {CHAR_HP, CHAR_DMG_BULLET, CHAR_SPEED_PLR, CHAR_REGEN, CHAR_VAMPIR, CHAR_CRITICAL, CHAR_ARMOR,
-CHAR_UKLON, CHAR_SPEED_SHOOT, SKILL_ADD_AK47, SKILL_ADD_KNIFE, SKILL_PROBITIE, CHAR_DMG_CRITICAL}
+CHAR_UKLON, CHAR_SPEED_SHOOT, SKILL_ADD_AK47, SKILL_ADD_KNIFE, SKILL_PROBITIE, CHAR_DMG_CRITICAL, SKILL_BOOM}
 
 STATE = "menu"
 
 -- STATISTIKA
-ALL_KILL_MONSTER = 0
+ALL_KILL_MONSTER = 15
 KOL_MONSTER = 0
 KOL_MONEY = 0
 KOL_DAMAGE = 0
@@ -117,6 +123,8 @@ KNIFE_DAMAGE = 15
 TIME_KNIFE = 1.5 -- max 1 sek
 KOL_PROBITIE = 0
 HEADSHOT = 0 --%
+BOOM_DAMAGE = 30
+BOOM_TIME = 3
 
 function add_ak()
 	AK = AK + 1
@@ -262,6 +270,17 @@ function upgrade_skills(key, value)
 				table.remove(UPGRADE_LIST, key)
 			end
 		end
+	elseif key == "boom" then
+		BOOM_DAMAGE = BOOM_DAMAGE + 10
+		msg.post("/player/cucumber#cucumber", "add_boom")
+		table.insert(UPGRADE_LIST, UP_DMG_BOOM)
+		for key, value in pairs(UPGRADE_LIST) do
+			if value == SKILL_BOOM then
+				table.remove(UPGRADE_LIST, key)
+			end
+		end
+	elseif key == "dmg-boom" then
+		BOOM_DAMAGE = BOOM_DAMAGE + value
 	end
 end
 --SUNDUK
@@ -322,6 +341,8 @@ local add_five_level = 20
 local add_ten_level = 40
 local max_level = 20
 function change_exp(value)
+	KOL_MONSTER = KOL_MONSTER + 1
+	EXP = EXP + value
 	if HARD_GAME == "easy" then
 		add_every = 1
 		add_five_level = 10
@@ -335,8 +356,6 @@ function change_exp(value)
 		add_five_level = 20
 		add_ten_level = 40
 	end
-		
-	EXP = EXP + value
 	if max_level == LEVEL then
 		table.insert(EXP_LVL, EXP_LVL[#EXP_LVL] + 1200)
 	end
@@ -354,6 +373,7 @@ function change_exp(value)
 		if LEVEL % 5 == 0 then
 			if LEVEL == 5 then
 				table.insert(UPGRADE_LIST, SKILL_HEADSHOT)
+				table.insert(UPGRADE_LIST, SKILL_BOOM)
 			end
 			HEALTH_BLUE = HEALTH_BLUE + add_five_level
 			HEALTH_RED = HEALTH_RED + add_five_level
@@ -423,7 +443,7 @@ function imba_mode()
 		table.insert(UPGRADE_LIST, UP_DMG_KNIFE)
 		table.insert(UPGRADE_LIST, UP_SPEED_KNIFE)
 	end
-
+	
 	if AK == 1 then
 		table.insert(UPGRADE_LIST, UP_SPEED_AK)
 		table.insert(UPGRADE_LIST, CHAR_DMG_UNIT)
@@ -435,6 +455,12 @@ function imba_mode()
 				table.remove(UPGRADE_LIST, key)
 			end
 		end
+	end
+	if HEADSHOT == 0 then
+		table.insert(UPGRADE_LIST, SKILL_HEADSHOT)
+	end
+	if BOOM_DAMAGE == 30 then
+		table.insert(UPGRADE_LIST, SKILL_BOOM)
 	end
 end
 function change_hp(value)
@@ -475,21 +501,19 @@ function change_weapon(value)
 	WEAPONS = value
 	if value == "pistol" then
 		DAMAGE_BULLET = 8
-		SPEED_SHOOT = 0.8
 		KOL_PROBITIE = 0
 	elseif value == "two-pistol" then
 		DAMAGE_BULLET = 6
-		SPEED_SHOOT = 0.9
 		KOL_PROBITIE = 0
 	elseif value == "ak47" then
 		DAMAGE_BULLET = 20
-		SPEED_SHOOT = 0.8
 		KOL_PROBITIE = 1
 	end
 end
 		
 function hop_cucumber()
 	CUCUMBER = "hop"
+	SPEED_SHOOT = 0.8
 	HP_PLAYER = 100
 	MAX_HP_PLAYER = 100
 	REGEN_PLAYER = 0 -- /10 max 30
@@ -502,20 +526,13 @@ function hop_cucumber()
 	SPEED_PLAYER = 80
 	-- AK47
 	TIME_SHOOT_AK47 = 1--1 -- max 0.3
-	KNIFE_DAMAGE = 15--15
+	KNIFE_DAMAGE = 30--15
 	TIME_KNIFE = 1 --1.5 -- max 1 sek
 	HEADSHOT = 0
 	-- add ak47 and knife
 	AK = 0
 	KNIFE = 0
 	-- STATISTIKA
-	KOL_MONSTER = 0
-	KOL_MONEY = 0
-	KOL_DAMAGE = 0
-	KOL_REGEN_HP = 0
-	KOL_POL_URON = 0
-	KOL_POGL_URON = 0
-	EXP = 0
 	MONEY = 150
 	-- MAX CHAR PLAYER
 	MAX_VAMPIR = 9 -- % max 9
@@ -532,6 +549,7 @@ function hop_cucumber()
 end
 function nik_cucumber()
 	CUCUMBER = "nik"
+	SPEED_SHOOT = 0.7
 	HP_PLAYER = 150
 	MAX_HP_PLAYER = 150
 	REGEN_PLAYER = 0 -- /10 max 30
@@ -546,7 +564,7 @@ function nik_cucumber()
 	TIME_SHOOT_AK47 = 1 -- max 0.3
 	AK = 0
 	KNIFE = 0
-	KNIFE_DAMAGE = 15
+	KNIFE_DAMAGE = 25
 	TIME_KNIFE = 1.5 -- max 1 sek
 	-- MAX CHAR PLAYER
 	MAX_VAMPIR = 9 -- % max 9
@@ -561,17 +579,12 @@ function nik_cucumber()
 	MAX_KOL_PROBITIE = 2
 	--------
 	HEADSHOT = 0
-	KOL_MONSTER = 0
-	KOL_MONEY = 0
-	KOL_DAMAGE = 0
-	KOL_REGEN_HP = 0
-	KOL_POL_URON = 0
-	KOL_POGL_URON = 0
 	EXP = 0
 	MONEY = 100
 end
 function vampir_cucumber()
 	CUCUMBER = "vampir"
+	SPEED_SHOOT = 0.8
 	HP_PLAYER = 90
 	MAX_HP_PLAYER = 90
 	REGEN_PLAYER = 0 -- /10 max 30
@@ -586,7 +599,7 @@ function vampir_cucumber()
 	TIME_SHOOT_AK47 = 1 -- max 0.3
 	AK = 0
 	KNIFE = 0
-	KNIFE_DAMAGE = 15
+	KNIFE_DAMAGE = 20
 	TIME_KNIFE = 1.5 -- max 1 sek
 	-- MAX CHAR PLAYER
 	MAX_VAMPIR = 40 -- % max 9
@@ -602,17 +615,11 @@ function vampir_cucumber()
 	--------
 
 	HEADSHOT = 0
-	KOL_MONSTER = 0
-	KOL_MONEY = 0
-	KOL_DAMAGE = 0
-	KOL_REGEN_HP = 0
-	KOL_POL_URON = 0
-	KOL_POGL_URON = 0
-	EXP = 0
 	MONEY = 100
 end
 function arni_cucumber()
 	CUCUMBER = "arni"
+	SPEED_SHOOT = 0.7
 	HP_PLAYER = 250
 	MAX_HP_PLAYER = 250
 	REGEN_PLAYER = 50 -- /10 max 30
@@ -643,6 +650,12 @@ function arni_cucumber()
 	MAX_KOL_PROBITIE = 2
 	--------
 	
+	MONEY = 100
+end
+
+function defold_monster()
+	BOOM_DAMAGE = 30
+	BOOM_TIME = 3
 	KOL_MONSTER = 0
 	KOL_MONEY = 0
 	KOL_DAMAGE = 0
@@ -650,10 +663,6 @@ function arni_cucumber()
 	KOL_POL_URON = 0
 	KOL_POGL_URON = 0
 	EXP = 0
-	MONEY = 100
-end
-
-function defold_monster()
 	KOL_REV = 0
 	add_every = 2
 	add_five_level = 10

@@ -117,7 +117,7 @@ function on_message(self, message_id, message, sender)
 		timer.delay(1, false, function() change_state("next") end)
 		
 	elseif message_id == hash("comeback") then
-		factory.create("#boom", nil, nil, {player = true})
+		factory.create("#boom", nil, nil, {player = true, boom = 500})
 		sound.play("#next_level1")
 		go.set("#sprite_cucumber", "tint", vmath.vector4(1,1,1,1))
 		msg.post(".", "enable")
@@ -132,6 +132,27 @@ function on_message(self, message_id, message, sender)
 			SPEED_SHOOT = spd 
 			TIME_SHOOT_AK47 = spd2
 		end)
+	elseif message_id == hash("add_boom") then
+		timer.delay(BOOM_TIME, true, function() 
+			factory.create("#boom", nil, nil, {player = true, boom = BOOM_DAMAGE})
+		end)
+	elseif message_id == hash("move") then
+		print('cuc move')
+		if message.value == "up" then
+			self.dir.y = 1
+		elseif message.value == "down" then
+			self.dir.y = -1
+		elseif message.value == "left" then
+			self.dir.x = -1
+			sprite.set_hflip("#sprite_cucumber", false)
+		elseif message.value == "right" then
+			self.dir.x = 1
+			sprite.set_hflip("#sprite_cucumber", true)
+		end
+
+		if vmath.length(self.dir) > 0 then
+			self.dir = vmath.normalize(self.dir)
+		end
 	end
 end
 

@@ -137,7 +137,7 @@ nodes {
   template_node_child: false
   size_mode: SIZE_MODE_MANUAL
   custom_type: 0
-  enabled: true
+  enabled: false
   visible: true
   material: ""
 }
@@ -1408,8 +1408,8 @@ nodes {
     w: 1.0
   }
   scale {
-    x: 0.7
-    y: 0.7
+    x: 0.6
+    y: 0.6
     z: 1.0
     w: 1.0
   }
@@ -5399,7 +5399,7 @@ nodes {
     w: 1.0
   }
   scale {
-    x: 0.3
+    x: 0.25
     y: 0.25
     z: 1.0
     w: 1.0

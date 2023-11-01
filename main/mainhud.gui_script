@@ -4,12 +4,24 @@ require "elements_game.core.const"
 local sound_effect = true
 local sound_bg = false
 local sound_hell = true
+local total_score_lang = "общий счет: "
 
 -- for key, value in pairs(sound.get_groups()) do
 -- 	sound.set_group_gain(value, 0)
 -- end
 
+local function load_highscore()
+	local filename = sys.get_save_file("sys_save_load", "highscore")
+	local data = sys.load(filename) 
+	return data.highscore or 0 
+end
+local function save_highscore(highscore)
+	local filename = sys.get_save_file("sys_save_load", "highscore")
+	sys.save(filename, { highscore = highscore })
+end
+
 function init(self)
+	ALL_KILL_MONSTER = load_highscore()
 	msg.post(".", "change_lang")
 	msg.post(".", "sound_off", {value = sound_effect})
 	msg.post(".", "sound_off1", {value = sound_bg})
@@ -167,9 +179,9 @@ function on_message(self, message_id, message, sender)
 			gui.set_text(HOW_GAME, "как играть?")
 			gui.set_text(MENU_TEXT, "выбери огурчика и начни бой!")			
 			gui.set_text(CHAR_TEXT, "огурец рик. сбалансированные характеристики, отличное владение мечом")
-			gui.set_text(CHAR_TEXT1, "Огурец НИК - одноглазый, ловкий и сильный, очень быстро стреляет")
-			gui.set_text(CHAR_TEXT2, "огуречный бой - повышенный вампиризм и скорость как у Дракулы")
-			gui.set_text(CHAR_TEXT3, "мощный огурец - железный эрни. бронирован как танк. имеет повышенную скорострельность дополнительного оружия")
+			gui.set_text(CHAR_TEXT1, "Огурец НИК - одноглазый, ловкий и сильный, быстро стреляет. чтобы открыть его нужно убить 5000 монстров")
+			gui.set_text(CHAR_TEXT2, "красный огурчик - повышенный вампиризм и скорость как у Дракулы. Чтобы открыть нужно убить 10к монстров")
+			gui.set_text(CHAR_TEXT3, "мощный огурец - железный эрни. бронирован как танк. имеет повышенные характеристики. чтобы открыть нужно убить 15к монстров")
 			gui.set_text(CHAR_NAME, "РИК")
 			gui.set_text(CHAR_NAME1, "НИК")
 			gui.set_text(CHAR_NAME2, "ДРАК")
@@ -196,12 +208,12 @@ function on_message(self, message_id, message, sender)
 			gui.set_text(HOW_TEXT2, "монстры становятся сильнее с каждым уровнем LVL")
 			gui.set_text(HOW_TEXT3, "Вы зарабатываете ресурсы, убивая монстров")
 			gui.set_text(HOW_TEXT4, "использовать заработанные ресурсы для модернизации огурца.")
-			gui.set_text(HOW_TEXT5, "Правильно рассчитывайте свои ресурсы, после смерти вы сможете вернуться и нанести большой урон.")
+			gui.set_text(HOW_TEXT5, "Правильно рассчитывайте свои ресурсы, после смерти вы сможете вернуться и получить буст")
 			gui.set_text(HOW_TEXT6, "Разбейте сундук, чтобы получить больше ресурсов")
 			gui.set_text(HOW_TEXT7, "цель игры - убить боссов")
 			gui.set_text(HOW_TEXT8, "как играть?")
 			gui.set_text(BACK_TEXT, "назад")
-			gui.set_text(TOTAL_SCORE_TEXT, "общий счет: ".. ALL_KILL_MONSTER)
+			total_score_lang = "общий счет: "
 		else 
 			gui.set_text(BTN_MENU, "MENU")
 			gui.set_text(LANG_TEXT, "lang: english")
@@ -214,9 +226,9 @@ function on_message(self, message_id, message, sender)
 			gui.set_text(HOW_GAME, "how to play?")
 			gui.set_text(MENU_TEXT, "choose a cucumber and start the battle!")
 			gui.set_text(CHAR_TEXT, "pickle rick. balanced characteristics, excellent sword skills")
-			gui.set_text(CHAR_TEXT1, "Cucumber NICK - one-eyed, dexterous and strong, shoots very quickly")
-			gui.set_text(CHAR_TEXT2, "cucumber fight increased vampirism and speed like Dracula")
-			gui.set_text(CHAR_TEXT3, "powerful cucumber - iron arni. armored like a tank. has increased speed of additional weapons")
+			gui.set_text(CHAR_TEXT1, "Cucumber NIC - one-eyed, agile and strong, quick to shoot. to open it you need to kill 5000 monsters")
+			gui.set_text(CHAR_TEXT2, "red pickle - increased vampirism and Dracula-like speed. To open it you need to kill 10k monsters")
+			gui.set_text(CHAR_TEXT3, "powerful cucumber - iron ernie. armored like a tank. has increased characteristics. to open it you need to kill 15k monsters.")
 			gui.set_text(CHAR_NAME, "RIK")
 			gui.set_text(CHAR_NAME1, "NICK")
 			gui.set_text(CHAR_NAME2, "DRAK")
@@ -243,12 +255,12 @@ function on_message(self, message_id, message, sender)
 			gui.set_text(HOW_TEXT2, "monsters get stronger with each LVL level")
 			gui.set_text(HOW_TEXT3, "You earn resources by killing monsters")
 			gui.set_text(HOW_TEXT4, "Use the resources you earn to improve the cucumber")
-			gui.set_text(HOW_TEXT5, "Calculate your resources correctly, after you die you can come back and do a lot of damage")
+			gui.set_text(HOW_TEXT5, "Calculate your resources correctly, after you die you can come back and get a boost")
 			gui.set_text(HOW_TEXT6, "Break the chest to get more resources")
 			gui.set_text(HOW_TEXT7, "The goal of the game is to kill bosses")
 			gui.set_text(HOW_TEXT8, "how to play?")
 			gui.set_text(BACK_TEXT, "back")
-			gui.set_text(TOTAL_SCORE_TEXT, "total score: ".. ALL_KILL_MONSTER)
+			total_score_lang = "total score: "
 		end
 		
 	end
@@ -296,6 +308,7 @@ function update(self, dt)
 		gui.set_enabled(BTN_MENU, false)
 		stop()
 	elseif STATE == "menu" then
+		gui.set_text(TOTAL_SCORE_TEXT, total_score_lang .. ALL_KILL_MONSTER)
 		gui.set_enabled(STATIC_BOX, false)
 		gui.set_enabled(WIN_BOX, false)
 		self.money_rev = 50
@@ -321,20 +334,74 @@ function static_text()
 	gui.set_text(STATIC_TEXT_REV, count_rev .. KOL_REV)
 end
 
+
+
 function select_cucumber(key, box, self)
-	local list_box = {BOX_CUCUMBER, BOX_CUCUMBER1, BOX_CUCUMBER2, BOX_CUCUMBER3}
+	local list_cucumber = {BOX_CUCUMBER, BOX_CUCUMBER1, BOX_CUCUMBER2, BOX_CUCUMBER3}
 	self.select_cucumber = key
-	for i = 1, #list_box do
-		if list_box[i] == box then
+	if ALL_KILL_MONSTER < 5 then
+		gui.set_color(BOX_CUCUMBER1, RED_COLOR)
+		for i = 1, #list_cucumber do
+			if list_cucumber[i] == BOX_CUCUMBER1 then
+				table.remove(list_cucumber, i)
+			end
+		end
+	else
+		gui.set_color(BOX_CUCUMBER1, BLACK_COLOR)
+	end
+	if ALL_KILL_MONSTER < 10 then
+		gui.set_color(BOX_CUCUMBER2, RED_COLOR)
+		for i = 1, #list_cucumber do
+			if list_cucumber[i] == BOX_CUCUMBER2 then
+				table.remove(list_cucumber, i)
+			end
+		end
+	else
+		gui.set_color(BOX_CUCUMBER2, BLACK_COLOR)
+	end
+	if ALL_KILL_MONSTER < 15 then
+		gui.set_color(BOX_CUCUMBER3, RED_COLOR)
+		for i = 1, #list_cucumber do
+			if list_cucumber[i] == BOX_CUCUMBER3 then
+				table.remove(list_cucumber, i)
+			end
+		end
+	else
+		gui.set_color(BOX_CUCUMBER3, BLACK_COLOR)
+	end	
+		
+	for i = 1, #list_cucumber do
+		if list_cucumber[i] == box then
 			gui.set_color(box, WHITE_COLOR)
 		else
-			gui.set_color(list_box[i], BLACK_COLOR)
+			gui.set_color(list_cucumber[i], BLACK_COLOR)
 		end
 	end
 end
 function select_weapon(key, box, self)
 	local list_box = {WEAPON_BOX, WEAPON_BOX1, WEAPON_BOX2}
 	self.select_weapon = key
+	if ALL_KILL_MONSTER < 5 then
+		gui.set_color(WEAPON_BOX1, RED_COLOR)
+		for i = 1, #list_box do
+			if list_box[i] == WEAPON_BOX1 then
+				table.remove(list_box, i)
+			end
+		end
+	else
+		gui.set_color(WEAPON_BOX1, BLACK_COLOR)
+	end
+	if ALL_KILL_MONSTER < 10 then
+		gui.set_color(WEAPON_BOX2, RED_COLOR)
+		for i = 1, #list_box do
+			if list_box[i] == WEAPON_BOX2 then
+				table.remove(list_box, i)
+			end
+		end
+	else
+		gui.set_color(WEAPON_BOX2, BLACK_COLOR)
+	end	
+	
 	for i = 1, #list_box do
 		if list_box[i] == box then
 			gui.set_color(box, WHITE_COLOR)
@@ -346,6 +413,27 @@ end
 function select_hard(key, box, self)
 	local list_box = {HARD_BOX, HARD_BOX1, HARD_BOX2}
 	self.select_hard = key
+	if ALL_KILL_MONSTER < 5 then
+		gui.set_color(HARD_BOX1, RED_COLOR)
+		for i = 1, #list_box do
+			if list_box[i] == HARD_BOX1 then
+				table.remove(list_box, i)
+			end
+		end
+	else
+		gui.set_color(HARD_BOX1, BLACK_COLOR)
+	end
+	if ALL_KILL_MONSTER < 10 then
+		gui.set_color(HARD_BOX2, RED_COLOR)
+		for i = 1, #list_box do
+			if list_box[i] == HARD_BOX2 then
+				table.remove(list_box, i)
+			end
+		end
+	else
+		gui.set_color(HARD_BOX2, BLACK_COLOR)
+	end	
+	
 	for i = 1, #list_box do
 		if list_box[i] == box then
 			gui.set_color(box, WHITE_COLOR)
@@ -354,6 +442,7 @@ function select_hard(key, box, self)
 		end
 	end
 end
+
 function on_input(self, action_id, action)
 	if action_id == hash("esc") and action.released and gui.is_enabled(BTN_MENU) then
 		sound.play("#click")
@@ -384,6 +473,7 @@ function on_input(self, action_id, action)
 	elseif action_id == hash("fire") and action.released and gui.pick_node(LANG_BOX, action.x, action.y) and gui.is_enabled(MENU_BOX) then
 		LANG_RUS = not LANG_RUS
 		msg.post(".", "change_lang")
+		save_lang()
 		change_langugage(LANG_RUS)
 	elseif action_id == hash("fire") and action.released and gui.pick_node(CONTINUE_BOX, action.x, action.y) and gui.is_enabled(WIN_BOX) then
 		change_exp(SCORE_BOSS)
@@ -392,6 +482,7 @@ function on_input(self, action_id, action)
 		sound.play("#click")
 	elseif action_id == hash("fire") and action.released and gui.pick_node(EXIT_BOX2, action.x, action.y) and gui.is_enabled(WIN_BOX) then
 		ALL_KILL_MONSTER = ALL_KILL_MONSTER + KOL_MONSTER
+		save_highscore(ALL_KILL_MONSTER)
 		msg.post("#gameproxy", "unload")
 		sound.play("#click")
 		gui.set_enabled(MENU_BOX, true)
@@ -437,38 +528,38 @@ function on_input(self, action_id, action)
 		change_state("start")
 		msg.post("#gameproxy", "load")
 		
-	elseif action_id == hash("fire") and action.released and gui.pick_node(BOX_CUCUMBER,action.x, action.y) and gui.is_enabled(MENU_BOX) then
+	elseif action_id == hash("fire") and action.released and gui.pick_node(BOX_CUCUMBER,action.x, action.y) and gui.is_enabled(MENU_BOX) and gui.get_color(BOX_CUCUMBER) == BLACK_COLOR then
 		select_cucumber("xop", BOX_CUCUMBER, self)
 		sound.play("#click")
-	elseif action_id == hash("fire") and action.released and gui.pick_node(BOX_CUCUMBER1, action.x, action.y) and gui.is_enabled(MENU_BOX) then
+	elseif action_id == hash("fire") and action.released and gui.pick_node(BOX_CUCUMBER1, action.x, action.y) and gui.is_enabled(MENU_BOX) and gui.get_color(BOX_CUCUMBER1) == BLACK_COLOR then
 		select_cucumber("nik", BOX_CUCUMBER1, self)
 		sound.play("#click")
-	elseif action_id == hash("fire") and action.released and gui.pick_node(BOX_CUCUMBER2, action.x, action.y) and gui.is_enabled(MENU_BOX) then
+	elseif action_id == hash("fire") and action.released and gui.pick_node(BOX_CUCUMBER2, action.x, action.y) and gui.is_enabled(MENU_BOX) and gui.get_color(BOX_CUCUMBER2) == BLACK_COLOR then
 		select_cucumber("drak", BOX_CUCUMBER2, self)
 		sound.play("#click")
-	elseif action_id == hash("fire") and action.released and gui.pick_node(BOX_CUCUMBER3, action.x, action.y) and gui.is_enabled(MENU_BOX) then
+	elseif action_id == hash("fire") and action.released and gui.pick_node(BOX_CUCUMBER3, action.x, action.y) and gui.is_enabled(MENU_BOX) and gui.get_color(BOX_CUCUMBER3) == BLACK_COLOR then
 		select_cucumber("arni", BOX_CUCUMBER3, self)
 		sound.play("#click")
 
-	elseif action_id == hash("fire") and action.released and gui.pick_node(WEAPON_BOX,action.x, action.y) and gui.is_enabled(MENU_BOX) then
+	elseif action_id == hash("fire") and action.released and gui.pick_node(WEAPON_BOX,action.x, action.y) and gui.is_enabled(MENU_BOX) and gui.get_color(WEAPON_BOX) == BLACK_COLOR then
 		select_weapon("pistol", WEAPON_BOX, self)
 		sound.play("#click")
-	elseif action_id == hash("fire") and action.released and gui.pick_node(WEAPON_BOX1, action.x, action.y) and gui.is_enabled(MENU_BOX) then
+	elseif action_id == hash("fire") and action.released and gui.pick_node(WEAPON_BOX1, action.x, action.y) and gui.is_enabled(MENU_BOX) and gui.get_color(WEAPON_BOX1) == BLACK_COLOR then
 		select_weapon("two-pistol", WEAPON_BOX1, self)
 		sound.play("#click")
-	elseif action_id == hash("fire") and action.released and gui.pick_node(WEAPON_BOX2, action.x, action.y) and gui.is_enabled(MENU_BOX) then
+	elseif action_id == hash("fire") and action.released and gui.pick_node(WEAPON_BOX2, action.x, action.y) and gui.is_enabled(MENU_BOX) and gui.get_color(WEAPON_BOX2) == BLACK_COLOR then
 		select_weapon("ak47", WEAPON_BOX2, self)
 		sound.play("#click")
 
-	elseif action_id == hash("fire") and action.released and gui.pick_node(HARD_BOX,action.x, action.y) and gui.is_enabled(MENU_BOX) then
+	elseif action_id == hash("fire") and action.released and gui.pick_node(HARD_BOX,action.x, action.y) and gui.is_enabled(MENU_BOX) and gui.get_color(HARD_BOX) == BLACK_COLOR then
 		select_hard("easy", HARD_BOX, self)
 		TIME_HITTED = 0.3
 		sound.play("#click")
-	elseif action_id == hash("fire") and action.released and gui.pick_node(HARD_BOX1, action.x, action.y) and gui.is_enabled(MENU_BOX) then
+	elseif action_id == hash("fire") and action.released and gui.pick_node(HARD_BOX1, action.x, action.y) and gui.is_enabled(MENU_BOX) and gui.get_color(HARD_BOX1) == BLACK_COLOR then
 		select_hard("medium", HARD_BOX1, self)
 		TIME_HITTED = 0.2
 		sound.play("#click")
-	elseif action_id == hash("fire") and action.released and gui.pick_node(HARD_BOX2, action.x, action.y) and gui.is_enabled(MENU_BOX) then
+	elseif action_id == hash("fire") and action.released and gui.pick_node(HARD_BOX2, action.x, action.y) and gui.is_enabled(MENU_BOX) and gui.get_color(HARD_BOX2) == BLACK_COLOR then
 		select_hard("hard", HARD_BOX2, self)
 		TIME_HITTED = 0.1
 		sound.play("#click")
@@ -477,14 +568,24 @@ function on_input(self, action_id, action)
 		IS_MOUSE = not IS_MOUSE
 		sound.play("#click")
 	elseif action_id == hash("fire") and action.released and gui.pick_node(EXIT_BOX, action.x, action.y) and gui.is_enabled(PAUSE_MENU) then
+		ALL_KILL_MONSTER = ALL_KILL_MONSTER + KOL_MONSTER
+		save_highscore(ALL_KILL_MONSTER)
 		msg.post("#gameproxy", "unload")
 		sound.play("#click")
 		gui.set_enabled(MENU_BOX, true)
+		select_cucumber("xop", BOX_CUCUMBER, self)
+		select_hard("easy", HARD_BOX, self)
+		select_weapon("pistol", WEAPON_BOX, self)
 		change_state("menu")
 	elseif action_id == hash("fire") and action.released and gui.pick_node(EXIT_BOX1, action.x, action.y) and gui.is_enabled(DEAD_MENU) then
+		ALL_KILL_MONSTER = ALL_KILL_MONSTER + KOL_MONSTER
+		save_highscore(ALL_KILL_MONSTER)
 		msg.post("#gameproxy", "unload")
 		sound.play("#click")
 		gui.set_enabled(MENU_BOX, true)
+		select_cucumber("xop", BOX_CUCUMBER, self)
+		select_hard("easy", HARD_BOX, self)
+		select_weapon("pistol", WEAPON_BOX, self)
 		change_state("menu")
 
 	elseif action_id == hash("fire") and action.released and gui.pick_node(ADS_BOX, action.x, action.y) and gui.is_enabled(DEAD_MENU) then

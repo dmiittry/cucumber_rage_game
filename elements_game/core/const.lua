@@ -15,7 +15,8 @@ CONST_TIME_SHOOT_AK47 = 1
 CONST_KNIFE_DAMAGE = 15
 CONST_TIME_KNIFE = 1.5 
 CONST_KOL_PROBITIE = 0
-CONST_HEADSHOT = 0 
+CONST_HEADSHOT = 0
+CONST_BOOM_DAMAGE = 30
 
 
 MAX_REGEN_PLAYER = 0 -- /10 max 30
@@ -53,6 +54,7 @@ LANG_TEXT_CHAR_PROB = "пробитие: "
 LANG_TEXT_CHAR_SPD_UNIT = "скорость доп. оружий: "
 LANG_TEXT_CHAR_SPD_KNIFE = "скорость меча: "
 LANG_TEXT_CHAR_DMG_KNIFE = "урон меча: "
+LANG_TEXT_CHAR_DMG_BOOM = "урон взрыва: "
 
 function change_langugage(value)
 	if value then
@@ -78,6 +80,7 @@ function change_langugage(value)
 		LANG_TEXT_CHAR_SPD_UNIT = "скорость доп. оружия: "
 		LANG_TEXT_CHAR_SPD_KNIFE = "скорость меча: "
 		LANG_TEXT_CHAR_DMG_KNIFE = "урон меча: "
+		LANG_TEXT_CHAR_DMG_BOOM = "урон взрыва: "
 	else
 		LANG_TEXT_LVL_SHOP = " LVL - shop"
 		LANG_TEXT_BUY = "buy"
@@ -101,5 +104,6 @@ function change_langugage(value)
 		LANG_TEXT_CHAR_SPD_UNIT = "extra weapon speed: "
 		LANG_TEXT_CHAR_SPD_KNIFE = "sword speed: "
 		LANG_TEXT_CHAR_DMG_KNIFE = "sword damage: "
+		LANG_TEXT_CHAR_DMG_BOOM = "blast damage: "
 	end
 end
