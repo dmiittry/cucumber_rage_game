@@ -5,7 +5,7 @@ local sound_effect = true
 local sound_bg = false
 local sound_hell = true
 local total_score_lang = "общий счет: "
-
+local gamepad_lang = "джойстик: "
 -- for key, value in pairs(sound.get_groups()) do
 -- 	sound.set_group_gain(value, 0)
 -- end
@@ -21,6 +21,13 @@ local function save_highscore(highscore)
 end
 
 function init(self)
+	local info = sys.get_sys_info()
+	if info.system_name == "HTML5" then
+		local device = info.user_agent
+		if device.type == "desktop" then
+			GAMEPAD_ON = false
+		end
+	end
 	ALL_KILL_MONSTER = load_highscore()
 	msg.post(".", "change_lang")
 	msg.post(".", "sound_off", {value = sound_effect})
@@ -98,6 +105,7 @@ function init(self)
 	CHAR_NAME2 = gui.get_node("char_name2")
 	CHAR_NAME3 = gui.get_node("char_name3")
 	YOU_DEAD_TEXT = gui.get_node("you_dead")
+	GAMEPAD_TEXT = gui.get_node("gamepad_text")
 	EXIT_TEXT = gui.get_node("exit_text")
 	EXIT_TEXT1 = gui.get_node("exit_text1")
 	EXIT_TEXT3 = gui.get_node("exit_text3")
@@ -122,6 +130,7 @@ function init(self)
 	SOUND_OFF = gui.get_node("sound_off")
 	SOUND_OFF1 = gui.get_node("sound_off1")
 	SOUND_OFF2 = gui.get_node("sound_off2")
+	GAMEPAD_OFF = gui.get_node("gamepad_off")
 	gui.set_enabled(STATIC_BOX, false)
 	gui.set_enabled(HOW_TO_BOX, false)
 	gui.set_enabled(MENU_BOX, true)
@@ -214,6 +223,14 @@ function on_message(self, message_id, message, sender)
 			gui.set_text(HOW_TEXT8, "как играть?")
 			gui.set_text(BACK_TEXT, "назад")
 			total_score_lang = "общий счет: "
+			gamepad_lang = "джойстик: "
+			if GAMEPAD_ON then
+				gui.set_text(GAMEPAD_TEXT, gamepad_lang .. "вкл")
+				gui.play_flipbook(GAMEPAD_OFF, "gamepad_on")
+			else
+				gui.set_text(GAMEPAD_TEXT, gamepad_lang .. "выкл")
+				gui.play_flipbook(GAMEPAD_OFF, "gamepad_off")
+			end
 		else 
 			gui.set_text(BTN_MENU, "MENU")
 			gui.set_text(LANG_TEXT, "lang: english")
@@ -261,6 +278,14 @@ function on_message(self, message_id, message, sender)
 			gui.set_text(HOW_TEXT8, "how to play?")
 			gui.set_text(BACK_TEXT, "back")
 			total_score_lang = "total score: "
+			gamepad_lang = "joystick: "
+			if GAMEPAD_ON then
+				gui.set_text(GAMEPAD_TEXT, gamepad_lang .. "on")
+				gui.play_flipbook(GAMEPAD_OFF, "gamepad_on")
+			else
+				gui.set_text(GAMEPAD_TEXT, gamepad_lang .. "off")
+				gui.play_flipbook(GAMEPAD_OFF, "gamepad_off")
+			end
 		end
 		
 	end
@@ -473,7 +498,6 @@ function on_input(self, action_id, action)
 	elseif action_id == hash("fire") and action.released and gui.pick_node(LANG_BOX, action.x, action.y) and gui.is_enabled(MENU_BOX) then
 		LANG_RUS = not LANG_RUS
 		msg.post(".", "change_lang")
-		save_lang()
 		change_langugage(LANG_RUS)
 	elseif action_id == hash("fire") and action.released and gui.pick_node(CONTINUE_BOX, action.x, action.y) and gui.is_enabled(WIN_BOX) then
 		change_exp(SCORE_BOSS)
@@ -483,6 +507,7 @@ function on_input(self, action_id, action)
 	elseif action_id == hash("fire") and action.released and gui.pick_node(EXIT_BOX2, action.x, action.y) and gui.is_enabled(WIN_BOX) then
 		ALL_KILL_MONSTER = ALL_KILL_MONSTER + KOL_MONSTER
 		save_highscore(ALL_KILL_MONSTER)
+		defold_monster()
 		msg.post("#gameproxy", "unload")
 		sound.play("#click")
 		gui.set_enabled(MENU_BOX, true)
@@ -493,6 +518,15 @@ function on_input(self, action_id, action)
 		change_state("pause")
 		sound.play("#click")
 		static_text()
+	elseif action_id == hash("fire") and action.released and gui.pick_node(GAMEPAD_OFF, action.x, action.y) and gui.is_enabled(MENU_BOX) then
+		GAMEPAD_ON = not GAMEPAD_ON
+		msg.post(".", "change_lang")
+		sound.play("#click")
+	elseif action_id == hash("fire") and action.released and gui.pick_node(GAMEPAD_TEXT,action.x, action.y) and gui.is_enabled(BTN_MENU) and gui.is_enabled(PAUSE_MENU) then
+		GAMEPAD_ON = not GAMEPAD_ON
+		msg.post("main:/interface#hud", "gamepad", {value = GAMEPAD_ON})
+		msg.post(".", "change_lang")
+		sound.play("#click")
 	elseif action_id == hash("fire") and action.released and gui.pick_node(BTN_CONTINUE,action.x, action.y) and gui.is_enabled(BTN_MENU) and gui.is_enabled(PAUSE_MENU) then
 		change_state("start")
 		msg.post("main:/interface#hud", "char_enable", {value = false})
@@ -570,6 +604,7 @@ function on_input(self, action_id, action)
 	elseif action_id == hash("fire") and action.released and gui.pick_node(EXIT_BOX, action.x, action.y) and gui.is_enabled(PAUSE_MENU) then
 		ALL_KILL_MONSTER = ALL_KILL_MONSTER + KOL_MONSTER
 		save_highscore(ALL_KILL_MONSTER)
+		defold_monster()
 		msg.post("#gameproxy", "unload")
 		sound.play("#click")
 		gui.set_enabled(MENU_BOX, true)
@@ -580,6 +615,7 @@ function on_input(self, action_id, action)
 	elseif action_id == hash("fire") and action.released and gui.pick_node(EXIT_BOX1, action.x, action.y) and gui.is_enabled(DEAD_MENU) then
 		ALL_KILL_MONSTER = ALL_KILL_MONSTER + KOL_MONSTER
 		save_highscore(ALL_KILL_MONSTER)
+		defold_monster()
 		msg.post("#gameproxy", "unload")
 		sound.play("#click")
 		gui.set_enabled(MENU_BOX, true)
@@ -592,4 +628,8 @@ function on_input(self, action_id, action)
 		change_money(300)
 		sound.play("#click")
 	end
+end
+
+function final(self)
+	save_highscore(ALL_KILL_MONSTER + KOL_MONSTER)
 end

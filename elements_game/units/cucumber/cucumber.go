@@ -1,6 +1,6 @@
 components {
   id: "cucumber"
-  component: "/main/cucumber.script"
+  component: "/elements_game/units/cucumber/cucumber.script"
   position {
     x: 0.0
     y: 0.0

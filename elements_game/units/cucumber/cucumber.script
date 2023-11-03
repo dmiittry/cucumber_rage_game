@@ -137,7 +137,6 @@ function on_message(self, message_id, message, sender)
 			factory.create("#boom", nil, nil, {player = true, boom = BOOM_DAMAGE})
 		end)
 	elseif message_id == hash("move") then
-		print('cuc move')
 		if message.value == "up" then
 			self.dir.y = 1
 		elseif message.value == "down" then

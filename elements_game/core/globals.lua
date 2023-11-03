@@ -72,11 +72,10 @@ UP_DMG_BOOM = {value =  math.random(2,6), key = "dmg_boom",
 text1 = " к урону взрыва", text2 = "увеличивает урон регулярного взрыва", text11 = " to blast damage", text22 = "increases regular blast damage",
 buy = math.random(100, 150), img =""}
 
-UPGRADE_LIST = {CHAR_HP, CHAR_DMG_BULLET, CHAR_SPEED_PLR, CHAR_REGEN, CHAR_VAMPIR, CHAR_CRITICAL, CHAR_ARMOR,
-CHAR_UKLON, CHAR_SPEED_SHOOT, SKILL_ADD_AK47, SKILL_ADD_KNIFE, SKILL_PROBITIE, CHAR_DMG_CRITICAL, SKILL_BOOM}
+UPGRADE_LIST = {}
 
 STARNDART_LIST = {CHAR_HP, CHAR_DMG_BULLET, CHAR_SPEED_PLR, CHAR_REGEN, CHAR_VAMPIR, CHAR_CRITICAL, CHAR_ARMOR,
-CHAR_UKLON, CHAR_SPEED_SHOOT, SKILL_ADD_AK47, SKILL_ADD_KNIFE, SKILL_PROBITIE, CHAR_DMG_CRITICAL, SKILL_BOOM}
+CHAR_UKLON, CHAR_SPEED_SHOOT, SKILL_ADD_AK47, SKILL_ADD_KNIFE, SKILL_PROBITIE, CHAR_DMG_CRITICAL}
 
 STATE = "menu"
 
@@ -102,6 +101,8 @@ LEVEL = 1
 TIME_HITTED = 0.3
 LANG_RUS = true
 BOOS_TIME = 3
+GAMEPAD_ON = true
+
 -- CHAR PLAYER
 HP_PLAYER = 100
 MAX_HP_PLAYER = 100
@@ -360,8 +361,8 @@ function change_exp(value)
 		table.insert(EXP_LVL, EXP_LVL[#EXP_LVL] + 1200)
 	end
 	if EXP >= EXP_LVL[LEVEL] then
-		msg.post("/player/cucumber#cucumber", "next_level")
 		LEVEL = LEVEL + 1
+		msg.post("/player/cucumber#cucumber", "next_level")
 		HEALTH_BLUE = HEALTH_BLUE + add_every
 		HEALTH_RED = HEALTH_RED + add_every
 		HEALTH_PURPLE = HEALTH_PURPLE + add_every
@@ -417,6 +418,7 @@ function change_exp(value)
 end
 
 function imba_mode()
+	add_every = add_every + 5
 	-- MAX CHAR PLAYER
 	MAX_VAMPIR = 50 -- % max 9
 	MAX_CRITICAL = 50
@@ -549,7 +551,7 @@ function hop_cucumber()
 end
 function nik_cucumber()
 	CUCUMBER = "nik"
-	SPEED_SHOOT = 0.7
+	SPEED_SHOOT = 0.65
 	HP_PLAYER = 150
 	MAX_HP_PLAYER = 150
 	REGEN_PLAYER = 0 -- /10 max 30
@@ -557,7 +559,7 @@ function nik_cucumber()
 	DAMAGE_UNIT = 30
 	DMG_CRITICAL = 150 
 	CRITICAL = 5   -- %
-	ARMOR = 3 -- %
+	ARMOR = 5 -- %
 	UKLON_PLAYER = 10 -- max 30 %
 	SPEED_PLAYER = 90
 	-- AK47
@@ -584,7 +586,7 @@ function nik_cucumber()
 end
 function vampir_cucumber()
 	CUCUMBER = "vampir"
-	SPEED_SHOOT = 0.8
+	SPEED_SHOOT = 0.7
 	HP_PLAYER = 90
 	MAX_HP_PLAYER = 90
 	REGEN_PLAYER = 0 -- /10 max 30
@@ -619,7 +621,7 @@ function vampir_cucumber()
 end
 function arni_cucumber()
 	CUCUMBER = "arni"
-	SPEED_SHOOT = 0.7
+	SPEED_SHOOT = 0.6
 	HP_PLAYER = 250
 	MAX_HP_PLAYER = 250
 	REGEN_PLAYER = 50 -- /10 max 30
@@ -675,7 +677,7 @@ function defold_monster()
 	end
 	MONEY_BOSS_TYKVA = 150
 	SCORE_BOSS_TYKVA = 100
-	HEALTH_BOSS_TYKVA = DAMAGE_BULLET * 100
+	HEALTH_BOSS_TYKVA = DAMAGE_BULLET * 200
 	DAMAGE_BOSS_TYKVA = MAX_HP_PLAYER *2/3
 	SPEED_BOSS_TYKVA = 90
 	TIME_SHOOT_BOSS_TYKVA = 1.5

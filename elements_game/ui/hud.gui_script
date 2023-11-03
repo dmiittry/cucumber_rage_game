@@ -104,7 +104,6 @@ function init(self)
 	text_update(self)
 	gui.set_enabled(CHARACTER_BOX, true)
 	gui.set_enabled(IMBA_BOX, false)
-	gui.set_enabled(GAMEPAD_BOX, false)
 	
 	gui.set_text(CLOSE_TEXT, LANG_TEXT_CLOSE)
 	gui.set_text(ADD_MONEY_TEXT, LANG_TEXT_ADS)
@@ -579,7 +578,7 @@ function on_input(self, action_id, action)
 		text_update(self)
 	elseif action_id == hash("fire") and action.released and gui.pick_node(CLOSE_BOX, action.x, action.y) and gui.is_enabled(UPGRADE_BOX) and gui.is_enabled(CLOSE_BOX) then
 		gui.set_enabled(UPGRADE_BOX, false)
-		gui.set_enabled(GAMEPAD_BOX, true)
+		gui.set_enabled(GAMEPAD_BOX, GAMEPAD_ON)
 		text_update(self)
 		free_upgrade = true
 		change_state('start')
@@ -589,13 +588,13 @@ function on_input(self, action_id, action)
 	elseif action_id == hash("fire") and action.released and gui.pick_node(ADD_MONEY_BOX, action.x, action.y) and gui.is_enabled(UPGRADE_BOX) then
 		change_money(300)
 		sound.play("/interface#click")
-	elseif action_id == hash("fire") and gui.pick_node(LEFT_BOX, action.x, action.y) and gui.is_enabled(GAMEPAD_BOX) then
+	elseif gui.pick_node(LEFT_BOX, action.x, action.y) and gui.is_enabled(GAMEPAD_BOX) and action_id == hash("fire") or action_id == hash("touch") then
 		msg.post("/player/cucumber#cucumber", "move", {value = "left"})
-	elseif action_id == hash("fire") and gui.pick_node(RIGHT_BOX, action.x, action.y) and gui.is_enabled(GAMEPAD_BOX) then
+	elseif gui.pick_node(RIGHT_BOX, action.x, action.y) and gui.is_enabled(GAMEPAD_BOX) and action_id == hash("fire") or action_id == hash("touch") then
 		msg.post("/player/cucumber#cucumber", "move", {value = "right"})
-	elseif action_id == hash("fire") and gui.pick_node(UP_BOX, action.x, action.y) and gui.is_enabled(GAMEPAD_BOX) then
+	elseif gui.pick_node(UP_BOX, action.x, action.y) and gui.is_enabled(GAMEPAD_BOX) and action_id == hash("fire") or action_id == hash("touch") then
 		msg.post("/player/cucumber#cucumber", "move", {value = "up"})
-	elseif action_id == hash("fire") and gui.pick_node(DOWN_BOX, action.x, action.y) and gui.is_enabled(GAMEPAD_BOX) then
+	elseif gui.pick_node(DOWN_BOX, action.x, action.y) and gui.is_enabled(GAMEPAD_BOX) and action_id == hash("fire") or action_id == hash("touch") then
 		msg.post("/player/cucumber#cucumber", "move", {value = "down"})
 	end
 end
@@ -607,6 +606,8 @@ function on_message(self, message_id, message, sender)
 		else
 			gui.set_enabled(CHARACTER_BOX, message.value)
 		end
+	elseif message_id == hash("gamepad") then
+		gui.set_enabled(GAMEPAD_BOX, message.value)
 	end
 end
 

@@ -67,7 +67,7 @@ nodes {
   clipping_mode: CLIPPING_MODE_NONE
   clipping_visible: true
   clipping_inverted: false
-  alpha: 1.0
+  alpha: 0.43
   template_node_child: false
   size_mode: SIZE_MODE_MANUAL
   custom_type: 0
@@ -108,7 +108,7 @@ nodes {
   }
   type: TYPE_BOX
   blend_mode: BLEND_MODE_ALPHA
-  texture: ""
+  texture: "sprites/arrow"
   id: "left_box"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
@@ -136,7 +136,7 @@ nodes {
 }
 nodes {
   position {
-    x: -111.0
+    x: -120.0
     y: 0.0
     z: 0.0
     w: 1.0
@@ -148,7 +148,7 @@ nodes {
     w: 1.0
   }
   scale {
-    x: 1.0
+    x: -1.0
     y: 1.0
     z: 1.0
     w: 1.0
@@ -167,7 +167,7 @@ nodes {
   }
   type: TYPE_BOX
   blend_mode: BLEND_MODE_ALPHA
-  texture: ""
+  texture: "sprites/arrow"
   id: "right_box"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
@@ -195,15 +195,15 @@ nodes {
 }
 nodes {
   position {
-    x: 235.0
-    y: 53.0
+    x: 234.0
+    y: 86.0
     z: 0.0
     w: 1.0
   }
   rotation {
     x: 0.0
     y: 0.0
-    z: 0.0
+    z: -90.0
     w: 1.0
   }
   scale {
@@ -226,7 +226,7 @@ nodes {
   }
   type: TYPE_BOX
   blend_mode: BLEND_MODE_ALPHA
-  texture: ""
+  texture: "sprites/arrow"
   id: "up_box"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
@@ -255,14 +255,14 @@ nodes {
 nodes {
   position {
     x: 234.0
-    y: -22.0
+    y: -21.0
     z: 0.0
     w: 1.0
   }
   rotation {
     x: 0.0
     y: 0.0
-    z: 0.0
+    z: 90.0
     w: 1.0
   }
   scale {
@@ -285,7 +285,7 @@ nodes {
   }
   type: TYPE_BOX
   blend_mode: BLEND_MODE_ALPHA
-  texture: ""
+  texture: "sprites/arrow"
   id: "down_box"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
