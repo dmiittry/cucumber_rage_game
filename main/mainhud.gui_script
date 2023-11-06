@@ -2,8 +2,8 @@ require "elements_game.core.globals"
 require "elements_game.core.const"
 
 local sound_effect = true
-local sound_bg = false
-local sound_hell = true
+local sound_bg = true
+local sound_hell = false
 local total_score_lang = "общий счет: "
 local gamepad_lang = "джойстик: "
 -- for key, value in pairs(sound.get_groups()) do
@@ -11,28 +11,28 @@ local gamepad_lang = "джойстик: "
 -- end
 
 local function load_highscore()
-	local filename = sys.get_save_file("sys_save_load", "highscore")
-	local data = sys.load(filename) 
-	return data.highscore or 0 
+	-- local filename = sys.get_save_file("sys_save_load", "highscore")
+	-- local data = sys.load(filename)
+	msg.post("menu:/main#yandex", "get_stats")
+	return ALL_KILL_MONSTER or 0 
 end
 local function save_highscore(highscore)
-	local filename = sys.get_save_file("sys_save_load", "highscore")
-	sys.save(filename, { highscore = highscore })
+	-- local filename = sys.get_save_file("sys_save_load", "highscore")
+	-- sys.save(filename, { highscore = highscore })
+	msg.post("menu:/main#yandex", "set_stats", {value = highscore})
+	msg.post("menu:/main#yandex", "leaderboard")
 end
 
 function init(self)
-	local info = sys.get_sys_info()
-	if info.system_name == "HTML5" then
-		local device = info.user_agent
-		if device.type == "desktop" then
-			GAMEPAD_ON = false
-		end
-	end
 	ALL_KILL_MONSTER = load_highscore()
+	self.play_sound = false
+	msg.post("menu:/main#yandex", "show_fullscreen_adv")
+	msg.post("menu:/main#yandex", "get_device")
 	msg.post(".", "change_lang")
-	msg.post(".", "sound_off", {value = sound_effect})
-	msg.post(".", "sound_off1", {value = sound_bg})
-	msg.post(".", "sound_off2", {value = sound_hell})
+	-- for key, value in pairs(sound.get_groups()) do
+	-- 	sound.set_group_gain(value, 0)
+	-- end
+	
 	self.select_cucumber = 0
 	self.select_weapon = "pistol"
 	self.select_hard = "easy"
@@ -364,7 +364,7 @@ end
 function select_cucumber(key, box, self)
 	local list_cucumber = {BOX_CUCUMBER, BOX_CUCUMBER1, BOX_CUCUMBER2, BOX_CUCUMBER3}
 	self.select_cucumber = key
-	if ALL_KILL_MONSTER < 5 then
+	if ALL_KILL_MONSTER < 5000 then
 		gui.set_color(BOX_CUCUMBER1, RED_COLOR)
 		for i = 1, #list_cucumber do
 			if list_cucumber[i] == BOX_CUCUMBER1 then
@@ -374,7 +374,7 @@ function select_cucumber(key, box, self)
 	else
 		gui.set_color(BOX_CUCUMBER1, BLACK_COLOR)
 	end
-	if ALL_KILL_MONSTER < 10 then
+	if ALL_KILL_MONSTER < 10000 then
 		gui.set_color(BOX_CUCUMBER2, RED_COLOR)
 		for i = 1, #list_cucumber do
 			if list_cucumber[i] == BOX_CUCUMBER2 then
@@ -384,7 +384,7 @@ function select_cucumber(key, box, self)
 	else
 		gui.set_color(BOX_CUCUMBER2, BLACK_COLOR)
 	end
-	if ALL_KILL_MONSTER < 15 then
+	if ALL_KILL_MONSTER < 15000 then
 		gui.set_color(BOX_CUCUMBER3, RED_COLOR)
 		for i = 1, #list_cucumber do
 			if list_cucumber[i] == BOX_CUCUMBER3 then
@@ -406,7 +406,7 @@ end
 function select_weapon(key, box, self)
 	local list_box = {WEAPON_BOX, WEAPON_BOX1, WEAPON_BOX2}
 	self.select_weapon = key
-	if ALL_KILL_MONSTER < 5 then
+	if ALL_KILL_MONSTER < 5000 then
 		gui.set_color(WEAPON_BOX1, RED_COLOR)
 		for i = 1, #list_box do
 			if list_box[i] == WEAPON_BOX1 then
@@ -416,7 +416,7 @@ function select_weapon(key, box, self)
 	else
 		gui.set_color(WEAPON_BOX1, BLACK_COLOR)
 	end
-	if ALL_KILL_MONSTER < 10 then
+	if ALL_KILL_MONSTER < 15000 then
 		gui.set_color(WEAPON_BOX2, RED_COLOR)
 		for i = 1, #list_box do
 			if list_box[i] == WEAPON_BOX2 then
@@ -438,7 +438,7 @@ end
 function select_hard(key, box, self)
 	local list_box = {HARD_BOX, HARD_BOX1, HARD_BOX2}
 	self.select_hard = key
-	if ALL_KILL_MONSTER < 5 then
+	if ALL_KILL_MONSTER < 5000 then
 		gui.set_color(HARD_BOX1, RED_COLOR)
 		for i = 1, #list_box do
 			if list_box[i] == HARD_BOX1 then
@@ -448,7 +448,7 @@ function select_hard(key, box, self)
 	else
 		gui.set_color(HARD_BOX1, BLACK_COLOR)
 	end
-	if ALL_KILL_MONSTER < 10 then
+	if ALL_KILL_MONSTER < 15000 then
 		gui.set_color(HARD_BOX2, RED_COLOR)
 		for i = 1, #list_box do
 			if list_box[i] == HARD_BOX2 then
@@ -469,7 +469,12 @@ function select_hard(key, box, self)
 end
 
 function on_input(self, action_id, action)
-	if action_id == hash("esc") and action.released and gui.is_enabled(BTN_MENU) then
+	if action_id ~= nil and self.play_sound == false then
+		msg.post(".", "sound_off", {value = sound_effect})
+		msg.post(".", "sound_off1", {value = sound_bg})
+		msg.post(".", "sound_off2", {value = sound_hell})
+		self.play_sound = true
+	elseif action_id == hash("esc") and action.released and gui.is_enabled(BTN_MENU) then
 		sound.play("#click")
 		if STATE == "pause" then
 			msg.post("main:/interface#hud", "char_enable", {value = false})
@@ -493,6 +498,7 @@ function on_input(self, action_id, action)
 		sound_hell = not sound_hell 
 	elseif action_id == hash("fire") and action.released and gui.pick_node(HOW_GAME, action.x, action.y) and gui.is_enabled(MENU_BOX) then
 		sound.play("#click")
+		msg.post("menu:/main#yandex", "show_feedback")
 		gui.set_enabled(MENU_BOX, false)
 		gui.set_enabled(HOW_TO_BOX, true)
 	elseif action_id == hash("fire") and action.released and gui.pick_node(LANG_BOX, action.x, action.y) and gui.is_enabled(MENU_BOX) then
@@ -555,6 +561,7 @@ function on_input(self, action_id, action)
 		end
 		LEVEL = 1
 		sound.play("#click")
+		msg.post("menu:/main#yandex", "show_fullscreen_adv")
 		HARD_GAME = self.select_hard
 		change_weapon(self.select_weapon)
 		defold_monster()
@@ -611,6 +618,7 @@ function on_input(self, action_id, action)
 		select_cucumber("xop", BOX_CUCUMBER, self)
 		select_hard("easy", HARD_BOX, self)
 		select_weapon("pistol", WEAPON_BOX, self)
+		msg.post("menu:/main#yandex", "show_fullscreen_adv")
 		change_state("menu")
 	elseif action_id == hash("fire") and action.released and gui.pick_node(EXIT_BOX1, action.x, action.y) and gui.is_enabled(DEAD_MENU) then
 		ALL_KILL_MONSTER = ALL_KILL_MONSTER + KOL_MONSTER
@@ -622,11 +630,12 @@ function on_input(self, action_id, action)
 		select_cucumber("xop", BOX_CUCUMBER, self)
 		select_hard("easy", HARD_BOX, self)
 		select_weapon("pistol", WEAPON_BOX, self)
+		msg.post("menu:/main#yandex", "show_fullscreen_adv")
 		change_state("menu")
 
 	elseif action_id == hash("fire") and action.released and gui.pick_node(ADS_BOX, action.x, action.y) and gui.is_enabled(DEAD_MENU) then
-		change_money(300)
 		sound.play("#click")
+		msg.post("menu:/main#yandex", "show_rewarded_video")
 	end
 end
 

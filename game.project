@@ -16,6 +16,11 @@ input_method = HiddenInputField
 
 [project]
 title = CucumberRageSurvival
+write_log = 0
+version = 1.0.1
+developer = Mika developer
+publisher = Mika publisher
+dependencies#0 = https://github.com/indiesoftby/defold-yagames/archive/refs/heads/master.zip
 
 [graphics]
 default_texture_min_filter = nearest
@@ -43,4 +48,9 @@ max_component_count = 999
 
 [label]
 max_count = 999
+
+[html5]
+show_fullscreen_button = 0
+show_made_with_defold = 0
+scale_mode = fit
 

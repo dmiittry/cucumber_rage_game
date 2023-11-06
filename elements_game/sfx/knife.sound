@@ -1,4 +1,4 @@
-sound: "/assets/sfx/knife.ogg"
+sound: "/assets/sfx/hit.ogg"
 looping: 0
 group: "effect"
 gain: 0.5

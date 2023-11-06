@@ -28,7 +28,7 @@ function on_message(self, message_id, message, sender)
 				if not self.player then
 					msg.post(message.other_id, "hit_player", {value = self.damage})
 				end
-			elseif message.other_group == hash("enemy") then
+			elseif message.other_group == hash("enemy") or message.other_group == hash("boss") then
 				if self.player then
 					msg.post(message.other_id, "hit", {value = self.boom, dir = self.dir})
 				end

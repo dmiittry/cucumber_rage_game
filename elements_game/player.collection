@@ -88,7 +88,7 @@ instances {
 }
 instances {
   id: "knife"
-  prototype: "/elements_game/units/weapons/knife.go"
+  prototype: "/elements_game/core/knife.go"
   position {
     x: 0.0
     y: 0.0
@@ -108,7 +108,7 @@ instances {
 }
 instances {
   id: "knife1"
-  prototype: "/elements_game/units/weapons/knife.go"
+  prototype: "/elements_game/core/knife.go"
   position {
     x: 0.0
     y: 0.0
@@ -128,7 +128,7 @@ instances {
 }
 instances {
   id: "knife2"
-  prototype: "/elements_game/units/weapons/knife.go"
+  prototype: "/elements_game/core/knife.go"
   position {
     x: 0.0
     y: 0.0
@@ -148,7 +148,7 @@ instances {
 }
 instances {
   id: "knife3"
-  prototype: "/elements_game/units/weapons/knife.go"
+  prototype: "/elements_game/core/knife.go"
   position {
     x: 0.0
     y: 0.0

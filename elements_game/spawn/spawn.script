@@ -22,6 +22,8 @@ function init(self)
 	self.time_spawn_sunduk = TIME_SUNDUK
 	self.boss_dead = false
 	-- mini_boss_spawn()
+	-- boss_spawn()
+	-- boss_spawn()
 	if HARD_GAME == "hard" then
 		mini_boss_spawn()
 	end

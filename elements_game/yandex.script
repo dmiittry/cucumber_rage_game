@@ -1,0 +1,124 @@
+require("elements_game.core.globals")
+local yagames = require("yagames.yagames")
+
+local function init_handler(self, err)
+	if err then
+		print('err')
+		print("Something bad happened :(", err)
+	else
+		--msg.post("menu:/main#yandex", "show_fullscreen_adv")
+	end
+end
+
+local function adv_open(self)
+	print('open')
+	for key, value in pairs(sound.get_groups()) do
+		sound.set_group_gain(value, 0)
+	end
+end
+
+local function adv_close(self, was_shown)
+	print('close')
+	for key, value in pairs(sound.get_groups()) do
+		sound.set_group_gain(value, 1)
+	end
+end
+
+local function adv_offline(self)
+	print('offle')
+	-- Internet is offline
+end
+
+local function adv_error(self, err)
+	print('err', err)
+	-- Something wrong happened :(
+end
+
+local function rewarded_open(self)
+	print('reward open')
+	for key, value in pairs(sound.get_groups()) do
+		sound.set_group_gain(value, 0)
+	end
+end
+
+local function rewarded_rewarded(self)
+	print('reward rewarded')
+	change_money(300)
+end
+
+local function rewarded_close(self)
+	for key, value in pairs(sound.get_groups()) do
+		sound.set_group_gain(value, 1)
+	end
+end
+
+local function rewarded_error(self, err)
+	print('reward err', err)
+end
+
+local function getstats(self, err, result)
+	ALL_KILL_MONSTER = result
+	print("get_data player:", result)
+end
+
+local function setstats(self)
+	print("set_data player:", self)
+end
+
+local function showfeedback(self, err, result)
+	print('showfeedback result', result)
+end
+
+local function canshowfeedback(self, err, result)
+	print('canshowfeedback result', result)
+	if result then
+		yagames.feedback_request_review(showfeedback)
+	end
+end
+
+function init(self)
+	yagames.init(init_handler)
+	-- msg.post(".", "get_device")
+	msg.post(".", "show_fullscreen_adv")
+	player_name = yagames.player_get_name()
+end
+
+function on_message(self, message_id, message)
+	if message_id == hash("show_rewarded_video") then
+		print('show_rewarded_video')
+		yagames.adv_show_rewarded_video({
+			open = rewarded_open,
+			rewarded = rewarded_rewarded,
+			close = rewarded_close,
+			error = rewarded_error
+		})
+	elseif message_id == hash("show_fullscreen_adv") then
+		print('show_fullscreen_adv')
+		yagames.adv_show_fullscreen_adv({
+			open = adv_open,
+			close = adv_close,
+			offline = adv_offline,
+			error = adv_error
+		})
+	elseif message_id == hash("show_feedback") then
+		yagames.feedback_can_review(canshowfeedback)
+		print("feedback:", ret)
+	elseif message_id == hash("get_stats") then
+		yagames.player_get_stats(getstats)
+	elseif message_id == hash("set_stats") then
+		yagames.player_set_stats({score = message.value}, setstats)
+		
+	elseif message_id == hash("leaderboard") then
+		yagames.leaderboards_set_score({leaderboardName = player_name, score = message.value})
+		print("leaderbord:", player_name)
+	elseif message_id == hash("get_device") then
+		local device = yagames.device_info_is_desktop()
+		print('desk', device)
+		if device then
+			print('desk')
+			GAMEPAD_ON = false
+		else
+			GAMEPAD_ON = true
+		end
+	end
+end
