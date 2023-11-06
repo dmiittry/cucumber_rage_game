@@ -52,5 +52,5 @@ max_count = 999
 [html5]
 show_fullscreen_button = 0
 show_made_with_defold = 0
-scale_mode = fit
+scale_mode = stretch
 

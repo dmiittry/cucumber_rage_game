@@ -191,6 +191,7 @@ function update(self, dt)
 	if self.level == 6 then
 		if HARD_GAME == "hard" then
 			mini_boss_spawn()
+			boss_spawn()
 		end
 		if self.boss_dead then
 			boss_spawn()

@@ -6,6 +6,7 @@ function init(self)
 	go.set_rotation(vmath.quat_rotation_z(90))
 	msg.post(".", "disable")
 	self.correct =  vmath.vector3(-15,27,0)
+	self.speed_shoot = TIME_SHOOT_AK47
 end
 
 local function shoot(target_position, gl , self)
@@ -21,7 +22,7 @@ local function shoot(target_position, gl , self)
 	sprite.set_vflip("#sprite", angle < 0 )
 	go.set_rotation(rota)
 	local bullet = factory.create("#bullet", nil, rota,{dir = vmath.normalize(dir), damage = DAMAGE_UNIT, ak = true})
-	timer.delay(TIME_SHOOT_AK47, false, function()
+	timer.delay(self.speed_shoot, false, function()
 		self.fire = true
 	end)
 end
@@ -37,8 +38,12 @@ local function change_nearest_enemy()
 end
 
 function on_message(self, message_id, message, sender)
-	if message_id == hash("dead_monster") then
-		-- change_nearest_enemy()
+	if message_id == hash("boost") then
+		self.speed_shoot = 0.1
+		timer.delay(BOOS_TIME, false, 
+		function()
+			self.speed_shoot = TIME_SHOOT_AK47
+		end)
 	elseif message_id == hash("collision_response") then
 		if message.other_group == hash("enemy") or message.other_group == hash("boss")  then
 			local pos = message.other_position

@@ -22,7 +22,7 @@ function init(self)
 			go.set("#damage", "scale", vmath.vector3(0.25,0.25,1))
 			go.set("#damage", "color", vmath.vector4(0.2, 0.7, 0.2, 1))
 			label.set_text("#damage", "+"..damage_text)
-			go.animate(".", "position.y", go.PLAYBACK_ONCE_FORWARD, 400, go.EASING_INCIRC, 1.5)
+			go.animate(".", "position.y", go.PLAYBACK_ONCE_FORWARD, 400, go.EASING_INCIRC, 1.0)
 		end
 	else
 		go.animate(".", "position.y", go.PLAYBACK_ONCE_FORWARD, 400, go.EASING_INCIRC, 3)

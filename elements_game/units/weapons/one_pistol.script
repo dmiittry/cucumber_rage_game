@@ -13,6 +13,7 @@ function init(self)
 		self.weap = "#ak47"
 		sprite.play_flipbook("#sprite_pistol", hash("ak47_hand"))
 	end
+	self.speed_shoot = SPEED_SHOOT
 end
 
 local function look_at(target_position, pos)
@@ -44,7 +45,7 @@ local function shoot(target_position, gl , self)
 			factory.create("#bullet", nil,rota,{dir = vmath.normalize(dir), damage = DAMAGE_BULLET}) 
 		end)
 	end
-	timer.delay(SPEED_SHOOT, false, function()
+	timer.delay(self.speed_shoot, false, function()
 		self.fire = true
 	end)
 end
@@ -68,6 +69,12 @@ end
 function on_message(self, message_id, message, sender)
 	if message_id == hash("dead_monster") then
 		change_nearest_enemy()
+	elseif message_id == hash("boost") then
+		self.speed_shoot = 0.1
+		timer.delay(BOOS_TIME, false, 
+		function()
+			self.speed_shoot = SPEED_SHOOT
+		end)
 	elseif message_id == hash("collision_response") then
 		if message.other_group == hash("enemy") or message.other_group == hash("boss") then
 			if not IS_MOUSE then

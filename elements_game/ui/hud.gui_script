@@ -313,9 +313,9 @@ function choose_upgrade()
 		if imba_select == false then
 			gui.set_enabled(IMBA_BOX, true)
 			if LANG_RUS then
-				gui.set_text(IMBA_TEXT, "снять ограничения за 1000")
+				gui.set_text(IMBA_TEXT, "режим имба за 1000")
 			else
-				gui.set_text(IMBA_TEXT, "to lift the restrictions for 1000")
+				gui.set_text(IMBA_TEXT, "imba mode for 1000")
 			end
 		end
 	end
@@ -588,13 +588,13 @@ function on_input(self, action_id, action)
 	elseif action_id == hash("fire") and action.released and gui.pick_node(ADD_MONEY_BOX, action.x, action.y) and gui.is_enabled(UPGRADE_BOX) then
 		sound.play("/interface#click")
 		msg.post("menu:/main#yandex", "show_rewarded_video")
-	elseif gui.pick_node(LEFT_BOX, action.x, action.y) and gui.is_enabled(GAMEPAD_BOX) and action_id == hash("fire") or action_id == hash("touch") then
+	elseif gui.pick_node(LEFT_BOX, action.x, action.y) and gui.is_enabled(GAMEPAD_BOX) and action_id == hash("touch") then
 		msg.post("/player/cucumber#cucumber", "move", {value = "left"})
-	elseif gui.pick_node(RIGHT_BOX, action.x, action.y) and gui.is_enabled(GAMEPAD_BOX) and action_id == hash("fire") or action_id == hash("touch") then
+	elseif gui.pick_node(RIGHT_BOX, action.x, action.y) and gui.is_enabled(GAMEPAD_BOX) and action_id == hash("touch") then
 		msg.post("/player/cucumber#cucumber", "move", {value = "right"})
-	elseif gui.pick_node(UP_BOX, action.x, action.y) and gui.is_enabled(GAMEPAD_BOX) and action_id == hash("fire") or action_id == hash("touch") then
+	elseif gui.pick_node(UP_BOX, action.x, action.y) and gui.is_enabled(GAMEPAD_BOX) and action_id == hash("touch") then
 		msg.post("/player/cucumber#cucumber", "move", {value = "up"})
-	elseif gui.pick_node(DOWN_BOX, action.x, action.y) and gui.is_enabled(GAMEPAD_BOX) and action_id == hash("fire") or action_id == hash("touch") then
+	elseif gui.pick_node(DOWN_BOX, action.x, action.y) and gui.is_enabled(GAMEPAD_BOX) and action_id == hash("touch") then
 		msg.post("/player/cucumber#cucumber", "move", {value = "down"})
 	end
 end

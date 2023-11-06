@@ -80,7 +80,7 @@ CHAR_UKLON, CHAR_SPEED_SHOOT, SKILL_ADD_AK47, SKILL_ADD_KNIFE, SKILL_PROBITIE, C
 STATE = "menu"
 
 -- STATISTIKA
-ALL_KILL_MONSTER = 15
+ALL_KILL_MONSTER = 0
 KOL_MONSTER = 0
 KOL_MONEY = 0
 KOL_DAMAGE = 0
@@ -89,7 +89,7 @@ KOL_POL_URON = 0
 KOL_POGL_URON = 0
 KOL_REV = 0
 EXP = 0
-MONEY = 50
+MONEY = 5
 
 IS_MOUSE = false
 CUCUMBER = "hop"
@@ -102,6 +102,7 @@ TIME_HITTED = 0.3
 LANG_RUS = true
 BOOS_TIME = 3
 GAMEPAD_ON = true
+BOSS_DEAD = false
 
 -- CHAR PLAYER
 HP_PLAYER = 100
@@ -431,7 +432,10 @@ function imba_mode()
 	MAX_TIME_KNIFE = 0.1 -- max 1 sek
 	MAX_KOL_PROBITIE = 5
 	--------
-	UPGRADE_LIST = STARNDART_LIST
+	UPGRADE_LIST = {}
+	for key,value in pairs(STARNDART_LIST) do 
+		UPGRADE_LIST[key] = value
+	end
 
 	if KNIFE == 3 then
 		table.insert(UPGRADE_LIST, UP_DMG_KNIFE)
@@ -529,7 +533,7 @@ function hop_cucumber()
 	-- AK47
 	TIME_SHOOT_AK47 = 1--1 -- max 0.3
 	KNIFE_DAMAGE = 30--15
-	TIME_KNIFE = 1 --1.5 -- max 1 sek
+	TIME_KNIFE = 0.9 --1.5 -- max 1 sek
 	HEADSHOT = 0
 	-- add ak47 and knife
 	AK = 0
@@ -656,6 +660,7 @@ function arni_cucumber()
 end
 
 function defold_monster()
+	BOSS_DEAD = false
 	BOOM_DAMAGE = 30
 	BOOM_TIME = 3
 	KOL_MONSTER = 0

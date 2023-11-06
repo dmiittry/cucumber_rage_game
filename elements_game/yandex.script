@@ -30,7 +30,9 @@ local function adv_offline(self)
 end
 
 local function adv_error(self, err)
-	print('err', err)
+	if err then
+		print("Something bad happened :(", err)
+	end
 	-- Something wrong happened :(
 end
 
@@ -53,12 +55,16 @@ local function rewarded_close(self)
 end
 
 local function rewarded_error(self, err)
-	print('reward err', err)
+	if err then
+		print("Something bad happened :(", err)
+	end
 end
 
 local function getstats(self, err, result)
-	ALL_KILL_MONSTER = result
-	print("get_data player:", result)
+	ALL_KILL_MONSTER = result.score
+	if err then
+		print("Something bad happened :(", err)
+	end
 end
 
 local function setstats(self)
@@ -66,19 +72,33 @@ local function setstats(self)
 end
 
 local function showfeedback(self, err, result)
-	print('showfeedback result', result)
+	if err then
+		print("Something bad happened :(", err)
+	end
 end
 
 local function canshowfeedback(self, err, result)
-	print('canshowfeedback result', result)
 	if result then
 		yagames.feedback_request_review(showfeedback)
+	end
+	if err then
+		print("Something bad happened :(", err)
+	end
+end
+local function auth_player(self, err, result)
+	if err then
+		print("Something bad happened :(", err)
+	end
+end
+local function getplayer(self, err)
+	yagames.player_get_stats(getstats)
+	if err then
+		print("Something bad happened :(", err)
 	end
 end
 
 function init(self)
 	yagames.init(init_handler)
-	-- msg.post(".", "get_device")
 	msg.post(".", "show_fullscreen_adv")
 	player_name = yagames.player_get_name()
 end
@@ -104,7 +124,7 @@ function on_message(self, message_id, message)
 		yagames.feedback_can_review(canshowfeedback)
 		print("feedback:", ret)
 	elseif message_id == hash("get_stats") then
-		yagames.player_get_stats(getstats)
+		yagames.player_init(getplayer)
 	elseif message_id == hash("set_stats") then
 		yagames.player_set_stats({score = message.value}, setstats)
 		

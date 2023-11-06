@@ -2217,7 +2217,7 @@ nodes {
     w: 1.0
   }
   size {
-    x: 200.0
+    x: 160.0
     y: 22.0
     z: 0.0
     w: 1.0
@@ -2252,13 +2252,13 @@ nodes {
   template_node_child: false
   size_mode: SIZE_MODE_MANUAL
   custom_type: 0
-  enabled: false
+  enabled: true
   visible: true
   material: ""
 }
 nodes {
   position {
-    x: 178.0
+    x: 139.0
     y: 0.0
     z: 0.0
     w: 1.0
@@ -2289,7 +2289,7 @@ nodes {
   }
   type: TYPE_TEXT
   blend_mode: BLEND_MODE_ALPHA
-  text: "\321\201\320\275\321\217\321\202\321\214 \320\276\320\263\321\200\320\260\320\275\320\270\321\207\320\265\320\275\320\270\321\217 \320\267\320\260 1000"
+  text: "\321\200\320\265\320\266\320\270\320\274 \320\270\320\274\320\261\320\260 \320\267\320\260 1000"
   font: "cirillic"
   id: "imba_text"
   xanchor: XANCHOR_NONE
@@ -2325,7 +2325,7 @@ nodes {
 }
 nodes {
   position {
-    x: 187.0
+    x: 148.0
     y: 0.0
     z: 0.0
     w: 1.0

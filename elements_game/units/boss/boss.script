@@ -31,6 +31,7 @@ function init(self)
 	sound.play("#boss_fight")
 	print("HP", self.health)
 	print("DMG", self.damage, MAX_HP_PLAYER, DAMAGE_BOSS)
+	TIME_HITTED = 0.1
 end
 
 local function red_dead_monster(self)
@@ -43,7 +44,10 @@ local function red_dead_monster(self)
 	go.animate(".", "scale", go.PLAYBACK_ONCE_FORWARD, vmath.vector3(0,0,0), go.EASING_OUTSINE, 0.5)
 	go.animate(".", "rotation", go.PLAYBACK_ONCE_FORWARD, vmath.quat(0,0,1,1), go.EASING_OUTSINE, 0.5)
 	timer.delay(1.8, false, function()
-		msg.post("main:/spawn_monster/go#spawn", "boss_dead")
+		if BOSS_DEAD then
+			msg.post("main:/spawn_monster/go#spawn", "boss_dead")
+		end
+		BOSS_DEAD = true
 		go.delete()
 	end)
 end
@@ -130,6 +134,8 @@ local function spawn_enemy(target_position, gl, self)
 		KOL_MONSTER = KOL_MONSTER + 1
 		local dir = vmath.vector3(target_position.x- gl.x, target_position.y - gl.y, 0)
 		dir = dir - vmath.vector3(directionx[i],directiony[i], 0)
+		local bullet = factory.create("#minis_factory", gl , rota, {dir = vmath.normalize(dir)})
+		local bullet = factory.create("#minis_factory", gl , rota, {dir = vmath.normalize(dir)})
 		local bullet = factory.create("#minis_factory", gl , rota, {dir = vmath.normalize(dir)})
 	end
 end
