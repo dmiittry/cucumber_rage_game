@@ -3,6 +3,11 @@ go.property('dir', vmath.vector3())
 go.property('boom', 0)
 go.property('player', false)
 
+local HASH_PLAYER = hash("player")
+local TRIGGER_RESPONSE = hash("trigger_response")
+local HASH_ENEMY = hash("enemy")
+local HASH_BOSS = hash("boss")
+
 function init(self)
 	sound.play("#explosin")
 	self.damage = DAMAGE_BOSS_TYKVA/2
@@ -22,13 +27,13 @@ function update(self, dt)
 end
 
 function on_message(self, message_id, message, sender)
-	if message_id == hash("trigger_response") then
+	if message_id == TRIGGER_RESPONSE then
 		if message.enter then
-			if message.other_group == hash("player") then
+			if message.other_group == HASH_PLAYER then
 				if not self.player then
 					msg.post(message.other_id, "hit_player", {value = self.damage})
 				end
-			elseif message.other_group == hash("enemy") or message.other_group == hash("boss") then
+			elseif message.other_group == HASH_ENEMY or message.other_group == HASH_BOSS then
 				if self.player then
 					msg.post(message.other_id, "hit", {value = self.boom, dir = self.dir})
 				end

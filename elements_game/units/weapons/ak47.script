@@ -1,5 +1,10 @@
 require "elements_game.core.globals"
 
+local COLLISION_RESPONSE = hash("collision_response")
+local HASH_BOOST = hash("boost")
+local HASH_ENEMY = hash("enemy")
+local HASH_BOSS = hash("boss")
+
 function init(self)
 	msg.post(".", "acquire_input_focus")
 	self.fire = true
@@ -38,14 +43,14 @@ local function change_nearest_enemy()
 end
 
 function on_message(self, message_id, message, sender)
-	if message_id == hash("boost") then
+	if message_id == HASH_BOOST then
 		self.speed_shoot = 0.1
 		timer.delay(BOOS_TIME, false, 
 		function()
 			self.speed_shoot = TIME_SHOOT_AK47
 		end)
-	elseif message_id == hash("collision_response") then
-		if message.other_group == hash("enemy") or message.other_group == hash("boss")  then
+	elseif message_id == COLLISION_RESPONSE then
+		if message.other_group == HASH_ENEMY or message.other_group == HASH_BOSS  then
 			local pos = message.other_position
 			local target_position = vmath.vector3(pos.x, pos.y, 0)
 			local gl = go.get_position(go.get_parent()) + self.correct

@@ -158,6 +158,10 @@ images {
   image: "/assets/ui/gamepad_off.png"
   sprite_trim_mode: SPRITE_TRIM_MODE_OFF
 }
+images {
+  image: "/assets/element/joystik.png"
+  sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+}
 animations {
   id: "cucumber_walk"
   images {

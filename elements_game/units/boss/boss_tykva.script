@@ -1,5 +1,13 @@
 require "elements_game.core.globals"
 
+local CONTACT_POINT_RESPONSE = hash("contact_point_response")
+local COLLISION_RESPONSE = hash("collision_response")
+local HASH_PLAYER = hash("player")
+local HAS_TRIGGER = hash("trigger")
+local HASH_KNIFE = hash("knife")
+local TRIGGER_RESPONSE = hash("trigger_response")
+local HASH_HIT = hash("hit")
+
 local knife_dmg = true
 
 function init(self)
@@ -104,25 +112,25 @@ local function shoot(target_position, gl , self)
 	timer.delay(self.time_shoot, false, function() self.fire = true end)
 end
 function on_message(self, message_id, message, sender)
-	if message_id == hash("hit") then
+	if message_id == HASH_HIT then
 		hitted_animate(self)
 		hitted_monster(self, message.value)
-	elseif message_id == hash("trigger_response") then
-		if message.other_group == hash("knife") then
+	elseif message_id == TRIGGER_RESPONSE then
+		if message.other_group == HASH_KNIFE then
 			if message.enter then
 				hitted_animate(self)
 				local rota = vmath.quat(0,0,0,0)
 				factory.create("#factory", nil, rota, {damage = KNIFE_DAMAGE})
 				hitted_monster(self, KNIFE_DAMAGE)
 			end
-		elseif message.other_group == hash("player") then
+		elseif message.other_group == HASH_PLAYER then
 			if message.enter then
 				msg.post(message.other_id, "hit_player", {value = self.damage})
 			end
 		end
 
-	elseif message_id == hash("collision_response") then
-		if message.other_group == hash("trigger") then
+	elseif message_id == COLLISION_RESPONSE then
+		if message.other_group == HAS_TRIGGER then
 			local tg = message.other_position
 			local target_position = vmath.vector3(tg.x, tg.y, 0)
 			local gl = go.get_position(go.get_parent())
@@ -132,8 +140,8 @@ function on_message(self, message_id, message, sender)
 			end
 			red_move_monster(tg, self)
 		end
-	elseif message_id == hash("contact_point_response") then
-		if message.other_group == hash("player") then
+	elseif message_id == CONTACT_POINT_RESPONSE then
+		if message.other_group == HASH_PLAYER then
 			msg.post(message.other_id, "hit_player", {value = self.damage})
 		end
 	end

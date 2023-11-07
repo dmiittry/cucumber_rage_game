@@ -1,4 +1,10 @@
 require "elements_game.core.globals"
+local DEAD_MONSTER = hash("dead_monster")
+local HASH_BOOST = hash("boost")
+local COLLISION_RESPONSE = hash("collision_response")
+local DEAD_MONSTER = hash("dead_monster")
+local HASH_ENEMY = hash("enemy")
+local HASH_BOSS = hash("boss")
 
 function init(self)
 	msg.post(".", "acquire_input_focus")
@@ -67,16 +73,16 @@ local function change_nearest_enemy()
 end
 
 function on_message(self, message_id, message, sender)
-	if message_id == hash("dead_monster") then
+	if message_id == DEAD_MONSTER then
 		change_nearest_enemy()
-	elseif message_id == hash("boost") then
+	elseif message_id == HASH_BOOST then
 		self.speed_shoot = 0.1
 		timer.delay(BOOS_TIME, false, 
 		function()
 			self.speed_shoot = SPEED_SHOOT
 		end)
-	elseif message_id == hash("collision_response") then
-		if message.other_group == hash("enemy") or message.other_group == hash("boss") then
+	elseif message_id == COLLISION_RESPONSE then
+		if message.other_group == HASH_ENEMY or message.other_group == HASH_BOSS then
 			if not IS_MOUSE then
 				local id = message.other_id
 				local pos = message.other_position
@@ -105,21 +111,21 @@ function on_message(self, message_id, message, sender)
 	end
 end
 
-function on_input(self, action_id, action)
-	local target_position = vmath.vector3(action.x, action.y, 0)
-	local gl = go.get_position(go.get_parent())
-	
-	if action_id then
-		if action_id == hash("fire") and self.fire then
-			if IS_MOUSE then
-				shoot(target_position, gl, self)
-				self.fire = false
-			end
-		elseif action_id == hash('reload') then
-			IS_MOUSE = not IS_MOUSE
-		end
-	end
-	if IS_MOUSE then
-		look_at(target_position, gl)
-	end
-end
+-- function on_input(self, action_id, action)
+-- 	local target_position = vmath.vector3(action.x, action.y, 0)
+-- 	local gl = go.get_position(go.get_parent())
+-- 	
+-- 	if action_id then
+-- 		if action_id == hash("fire") and self.fire then
+-- 			if IS_MOUSE then
+-- 				shoot(target_position, gl, self)
+-- 				self.fire = false
+-- 			end
+-- 		elseif action_id == hash('reload') then
+-- 			IS_MOUSE = not IS_MOUSE
+-- 		end
+-- 	end
+-- 	if IS_MOUSE then
+-- 		look_at(target_position, gl)
+-- 	end
+-- end

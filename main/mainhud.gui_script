@@ -1,6 +1,12 @@
 require "elements_game.core.globals"
 require "elements_game.core.const"
-
+local PROXY_LOAD = hash("proxy_loaded")
+local HASH_SOUND = hash("sound_off")
+local HASH_SOUND1 = hash("sound_off1")
+local HASH_SOUND2 = hash("sound_off2")
+local HASH_CHANGE_LANG = hash("change_lang")
+local HASH_FIRE = hash("fire")
+local HASH_ESC = hash("esc")
 local sound_effect = true
 local sound_bg = true
 local sound_hell = false
@@ -14,6 +20,7 @@ local function load_highscore()
 	-- local filename = sys.get_save_file("sys_save_load", "highscore")
 	-- local data = sys.load(filename)
 	msg.post("menu:/main#yandex", "get_stats")
+	print('load_highscore')
 	-- return data.highscore or 0 
 end
 local function save_highscore(highscore)
@@ -21,13 +28,14 @@ local function save_highscore(highscore)
 	-- sys.save(filename, { highscore = highscore })
 	msg.post("menu:/main#yandex", "set_stats", {value = highscore})
 	msg.post("menu:/main#yandex", "leaderboard")
+	print('save_highscore')
 end
 
 function init(self)
+	msg.post("menu:/main#yandex", "get_device")
 	msg.post("menu:/main#yandex", "get_stats")
 	self.play_sound = false
 	msg.post("menu:/main#yandex", "show_fullscreen_adv")
-	msg.post("menu:/main#yandex", "get_device")
 	msg.post(".", "change_lang")
 	-- for key, value in pairs(sound.get_groups()) do
 	-- 	sound.set_group_gain(value, 0)
@@ -149,9 +157,9 @@ function stop()
 end
 
 function on_message(self, message_id, message, sender)
-	if message_id == hash("proxy_loaded") then
+	if message_id == PROXY_LOAD then
 		msg.post(sender, "enable")
-	elseif message_id == hash("sound_off") then
+	elseif message_id == HASH_SOUND then
 		if message.value then
 			sound.set_group_gain("effect", 1)
 			gui.play_flipbook(SOUND_OFF, "sound_on")
@@ -159,7 +167,7 @@ function on_message(self, message_id, message, sender)
 			sound.set_group_gain("effect", 0)
 			gui.play_flipbook(SOUND_OFF, "sound_off")
 		end
-	elseif message_id == hash("sound_off1") then
+	elseif message_id == HASH_SOUND1 then
 		if message.value then
 			msg.post("#bg", "play_sound")
 			gui.play_flipbook(SOUND_OFF1, "sound_on")
@@ -167,7 +175,7 @@ function on_message(self, message_id, message, sender)
 			msg.post("#bg", "stop_sound")
 			gui.play_flipbook(SOUND_OFF1, "sound_off")
 		end
-	elseif message_id == hash("sound_off2") then
+	elseif message_id == HASH_SOUND2 then
 		if message.value then
 			msg.post("#helloween", "play_sound")
 			gui.play_flipbook(SOUND_OFF2, "sound_on")
@@ -175,7 +183,7 @@ function on_message(self, message_id, message, sender)
 			msg.post("#helloween", "stop_sound")
 			gui.play_flipbook(SOUND_OFF2, "sound_off")
 		end
-	elseif message_id == hash("change_lang") then
+	elseif message_id == HASH_CHANGE_LANG then
 		if LANG_RUS then
 			gui.set_text(BTN_MENU, "меню")
 			gui.set_text(LANG_TEXT, "язык: русский")
@@ -186,7 +194,7 @@ function on_message(self, message_id, message, sender)
 			gui.set_text(SELECT_DIF, "выбери сложность>")
 			gui.set_text(SELECT_WEAP, "выбери оружье >")
 			gui.set_text(HOW_GAME, "как играть?")
-			gui.set_text(MENU_TEXT, "выбери огурчика и начни бой!")			
+			gui.set_text(MENU_TEXT, PLAYER_NAME .. " выбери огурчика и начни бой!")			
 			gui.set_text(CHAR_TEXT, "огурец рик. сбалансированные характеристики, отличное владение мечом")
 			gui.set_text(CHAR_TEXT1, "Огурец НИК - одноглазый, ловкий и сильный, быстро стреляет. чтобы открыть его нужно убить 5000 монстров")
 			gui.set_text(CHAR_TEXT2, "красный огурчик - повышенный вампиризм и скорость как у Дракулы. Чтобы открыть нужно убить 10к монстров")
@@ -243,7 +251,7 @@ function on_message(self, message_id, message, sender)
 			gui.set_text(SELECT_DIF, "select difficulty>")
 			gui.set_text(SELECT_WEAP, "select weapon >")
 			gui.set_text(HOW_GAME, "how to play?")
-			gui.set_text(MENU_TEXT, "choose a cucumber and start the battle!")
+			gui.set_text(MENU_TEXT, PLAYER_NAME .. " choose a cucumber and start the battle!")
 			gui.set_text(CHAR_TEXT, "pickle rick. balanced characteristics, excellent sword skills")
 			gui.set_text(CHAR_TEXT1, "Cucumber NIC - one-eyed, agile and strong, quick to shoot. to open it you need to kill 5000 monsters")
 			gui.set_text(CHAR_TEXT2, "red pickle - increased vampirism and Dracula-like speed. To open it you need to kill 10k monsters")
@@ -478,7 +486,7 @@ function on_input(self, action_id, action)
 		msg.post(".", "sound_off1", {value = sound_bg})
 		msg.post(".", "sound_off2", {value = sound_hell})
 		self.play_sound = true
-	elseif action_id == hash("esc") and action.released and gui.is_enabled(BTN_MENU) then
+	elseif action_id == HASH_ESC and action.released and gui.is_enabled(BTN_MENU) then
 		sound.play("#click")
 		if STATE == "pause" then
 			msg.post("main:/interface#hud", "char_enable", {value = false})
@@ -487,34 +495,34 @@ function on_input(self, action_id, action)
 			change_state("pause")
 			msg.post("main:/interface#hud", "char_enable", {value = true})
 		end
-	elseif action_id == hash("fire") and action.released and gui.pick_node(BACK_TEXT, action.x, action.y) and gui.is_enabled(HOW_TO_BOX) then
+	elseif action_id == HASH_FIRE and action.released and gui.pick_node(BACK_TEXT, action.x, action.y) and gui.is_enabled(HOW_TO_BOX) then
 		sound.play("#click")
 		gui.set_enabled(HOW_TO_BOX, false)
 		gui.set_enabled(MENU_BOX, true)
-	elseif action_id == hash("fire") and action.released and gui.pick_node(SOUND_OFF, action.x, action.y) and gui.is_enabled(MENU_BOX) then
+	elseif action_id == HASH_FIRE and action.released and gui.pick_node(SOUND_OFF, action.x, action.y) and gui.is_enabled(MENU_BOX) then
 		msg.post(".", "sound_off", {value = not sound_effect})
 		sound_effect = not sound_effect
-	elseif action_id == hash("fire") and action.released and gui.pick_node(SOUND_OFF1, action.x, action.y) and gui.is_enabled(MENU_BOX) then
+	elseif action_id == HASH_FIRE and action.released and gui.pick_node(SOUND_OFF1, action.x, action.y) and gui.is_enabled(MENU_BOX) then
 		msg.post(".", "sound_off1", {value = not sound_bg})
 		sound_bg = not sound_bg
-	elseif action_id == hash("fire") and action.released and gui.pick_node(SOUND_OFF2, action.x, action.y) and gui.is_enabled(MENU_BOX) then
+	elseif action_id == HASH_FIRE and action.released and gui.pick_node(SOUND_OFF2, action.x, action.y) and gui.is_enabled(MENU_BOX) then
 		msg.post(".", "sound_off2", {value = not sound_hell})
 		sound_hell = not sound_hell 
-	elseif action_id == hash("fire") and action.released and gui.pick_node(HOW_GAME, action.x, action.y) and gui.is_enabled(MENU_BOX) then
+	elseif action_id == HASH_FIRE and action.released and gui.pick_node(HOW_GAME, action.x, action.y) and gui.is_enabled(MENU_BOX) then
 		sound.play("#click")
 		gui.set_enabled(MENU_BOX, false)
 		gui.set_enabled(HOW_TO_BOX, true)
-	elseif action_id == hash("fire") and action.released and gui.pick_node(LANG_BOX, action.x, action.y) and gui.is_enabled(MENU_BOX) then
+	elseif action_id == HASH_FIRE and action.released and gui.pick_node(LANG_BOX, action.x, action.y) and gui.is_enabled(MENU_BOX) then
 		LANG_RUS = not LANG_RUS
 		msg.post(".", "change_lang")
 		change_langugage(LANG_RUS)
-	elseif action_id == hash("fire") and action.released and gui.pick_node(CONTINUE_BOX, action.x, action.y) and gui.is_enabled(WIN_BOX) then
+	elseif action_id == HASH_FIRE and action.released and gui.pick_node(CONTINUE_BOX, action.x, action.y) and gui.is_enabled(WIN_BOX) then
 		change_exp(SCORE_BOSS)
 		change_money(MONEY_BOSS)
 		msg.post("menu:/main#yandex", "show_feedback")
 		change_state("start")
 		sound.play("#click")
-	elseif action_id == hash("fire") and action.released and gui.pick_node(EXIT_BOX2, action.x, action.y) and gui.is_enabled(WIN_BOX) then
+	elseif action_id == HASH_FIRE and action.released and gui.pick_node(EXIT_BOX2, action.x, action.y) and gui.is_enabled(WIN_BOX) then
 		ALL_KILL_MONSTER = ALL_KILL_MONSTER + KOL_MONSTER
 		save_highscore(ALL_KILL_MONSTER)
 		defold_monster()
@@ -528,25 +536,25 @@ function on_input(self, action_id, action)
 		msg.post("menu:/main#yandex", "show_fullscreen_adv")
 		change_state("menu")
 	-- BUTTON MENU
-	elseif action_id == hash("fire") and action.released and gui.pick_node(BTN_MENU, action.x, action.y) and gui.is_enabled(BTN_MENU) then
+	elseif action_id == HASH_FIRE and action.released and gui.pick_node(BTN_MENU, action.x, action.y) and gui.is_enabled(BTN_MENU) then
 		msg.post("main:/interface#hud", "char_enable", {value = true})
 		change_state("pause")
 		sound.play("#click")
 		static_text()
-	elseif action_id == hash("fire") and action.released and gui.pick_node(GAMEPAD_OFF, action.x, action.y) and gui.is_enabled(MENU_BOX) then
+	elseif action_id == HASH_FIRE and action.released and gui.pick_node(GAMEPAD_OFF, action.x, action.y) and gui.is_enabled(MENU_BOX) then
 		GAMEPAD_ON = not GAMEPAD_ON
 		msg.post(".", "change_lang")
 		sound.play("#click")
-	elseif action_id == hash("fire") and action.released and gui.pick_node(GAMEPAD_TEXT,action.x, action.y) and gui.is_enabled(BTN_MENU) and gui.is_enabled(PAUSE_MENU) then
+	elseif action_id == HASH_FIRE and action.released and gui.pick_node(GAMEPAD_TEXT,action.x, action.y) and gui.is_enabled(BTN_MENU) and gui.is_enabled(PAUSE_MENU) then
 		GAMEPAD_ON = not GAMEPAD_ON
 		msg.post("main:/interface#hud", "gamepad", {value = GAMEPAD_ON})
 		msg.post(".", "change_lang")
 		sound.play("#click")
-	elseif action_id == hash("fire") and action.released and gui.pick_node(BTN_CONTINUE,action.x, action.y) and gui.is_enabled(BTN_MENU) and gui.is_enabled(PAUSE_MENU) then
+	elseif action_id == HASH_FIRE and action.released and gui.pick_node(BTN_CONTINUE,action.x, action.y) and gui.is_enabled(BTN_MENU) and gui.is_enabled(PAUSE_MENU) then
 		change_state("start")
 		msg.post("main:/interface#hud", "char_enable", {value = false})
 		sound.play("#click")
-	elseif action_id == hash("fire") and action.released and gui.pick_node(REVIVE_BOX,action.x, action.y) and gui.is_enabled(DEAD_MENU) then
+	elseif action_id == HASH_FIRE and action.released and gui.pick_node(REVIVE_BOX,action.x, action.y) and gui.is_enabled(DEAD_MENU) then
 		if MONEY > self.money_rev then
 			sound.play("#click")
 			change_money(-self.money_rev)
@@ -558,7 +566,7 @@ function on_input(self, action_id, action)
 			change_state("start")
 		end
 
-	elseif action_id == hash("fire") and action.released and gui.pick_node(MENU_START_BUTTON,action.x, action.y) and gui.is_enabled(MENU_BOX) then
+	elseif action_id == HASH_FIRE and action.released and gui.pick_node(MENU_START_BUTTON,action.x, action.y) and gui.is_enabled(MENU_BOX) then
 		if self.select_cucumber == "xop" then
 			hop_cucumber()
 		elseif self.select_cucumber == "nik" then
@@ -578,46 +586,46 @@ function on_input(self, action_id, action)
 		change_state("start")
 		msg.post("#gameproxy", "load")
 		
-	elseif action_id == hash("fire") and action.released and gui.pick_node(BOX_CUCUMBER,action.x, action.y) and gui.is_enabled(MENU_BOX) and gui.get_color(BOX_CUCUMBER) == BLACK_COLOR then
+	elseif action_id == HASH_FIRE and action.released and gui.pick_node(BOX_CUCUMBER,action.x, action.y) and gui.is_enabled(MENU_BOX) and gui.get_color(BOX_CUCUMBER) == BLACK_COLOR then
 		select_cucumber("xop", BOX_CUCUMBER, self)
 		sound.play("#click")
-	elseif action_id == hash("fire") and action.released and gui.pick_node(BOX_CUCUMBER1, action.x, action.y) and gui.is_enabled(MENU_BOX) and gui.get_color(BOX_CUCUMBER1) == BLACK_COLOR then
+	elseif action_id == HASH_FIRE and action.released and gui.pick_node(BOX_CUCUMBER1, action.x, action.y) and gui.is_enabled(MENU_BOX) and gui.get_color(BOX_CUCUMBER1) == BLACK_COLOR then
 		select_cucumber("nik", BOX_CUCUMBER1, self)
 		sound.play("#click")
-	elseif action_id == hash("fire") and action.released and gui.pick_node(BOX_CUCUMBER2, action.x, action.y) and gui.is_enabled(MENU_BOX) and gui.get_color(BOX_CUCUMBER2) == BLACK_COLOR then
+	elseif action_id == HASH_FIRE and action.released and gui.pick_node(BOX_CUCUMBER2, action.x, action.y) and gui.is_enabled(MENU_BOX) and gui.get_color(BOX_CUCUMBER2) == BLACK_COLOR then
 		select_cucumber("drak", BOX_CUCUMBER2, self)
 		sound.play("#click")
-	elseif action_id == hash("fire") and action.released and gui.pick_node(BOX_CUCUMBER3, action.x, action.y) and gui.is_enabled(MENU_BOX) and gui.get_color(BOX_CUCUMBER3) == BLACK_COLOR then
+	elseif action_id == HASH_FIRE and action.released and gui.pick_node(BOX_CUCUMBER3, action.x, action.y) and gui.is_enabled(MENU_BOX) and gui.get_color(BOX_CUCUMBER3) == BLACK_COLOR then
 		select_cucumber("arni", BOX_CUCUMBER3, self)
 		sound.play("#click")
 
-	elseif action_id == hash("fire") and action.released and gui.pick_node(WEAPON_BOX,action.x, action.y) and gui.is_enabled(MENU_BOX) and gui.get_color(WEAPON_BOX) == BLACK_COLOR then
+	elseif action_id == HASH_FIRE and action.released and gui.pick_node(WEAPON_BOX,action.x, action.y) and gui.is_enabled(MENU_BOX) and gui.get_color(WEAPON_BOX) == BLACK_COLOR then
 		select_weapon("pistol", WEAPON_BOX, self)
 		sound.play("#click")
-	elseif action_id == hash("fire") and action.released and gui.pick_node(WEAPON_BOX1, action.x, action.y) and gui.is_enabled(MENU_BOX) and gui.get_color(WEAPON_BOX1) == BLACK_COLOR then
+	elseif action_id == HASH_FIRE and action.released and gui.pick_node(WEAPON_BOX1, action.x, action.y) and gui.is_enabled(MENU_BOX) and gui.get_color(WEAPON_BOX1) == BLACK_COLOR then
 		select_weapon("two-pistol", WEAPON_BOX1, self)
 		sound.play("#click")
-	elseif action_id == hash("fire") and action.released and gui.pick_node(WEAPON_BOX2, action.x, action.y) and gui.is_enabled(MENU_BOX) and gui.get_color(WEAPON_BOX2) == BLACK_COLOR then
+	elseif action_id == HASH_FIRE and action.released and gui.pick_node(WEAPON_BOX2, action.x, action.y) and gui.is_enabled(MENU_BOX) and gui.get_color(WEAPON_BOX2) == BLACK_COLOR then
 		select_weapon("ak47", WEAPON_BOX2, self)
 		sound.play("#click")
 
-	elseif action_id == hash("fire") and action.released and gui.pick_node(HARD_BOX,action.x, action.y) and gui.is_enabled(MENU_BOX) and gui.get_color(HARD_BOX) == BLACK_COLOR then
+	elseif action_id == HASH_FIRE and action.released and gui.pick_node(HARD_BOX,action.x, action.y) and gui.is_enabled(MENU_BOX) and gui.get_color(HARD_BOX) == BLACK_COLOR then
 		select_hard("easy", HARD_BOX, self)
 		TIME_HITTED = 0.3
 		sound.play("#click")
-	elseif action_id == hash("fire") and action.released and gui.pick_node(HARD_BOX1, action.x, action.y) and gui.is_enabled(MENU_BOX) and gui.get_color(HARD_BOX1) == BLACK_COLOR then
+	elseif action_id == HASH_FIRE and action.released and gui.pick_node(HARD_BOX1, action.x, action.y) and gui.is_enabled(MENU_BOX) and gui.get_color(HARD_BOX1) == BLACK_COLOR then
 		select_hard("medium", HARD_BOX1, self)
 		TIME_HITTED = 0.2
 		sound.play("#click")
-	elseif action_id == hash("fire") and action.released and gui.pick_node(HARD_BOX2, action.x, action.y) and gui.is_enabled(MENU_BOX) and gui.get_color(HARD_BOX2) == BLACK_COLOR then
+	elseif action_id == HASH_FIRE and action.released and gui.pick_node(HARD_BOX2, action.x, action.y) and gui.is_enabled(MENU_BOX) and gui.get_color(HARD_BOX2) == BLACK_COLOR then
 		select_hard("hard", HARD_BOX2, self)
 		TIME_HITTED = 0.1
 		sound.play("#click")
 		
-	elseif action_id == hash("fire") and action.released and gui.pick_node(MENU_AUTOFIRE_BUTTON, action.x, action.y) and gui.is_enabled(MENU_AUTOFIRE_BUTTON) and gui.is_enabled(MENU_BOX) then
+	elseif action_id == HASH_FIRE and action.released and gui.pick_node(MENU_AUTOFIRE_BUTTON, action.x, action.y) and gui.is_enabled(MENU_AUTOFIRE_BUTTON) and gui.is_enabled(MENU_BOX) then
 		IS_MOUSE = not IS_MOUSE
 		sound.play("#click")
-	elseif action_id == hash("fire") and action.released and gui.pick_node(EXIT_BOX, action.x, action.y) and gui.is_enabled(PAUSE_MENU) then
+	elseif action_id == HASH_FIRE and action.released and gui.pick_node(EXIT_BOX, action.x, action.y) and gui.is_enabled(PAUSE_MENU) then
 		ALL_KILL_MONSTER = ALL_KILL_MONSTER + KOL_MONSTER
 		save_highscore(ALL_KILL_MONSTER)
 		defold_monster()
@@ -632,7 +640,7 @@ function on_input(self, action_id, action)
 		end
 		msg.post("menu:/main#yandex", "show_fullscreen_adv")
 		change_state("menu")
-	elseif action_id == hash("fire") and action.released and gui.pick_node(EXIT_BOX1, action.x, action.y) and gui.is_enabled(DEAD_MENU) then
+	elseif action_id == HASH_FIRE and action.released and gui.pick_node(EXIT_BOX1, action.x, action.y) and gui.is_enabled(DEAD_MENU) then
 		ALL_KILL_MONSTER = ALL_KILL_MONSTER + KOL_MONSTER
 		save_highscore(ALL_KILL_MONSTER)
 		defold_monster()
@@ -648,7 +656,7 @@ function on_input(self, action_id, action)
 		msg.post("menu:/main#yandex", "show_fullscreen_adv")
 		change_state("menu")
 
-	elseif action_id == hash("fire") and action.released and gui.pick_node(ADS_BOX, action.x, action.y) and gui.is_enabled(DEAD_MENU) then
+	elseif action_id == HASH_FIRE and action.released and gui.pick_node(ADS_BOX, action.x, action.y) and gui.is_enabled(DEAD_MENU) then
 		sound.play("#click")
 		msg.post("menu:/main#yandex", "show_rewarded_video")
 	end

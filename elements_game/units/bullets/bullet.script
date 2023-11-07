@@ -3,6 +3,10 @@ go.property('dir', vmath.vector3())
 go.property('damage',0)
 go.property('ak', false)
 
+local HASH_ENEMY = hash("enemy")
+local HASH_BOSS = hash("boss")
+local TRIGGER_RESPONSE = hash("trigger_response")
+
 function init(self)
 	math.randomseed(os.time())
 	self.probitie = KOL_PROBITIE
@@ -26,11 +30,11 @@ end
 
 local rota = vmath.quat_rotation_z(0)
 function on_message(self, message_id, message, sender)
-	if message_id == hash("trigger_response") then
+	if message_id == TRIGGER_RESPONSE then
 		if message.enter then
-			if message.other_group == hash("enemy") or message.other_group == hash("boss") then
+			if message.other_group == HASH_ENEMY or message.other_group == HASH_BOSS then
 				local randi = math.random()
-				if message.other_group == hash("enemy") and HEADSHOT > 0 and randi <= HEADSHOT/100 and self.ak == false then
+				if message.other_group == HASH_ENEMY and HEADSHOT > 0 and randi <= HEADSHOT/100 and self.ak == false then
 					sound.play("#headshot", { gain = 0.5, pan = 0 })
 					factory.create("#damage_tittle", nil, rota, {headshot = true})
 					msg.post(message.other_id, "hit", {value = 1000, dir = self.dir})

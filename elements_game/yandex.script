@@ -3,10 +3,13 @@ local yagames = require("yagames.yagames")
 
 local function init_handler(self, err)
 	if err then
-		print('err')
-		print("Something bad happened :(", err)
+		print("bad init_handler :(", err)
 	else
-		--msg.post("menu:/main#yandex", "show_fullscreen_adv")
+		print('open')
+		yagames.features_loadingapi_ready()
+		yagames.auth_open_auth_dialog(function(self, err)
+			print("yagames.auth_open_auth_dialog:", err or "OK!")
+		end)
 	end
 end
 
@@ -31,9 +34,8 @@ end
 
 local function adv_error(self, err)
 	if err then
-		print("Something bad happened :(", err)
+		print("bad adv_error :(", err)
 	end
-	-- Something wrong happened :(
 end
 
 local function rewarded_open(self)
@@ -56,14 +58,15 @@ end
 
 local function rewarded_error(self, err)
 	if err then
-		print("Something bad happened :(", err)
+		print("bad rewarded_error :(", err)
 	end
 end
 
 local function getstats(self, err, result)
 	ALL_KILL_MONSTER = result.score
+	print("add getstats :(", result)
 	if err then
-		print("Something bad happened :(", err)
+		print("bad getstats :(", err)
 	end
 end
 
@@ -73,7 +76,7 @@ end
 
 local function showfeedback(self, err, result)
 	if err then
-		print("Something bad happened :(", err)
+		print("bad showfeedback :(", err)
 	end
 end
 
@@ -82,18 +85,18 @@ local function canshowfeedback(self, err, result)
 		yagames.feedback_request_review(showfeedback)
 	end
 	if err then
-		print("Something bad happened :(", err)
+		print("bad canshowfeedback :(", err)
 	end
 end
 local function auth_player(self, err, result)
 	if err then
-		print("Something bad happened :(", err)
+		print("bad auth_player :(", err)
 	end
 end
 local function getplayer(self, err)
-	yagames.player_get_stats(getstats)
+	yagames.player_get_stats(nil, getstats)
 	if err then
-		print("Something bad happened :(", err)
+		print("bad getplayer :", err)
 	end
 end
 
@@ -101,6 +104,7 @@ function init(self)
 	yagames.init(init_handler)
 	msg.post(".", "show_fullscreen_adv")
 	player_name = yagames.player_get_name()
+	PLAYER_NAME = player_name
 end
 
 function on_message(self, message_id, message)
@@ -124,18 +128,22 @@ function on_message(self, message_id, message)
 		yagames.feedback_can_review(canshowfeedback)
 		print("feedback:", ret)
 	elseif message_id == hash("get_stats") then
-		yagames.player_init(getplayer)
+		yagames.player_init({scopes = false, signed = true}, getplayer)
+		print("get_stats:")
 	elseif message_id == hash("set_stats") then
-		yagames.player_set_stats({score = message.value}, setstats)
-		
+		yagames.player_set_stats({score = message.value}, true, setstats)
+		print("set_stats:")
+				
 	elseif message_id == hash("leaderboard") then
-		yagames.leaderboards_set_score({leaderboardName = player_name, score = message.value})
+		yagames.leaderboards_set_score({leaderboardName = player_name, score = message.value}, nil, function(self, err)
+			print("yagames.leaderboards_set_score (score=1):", err or "OK")
+		end)
+		
 		print("leaderbord:", player_name)
 	elseif message_id == hash("get_device") then
 		local device = yagames.device_info_is_desktop()
 		print('desk', device)
 		if device then
-			print('desk')
 			GAMEPAD_ON = false
 		else
 			GAMEPAD_ON = true

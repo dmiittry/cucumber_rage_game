@@ -2,6 +2,7 @@ require "elements_game.core.globals"
 go.property('dir', vmath.vector3())
 go.property('damage', 0)
 
+local TRIGGER_RESPONSE = hash("trigger_response")
 function init(self)
 	sound.play("#shoot_monster")
 	self.speed = 100
@@ -21,7 +22,7 @@ function update(self, dt)
 end
 
 function on_message(self, message_id, message, sender)
-	if message_id == hash("trigger_response") then
+	if message_id == TRIGGER_RESPONSE then
 		if message.enter then
 			msg.post(message.other_id, "hit_player", {value = self.damage})
 			go.delete()

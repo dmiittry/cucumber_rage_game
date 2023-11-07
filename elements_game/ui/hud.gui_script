@@ -3,7 +3,8 @@ require "elements_game.core.const"
 local change_coins = 5
 local free_upgrade = true
 local imba_select = false
-
+local TOUCH = hash("touch")
+local FIRE = hash("fire")
 function init(self)
 	change_state('next')
 	math.randomseed(os.time())
@@ -96,10 +97,7 @@ function init(self)
 	end
 
 	GAMEPAD_BOX = gui.get_node("gamepad")
-	LEFT_BOX = gui.get_node("left_box")
-	RIGHT_BOX = gui.get_node("right_box")
-	UP_BOX = gui.get_node("up_box")
-	DOWN_BOX = gui.get_node("down_box")
+	JOYSTICK_BOX = gui.get_node("joystick_box")
 	
 	text_update(self)
 	gui.set_enabled(CHARACTER_BOX, true)
@@ -110,8 +108,7 @@ function init(self)
 	gui.set_text(CHARACTER_TEXT, LANG_TEXT_CHAR)
 end
 
-function update(self, dt)
-		
+function update(self, dt)		
 	gui.set_text(HEARTS_TEXT, string.format("%.1f", HP_PLAYER) .. "/" .. MAX_HP_PLAYER)
 	local prosent_hp = HP_PLAYER * 100 / MAX_HP_PLAYER
 	local prosent_bar_hp = 150 * prosent_hp / 100
@@ -506,7 +503,7 @@ local function select_box(key, value, box, self)
 end
 	
 function on_input(self, action_id, action)
-	if action_id == hash("fire") and action.released and gui.pick_node(BOX1, action.x, action.y) and gui.is_enabled(UPGRADE_BOX) and gui.is_enabled(BOX1) then
+	if action_id == FIRE and action.released and gui.pick_node(BOX1, action.x, action.y) and gui.is_enabled(UPGRADE_BOX) and gui.is_enabled(BOX1) then
 		if free_upgrade then
 			select_box(KEY1, VALUE1, BOX1, self)
 		else
@@ -517,9 +514,9 @@ function on_input(self, action_id, action)
 			end
 		end
 			
-	elseif action_id == hash("fire") and action.released and gui.pick_node(ICON_CUCUMBER, action.x, action.y) then
+	elseif action_id == FIRE and action.released and gui.pick_node(ICON_CUCUMBER, action.x, action.y) then
 		msg.post(".", "char_enable")
-	elseif action_id == hash("fire") and action.released and gui.pick_node(IMBA_BOX, action.x, action.y) and gui.is_enabled(IMBA_BOX) then
+	elseif action_id == FIRE and action.released and gui.pick_node(IMBA_BOX, action.x, action.y) and gui.is_enabled(IMBA_BOX) then
 		if MONEY >= 1000 then
 			gui.set_enabled(IMBA_BOX, false)
 			imba_select = true
@@ -527,7 +524,7 @@ function on_input(self, action_id, action)
 			imba_mode()
 			text_update(self)
 		end
-	elseif action_id == hash("fire") and action.released and gui.pick_node(BOX2, action.x, action.y) and gui.is_enabled(UPGRADE_BOX) and gui.is_enabled(BOX2)then
+	elseif action_id == FIRE and action.released and gui.pick_node(BOX2, action.x, action.y) and gui.is_enabled(UPGRADE_BOX) and gui.is_enabled(BOX2)then
 		if free_upgrade then
 			select_box(KEY2, VALUE2, BOX2, self)
 		else
@@ -538,7 +535,7 @@ function on_input(self, action_id, action)
 			end
 		end
 		
-	elseif action_id == hash("fire") and action.released and gui.pick_node(BOX3, action.x, action.y) and gui.is_enabled(UPGRADE_BOX) and gui.is_enabled(BOX3) then
+	elseif action_id == FIRE and action.released and gui.pick_node(BOX3, action.x, action.y) and gui.is_enabled(UPGRADE_BOX) and gui.is_enabled(BOX3) then
 		if free_upgrade then
 			select_box(KEY3, VALUE3, BOX3, self)
 		else
@@ -549,7 +546,7 @@ function on_input(self, action_id, action)
 			end
 		end
 		
-	elseif action_id == hash("fire") and action.released and gui.pick_node(BOX4, action.x, action.y) and gui.is_enabled(UPGRADE_BOX) and gui.is_enabled(BOX4)then
+	elseif action_id == FIRE and action.released and gui.pick_node(BOX4, action.x, action.y) and gui.is_enabled(UPGRADE_BOX) and gui.is_enabled(BOX4)then
 		if free_upgrade then
 			select_box(KEY4, VALUE4, BOX4, self)
 		else
@@ -560,11 +557,11 @@ function on_input(self, action_id, action)
 			end
 		end
 		
-	elseif action_id == hash("fire") and action.released and gui.pick_node(CHANGE_BOX, action.x, action.y) and gui.is_enabled(UPGRADE_BOX) and MONEY >= change_coins then
+	elseif action_id == FIRE and action.released and gui.pick_node(CHANGE_BOX, action.x, action.y) and gui.is_enabled(UPGRADE_BOX) and MONEY >= change_coins then
 		change_money(-change_coins)
 		change_coins = change_coins + math.random(5,13)
 		choose_upgrade()
-	elseif action_id == hash("fire") and action.released and gui.pick_node(CURRENT_BOX, action.x, action.y) and gui.is_enabled(UPGRADE_BOX) and CURRENT_KEY ~= 0 and BUY <= MONEY then
+	elseif action_id == FIRE and action.released and gui.pick_node(CURRENT_BOX, action.x, action.y) and gui.is_enabled(UPGRADE_BOX) and CURRENT_KEY ~= 0 and BUY <= MONEY then
 
 		upgrade_skills(CURRENT_KEY,CURRENT_VALUE)
 		if free_upgrade then
@@ -576,7 +573,7 @@ function on_input(self, action_id, action)
 		end
 		BUY = 0
 		text_update(self)
-	elseif action_id == hash("fire") and action.released and gui.pick_node(CLOSE_BOX, action.x, action.y) and gui.is_enabled(UPGRADE_BOX) and gui.is_enabled(CLOSE_BOX) then
+	elseif action_id == FIRE and action.released and gui.pick_node(CLOSE_BOX, action.x, action.y) and gui.is_enabled(UPGRADE_BOX) and gui.is_enabled(CLOSE_BOX) then
 		gui.set_enabled(UPGRADE_BOX, false)
 		gui.set_enabled(GAMEPAD_BOX, GAMEPAD_ON)
 		text_update(self)
@@ -585,17 +582,14 @@ function on_input(self, action_id, action)
 		change_coins = 5
 		msg.post(".", "char_enable", {value = false})
 		sound.play("/interface#click")
-	elseif action_id == hash("fire") and action.released and gui.pick_node(ADD_MONEY_BOX, action.x, action.y) and gui.is_enabled(UPGRADE_BOX) then
+	elseif action_id == FIRE and action.released and gui.pick_node(ADD_MONEY_BOX, action.x, action.y) and gui.is_enabled(UPGRADE_BOX) then
 		sound.play("/interface#click")
 		msg.post("menu:/main#yandex", "show_rewarded_video")
-	elseif gui.pick_node(LEFT_BOX, action.x, action.y) and gui.is_enabled(GAMEPAD_BOX) and action_id == hash("touch") then
-		msg.post("/player/cucumber#cucumber", "move", {value = "left"})
-	elseif gui.pick_node(RIGHT_BOX, action.x, action.y) and gui.is_enabled(GAMEPAD_BOX) and action_id == hash("touch") then
-		msg.post("/player/cucumber#cucumber", "move", {value = "right"})
-	elseif gui.pick_node(UP_BOX, action.x, action.y) and gui.is_enabled(GAMEPAD_BOX) and action_id == hash("touch") then
-		msg.post("/player/cucumber#cucumber", "move", {value = "up"})
-	elseif gui.pick_node(DOWN_BOX, action.x, action.y) and gui.is_enabled(GAMEPAD_BOX) and action_id == hash("touch") then
-		msg.post("/player/cucumber#cucumber", "move", {value = "down"})
+	elseif gui.pick_node(JOYSTICK_BOX, action.x, action.y) and gui.is_enabled(GAMEPAD_BOX) and action_id == FIRE then
+		local dir = vmath.vector3(110,107,0)
+		local diry = vmath.vector3(action.x,action.y,0)
+		msg.post("/player/cucumber#cucumber", "move", {direct = vmath.normalize(diry - dir)})
+		
 	end
 end
 

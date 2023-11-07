@@ -1,6 +1,14 @@
 require "elements_game.core.globals"
 go.property("dir", vmath.vector3())
 
+local CONTACT_POINT_RESPONSE = hash("contact_point_response")
+local COLLISION_RESPONSE = hash("collision_response")
+local HASH_PLAYER = hash("player")
+local HAS_TRIGGER = hash("trigger")
+local HASH_KNIFE = hash("knife")
+local TRIGGER_RESPONSE = hash("trigger_response")
+local HASH_HIT = hash("hit")
+
 function init(self)
 	self.speed = SPEED_MINIS
 	self.health = HEALTH_MINIS
@@ -58,12 +66,12 @@ end
 
 
 function on_message(self, message_id, message, sender)
-	if message_id == hash("hit") then
+	if message_id == HASH_HIT then
 		hitted_animate(self)
 		hitted_monster(self, message.value)
 		push_monster(self, message.dir)
-	elseif message_id == hash("trigger_response") then
-		if message.other_group == hash("knife") then
+	elseif message_id == TRIGGER_RESPONSE then
+		if message.other_group == HASH_KNIFE then
 			if message.enter then
 				hitted_animate(self)
 				local rota = vmath.quat(0,0,0,0)
@@ -71,15 +79,15 @@ function on_message(self, message_id, message, sender)
 				hitted_monster(self, KNIFE_DAMAGE)
 			end	
 		end
-	elseif message_id == hash("collision_response") then
-		if message.other_group == hash("trigger") then
+	elseif message_id == COLLISION_RESPONSE then
+		if message.other_group == HAS_TRIGGER then
 			local tg = message.other_position
 			if self.move then
 				blue_move_monster(tg, self)
 			end
 		end
-	elseif message_id == hash("contact_point_response") then
-		if message.other_group == hash("player") then
+	elseif message_id == CONTACT_POINT_RESPONSE then
+		if message.other_group == HASH_PLAYER then
 			msg.post(message.other_id, "hit_player", {value = self.damage})
 		end
 	end

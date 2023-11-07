@@ -1,17 +1,21 @@
 require "elements_game.core.globals"
 
+local HASH_ADD_KNIFE = hash("add_knife")
+local TRIGGER_RESPONSE = hash("trigger_response")
+local HASH_ENEMY = hash("enemy")
+local HASH_BOSS = hash("boss")
+
 function init(self)
 	msg.post(".", "disable")
 	local rad = go.get(".", "euler.z")
 	go.animate(".", "euler.z", go.PLAYBACK_LOOP_FORWARD, rad + 360, go.EASING_LINEAR, TIME_KNIFE)
 end
 
-
 function on_message(self, message_id, message, sender)
-	if message_id == hash("add_knife") then
+	if message_id == HASH_ADD_KNIFE then
 		msg.post(".", "enable")
-	elseif message_id == hash("trigger_response") then
-		if message.other_group == hash("enemy") or message.other_group == hash("boss") then
+	elseif message_id == TRIGGER_RESPONSE then
+		if message.other_group == HASH_ENEMY or message.other_group == HASH_BOSS then
 			sound.play("#knife_sound")
 		end
 	end
