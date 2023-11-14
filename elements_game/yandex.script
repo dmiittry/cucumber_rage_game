@@ -1,18 +1,6 @@
 require("elements_game.core.globals")
 local yagames = require("yagames.yagames")
 
-local function init_handler(self, err)
-	if err then
-		print("bad init_handler :(", err)
-	else
-		print('open')
-		yagames.features_loadingapi_ready()
-		yagames.auth_open_auth_dialog(function(self, err)
-			print("yagames.auth_open_auth_dialog:", err or "OK!")
-		end)
-	end
-end
-
 local function adv_open(self)
 	print('open')
 	for key, value in pairs(sound.get_groups()) do
@@ -63,15 +51,21 @@ local function rewarded_error(self, err)
 end
 
 local function getstats(self, err, result)
-	ALL_KILL_MONSTER = result.score
+	if result.score == nil then
+		ALL_KILL_MONSTER = 0
+	else
+		ALL_KILL_MONSTER = result.score
+	end
 	print("add getstats :(", result)
 	if err then
 		print("bad getstats :(", err)
 	end
 end
 
-local function setstats(self)
-	print("set_data player:", self)
+local function setstats(self, err)
+	if err then
+		print("set_data player:", err)
+	end
 end
 
 local function showfeedback(self, err, result)
@@ -96,15 +90,28 @@ end
 local function getplayer(self, err)
 	yagames.player_get_stats(nil, getstats)
 	if err then
+		yagames.auth_open_auth_dialog(function(self, err)
+			print("yagames.auth_open_auth_dialog:", err or "OK!")
+		end)
 		print("bad getplayer :", err)
+	end
+end
+
+local function init_handler(self, err)
+	if err then
+		print("bad init_handler :(", err)
+	else
+		print('open')
+		yagames.player_init({scopes = false, signed = true}, getplayer)
+		msg.post(".", "show_fullscreen_adv")
+		player_name = yagames.player_get_name()
+		PLAYER_NAME = player_name
+		yagames.features_loadingapi_ready()
 	end
 end
 
 function init(self)
 	yagames.init(init_handler)
-	msg.post(".", "show_fullscreen_adv")
-	player_name = yagames.player_get_name()
-	PLAYER_NAME = player_name
 end
 
 function on_message(self, message_id, message)
