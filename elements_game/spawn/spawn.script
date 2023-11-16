@@ -47,17 +47,13 @@ local function standrat_spawn(self)
 			yellow_spawn()
 			purple_spawn()
 		end
-		if SPEED_SHOOT <= 0.35 then
+		if SPEED_SHOOT <= 0.3 then
 			yellow_spawn()
-			yellow_spawn()
-			purple_spawn()
 			purple_spawn()
 		end
 		if TIME_SHOOT_AK47 <= 0.35 then
-			blue_spawn()
-			blue_spawn()
-			yellow_spawn()
-			yellow_spawn()
+			purple_spawn()
+			red_spawn()
 		end
 	end
 	if randi > 0 and randi < 0.25 then
