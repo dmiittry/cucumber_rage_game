@@ -37,7 +37,7 @@ gravity_y = 0.0
 max_collision_object_count = 999
 
 [collection]
-max_input_stack_entries = 99
+max_input_stack_entries = 399
 
 [factory]
 max_count = 500

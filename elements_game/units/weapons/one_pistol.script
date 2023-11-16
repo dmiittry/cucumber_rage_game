@@ -19,7 +19,8 @@ function init(self)
 		self.weap = "#ak47"
 		sprite.play_flipbook("#sprite_pistol", hash("ak47_hand"))
 	end
-	self.speed_shoot = SPEED_SHOOT
+	self.speed_boost = false
+	self.time_shoot = SPEED_SHOOT
 end
 
 local function look_at(target_position, pos)
@@ -51,7 +52,12 @@ local function shoot(target_position, gl , self)
 			factory.create("#bullet", nil,rota,{dir = vmath.normalize(dir), damage = DAMAGE_BULLET}) 
 		end)
 	end
-	timer.delay(self.speed_shoot, false, function()
+	if self.speed_boost then
+		self.time_shoot = 0.1
+	else
+		self.time_shoot = SPEED_SHOOT
+	end
+	timer.delay(self.time_shoot, false, function()
 		self.fire = true
 	end)
 end
@@ -76,10 +82,10 @@ function on_message(self, message_id, message, sender)
 	if message_id == DEAD_MONSTER then
 		change_nearest_enemy()
 	elseif message_id == HASH_BOOST then
-		self.speed_shoot = 0.1
+		self.speed_boost = true
 		timer.delay(BOOS_TIME, false, 
 		function()
-			self.speed_shoot = SPEED_SHOOT
+			self.speed_boost = false
 		end)
 	elseif message_id == COLLISION_RESPONSE then
 		if message.other_group == HASH_ENEMY or message.other_group == HASH_BOSS then
@@ -111,21 +117,28 @@ function on_message(self, message_id, message, sender)
 	end
 end
 
--- function on_input(self, action_id, action)
--- 	local target_position = vmath.vector3(action.x, action.y, 0)
--- 	local gl = go.get_position(go.get_parent())
--- 	
--- 	if action_id then
--- 		if action_id == hash("fire") and self.fire then
--- 			if IS_MOUSE then
--- 				shoot(target_position, gl, self)
--- 				self.fire = false
--- 			end
--- 		elseif action_id == hash('reload') then
--- 			IS_MOUSE = not IS_MOUSE
--- 		end
--- 	end
--- 	if IS_MOUSE then
--- 		look_at(target_position, gl)
--- 	end
--- end
+function on_input(self, action_id, action)
+	-- local target_position = vmath.vector3(action.x, action.y, 0)
+	-- local gl = go.get_position(go.get_parent())
+	
+	if action_id then
+		if action_id == hash("reload") and action.released then
+			-- print("speed knife", TIME_KNIFE)
+			-- TIME_KNIFE = TIME_KNIFE - 0.1
+			-- msg.post("/player/knife", "speed_knife")
+			-- msg.post("/player/knife1", "speed_knife")
+			-- msg.post("/player/knife2", "speed_knife")
+			-- msg.post("/player/knife3", "speed_knife")
+			ALL_KILL_MONSTER = 260000
+			-- if IS_MOUSE then
+			-- 	shoot(target_position, gl, self)
+			-- 	self.fire = false
+			-- end
+		-- elseif action_id == hash('reload') then
+			-- IS_MOUSE = not IS_MOUSE
+		end
+	end
+	-- if IS_MOUSE then
+	-- 	look_at(target_position, gl)
+	-- end
+end

@@ -58,7 +58,7 @@ local function set_color(self)
 end
 
 local function hitted_animate(self)
-	go.animate("#sprite", "tint", go.PLAYBACK_ONCE_PINGPONG, vmath.vector4(150,255,55,1), go.EASING_LINEAR, 0.1, 0, set_color)
+	go.animate("#sprite", "tint", go.PLAYBACK_ONCE_PINGPONG, vmath.vector4(0.5,0,0,1), go.EASING_LINEAR, 0.1, 0, set_color)
 end
 
 local function red_move_monster(tg, self)

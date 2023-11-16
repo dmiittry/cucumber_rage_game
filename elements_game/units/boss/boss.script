@@ -52,7 +52,7 @@ local function red_dead_monster(self)
 	go.animate(".", "scale", go.PLAYBACK_ONCE_FORWARD, vmath.vector3(0,0,0), go.EASING_OUTSINE, 0.5)
 	go.animate(".", "rotation", go.PLAYBACK_ONCE_FORWARD, vmath.quat(0,0,1,1), go.EASING_OUTSINE, 0.5)
 	timer.delay(1.8, false, function()
-		if BOSS_DEAD then
+		if BOSS_DEAD == false then
 			msg.post("main:/spawn_monster/go#spawn", "boss_dead")
 		end
 		BOSS_DEAD = true
@@ -79,7 +79,7 @@ local function set_color(self)
 end
 
 local function hitted_animate(self)
-	go.animate("#sprite", "tint", go.PLAYBACK_ONCE_PINGPONG, vmath.vector4(150,255,55,1), go.EASING_LINEAR, 0.1, 0, set_color)
+	go.animate("#sprite", "tint", go.PLAYBACK_ONCE_PINGPONG, vmath.vector4(1,0,0,1), go.EASING_LINEAR, 0.1, 0, set_color)
 end
 
 local function red_move_monster(tg, self)

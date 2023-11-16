@@ -19,7 +19,6 @@ local gamepad_lang = "джойстик: "
 local function load_highscore()
 	-- local filename = sys.get_save_file("sys_save_load", "highscore")
 	-- local data = sys.load(filename)
-	msg.post("menu:/main#yandex", "get_stats")
 	print('load_highscore')
 	-- return data.highscore or 0 
 end
@@ -27,25 +26,23 @@ local function save_highscore(highscore)
 	-- local filename = sys.get_save_file("sys_save_load", "highscore")
 	-- sys.save(filename, { highscore = highscore })
 	msg.post("menu:/main#yandex", "set_stats", {value = highscore})
-	msg.post("menu:/main#yandex", "leaderboard")
+	msg.post("menu:/main#yandex", "leaderboard", {value = highscore})
 	print('save_highscore')
 end
 
 function init(self)
-	msg.post("menu:/main#yandex", "get_device")
-	msg.post("menu:/main#yandex", "get_stats")
-	self.play_sound = false
-	msg.post("menu:/main#yandex", "show_fullscreen_adv")
-	msg.post(".", "change_lang")
+	LOADING_BOX = gui.get_node("loading_box")
+	LOADING_SPRITE = gui.get_node("loading_sprite")
+	gui.set_enabled(LOADING_BOX, true)
 	-- for key, value in pairs(sound.get_groups()) do
 	-- 	sound.set_group_gain(value, 0)
 	-- end
-	
+
+	self.play_sound = false
 	self.select_cucumber = 0
 	self.select_weapon = "pistol"
 	self.select_hard = "easy"
 	self.money_rev = 50
-	msg.post(".", "acquire_input_focus")
 	PAUSE_MENU = gui.get_node("pause_menu")
 	BTN_CONTINUE = gui.get_node("continue")
 	BTN_MENU = gui.get_node("menu_button")
@@ -159,6 +156,14 @@ end
 function on_message(self, message_id, message, sender)
 	if message_id == PROXY_LOAD then
 		msg.post(sender, "enable")
+	elseif message_id == hash("loading") then
+		msg.post("menu:/main#mainhud", "change_lang")
+		select_cucumber("xop", BOX_CUCUMBER, self)
+		select_hard("easy", HARD_BOX, self)
+		select_weapon("pistol", WEAPON_BOX, self)
+		msg.post(".", "acquire_input_focus")
+		gui.set_enabled(LOADING_BOX, false)
+		gui.set_enabled(LOADING_SPRITE, false)
 	elseif message_id == HASH_SOUND then
 		if message.value then
 			sound.set_group_gain("effect", 1)
@@ -305,24 +310,25 @@ end
 
 function update(self, dt)
 	if STATE == "start" then
+		play()
 		gui.set_enabled(PAUSE_MENU, false)
 		gui.set_enabled(DEAD_MENU, false)
 		gui.set_enabled(BTN_MENU, true)
 		gui.set_enabled(WIN_BOX, false)
 		gui.set_enabled(STATIC_BOX, false)
-		play()
 	elseif STATE == "pause" then
+		stop()
 		gui.set_enabled(STATIC_BOX, true)
 		gui.set_enabled(BTN_MENU, true)
 		gui.set_enabled(PAUSE_MENU, true)
 		gui.set_enabled(WIN_BOX, false)
-		stop()
 	elseif STATE == "win_boss" then
+		stop()
 		gui.set_enabled(BTN_MENU, false)
 		gui.set_enabled(STATIC_BOX, true)
 		gui.set_enabled(WIN_BOX, true)
-		stop()
 	elseif STATE == "dead" then
+		stop()
 		gui.set_enabled(STATIC_BOX, true)
 		gui.set_enabled(WIN_BOX, false)
 		gui.set_text(REVIVE_TEXT, rev_text .. self.money_rev)
@@ -333,18 +339,18 @@ function update(self, dt)
 		else
 			gui.set_color(REVIVE_BOX, GREEN_COLOR)
 		end
-		stop()
 	elseif STATE == "next" then
+		stop()
 		gui.set_enabled(STATIC_BOX, false)
 		gui.set_enabled(WIN_BOX, false)
 		gui.set_enabled(BTN_MENU, false)
-		stop()
 	elseif STATE == "magazin" then
+		stop()
 		gui.set_enabled(STATIC_BOX, false)
 		gui.set_enabled(WIN_BOX, false)
 		gui.set_enabled(BTN_MENU, false)
-		stop()
 	elseif STATE == "menu" then
+		stop()
 		gui.set_text(TOTAL_SCORE_TEXT, total_score_lang .. ALL_KILL_MONSTER)
 		gui.set_enabled(STATIC_BOX, false)
 		gui.set_enabled(WIN_BOX, false)
@@ -357,7 +363,6 @@ function update(self, dt)
 		else
 			gui.set_text(MENU_AUTOFIRE_BUTTON, "авто-атака: выкл")
 		end
-		stop()
 	end
 end
 function static_text()

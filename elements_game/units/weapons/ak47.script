@@ -12,6 +12,7 @@ function init(self)
 	msg.post(".", "disable")
 	self.correct =  vmath.vector3(-15,27,0)
 	self.speed_shoot = TIME_SHOOT_AK47
+	self.speed_boost = false
 end
 
 local function shoot(target_position, gl , self)
@@ -27,6 +28,11 @@ local function shoot(target_position, gl , self)
 	sprite.set_vflip("#sprite", angle < 0 )
 	go.set_rotation(rota)
 	local bullet = factory.create("#bullet", nil, rota,{dir = vmath.normalize(dir), damage = DAMAGE_UNIT, ak = true})
+	if self.speed_boost then
+		self.speed_shoot = 0.1
+	else
+		self.speed_shoot = TIME_SHOOT_AK47
+	end
 	timer.delay(self.speed_shoot, false, function()
 		self.fire = true
 	end)
@@ -44,10 +50,10 @@ end
 
 function on_message(self, message_id, message, sender)
 	if message_id == HASH_BOOST then
-		self.speed_shoot = 0.1
+		self.speed_boost = true
 		timer.delay(BOOS_TIME, false, 
 		function()
-			self.speed_shoot = TIME_SHOOT_AK47
+			self.speed_boost = false
 		end)
 	elseif message_id == COLLISION_RESPONSE then
 		if message.other_group == HASH_ENEMY or message.other_group == HASH_BOSS  then

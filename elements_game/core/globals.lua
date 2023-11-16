@@ -90,7 +90,7 @@ KOL_POL_URON = 0
 KOL_POGL_URON = 0
 KOL_REV = 0
 EXP = 0
-MONEY = 5
+MONEY = 0
 
 IS_MOUSE = false
 CUCUMBER = "hop"
@@ -258,6 +258,10 @@ function upgrade_skills(key, value)
 		end
 	elseif key == "up_speed_knife" then
 		TIME_KNIFE = TIME_KNIFE - value/100
+		msg.post("/player/knife", "speed_knife")
+		msg.post("/player/knife1", "speed_knife")
+		msg.post("/player/knife2", "speed_knife")
+		msg.post("/player/knife3", "speed_knife")
 		if TIME_KNIFE <= MAX_TIME_KNIFE then
 			TIME_KNIFE = MAX_TIME_KNIFE
 			for key, value in pairs(UPGRADE_LIST) do
@@ -520,11 +524,11 @@ end
 		
 function hop_cucumber()
 	CUCUMBER = "hop"
-	SPEED_SHOOT = 0.8
+	SPEED_SHOOT = 0.8 -- max 0.8
 	HP_PLAYER = 100
 	MAX_HP_PLAYER = 100
 	REGEN_PLAYER = 0 -- /10 max 30
-	VAMPIR = 0 -- % max 9
+	VAMPIR = 2 -- % max 10
 	DAMAGE_UNIT = 30
 	DMG_CRITICAL = 150 
 	CRITICAL = 3   -- %
@@ -542,7 +546,7 @@ function hop_cucumber()
 	-- STATISTIKA
 	MONEY = 150
 	-- MAX CHAR PLAYER
-	MAX_VAMPIR = 9 -- % max 9
+	MAX_VAMPIR = 10 -- % max 9
 	MAX_CRITICAL = 25
 	MAX_ARMOR = 25   -- %
 	MAX_UKLON_PLAYER = 30 -- max 30 %
@@ -572,14 +576,14 @@ function nik_cucumber()
 	AK = 0
 	KNIFE = 0
 	KNIFE_DAMAGE = 25
-	TIME_KNIFE = 1.5 -- max 1 sek
+	TIME_KNIFE = 1.2 -- max 1 sek
 	-- MAX CHAR PLAYER
 	MAX_VAMPIR = 9 -- % max 9
 	MAX_CRITICAL = 40
 	MAX_ARMOR = 20   -- %
 	MAX_UKLON_PLAYER = 40 -- max 30 %
 	MAX_SPEED_PLAYER = 120
-	MAX_SPEED_SHOOT = 0.25 -- sekunda - max 0.2
+	MAX_SPEED_SHOOT = 0.2 -- sekunda - max 0.2
 	-- AK47 and KNIFE
 	MAX_TIME_SHOOT_AK47 = 0.3 -- max 0.3
 	MAX_TIME_KNIFE = 0.8 -- max 1 sek
@@ -587,7 +591,7 @@ function nik_cucumber()
 	--------
 	HEADSHOT = 0
 	EXP = 0
-	MONEY = 100
+	MONEY = 170
 end
 function vampir_cucumber()
 	CUCUMBER = "vampir"
@@ -622,7 +626,7 @@ function vampir_cucumber()
 	--------
 
 	HEADSHOT = 0
-	MONEY = 100
+	MONEY = 180
 end
 function arni_cucumber()
 	CUCUMBER = "arni"
@@ -642,7 +646,7 @@ function arni_cucumber()
 	AK = 0
 	KNIFE = 0
 	KNIFE_DAMAGE = 25
-	TIME_KNIFE = 1.1 -- max 1 sek
+	TIME_KNIFE = 1 -- max 1 sek
 	HEADSHOT = 0
 	-- MAX CHAR PLAYER
 	MAX_VAMPIR = 9 -- % max 9
@@ -657,7 +661,7 @@ function arni_cucumber()
 	MAX_KOL_PROBITIE = 2
 	--------
 	
-	MONEY = 100
+	MONEY = 200
 end
 
 function defold_monster()
