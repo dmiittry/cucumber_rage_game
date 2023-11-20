@@ -146,19 +146,18 @@ end
 
 function play()
 	msg.post("#gameproxy", "set_time_step", {factor = 1, mode = 0})
-	sound.set_group_gain("effect", 1)
 end
 
 function stop()
 	static_text()
 	msg.post("#gameproxy", "set_time_step", {factor = 0, mode = 0})
-	sound.set_group_gain("effect", 0)
 end
 
 function on_message(self, message_id, message, sender)
 	if message_id == PROXY_LOAD then
 		msg.post(sender, "enable")
 	elseif message_id == hash("loading") then
+		-- ALL_KILL_MONSTER = 999999
 		msg.post("menu:/main#mainhud", "change_lang")
 		select_cucumber("xop", BOX_CUCUMBER, self)
 		select_hard("easy", HARD_BOX, self)

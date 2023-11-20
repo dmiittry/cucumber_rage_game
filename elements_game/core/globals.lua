@@ -36,7 +36,7 @@ CHAR_CRITICAL = {value = math.random(1,5), key = "critical",
 text1 = "% шанса критической атаки", text2 = "увеличивает шанс критической атаки",text11 = "% critical attack chance", text22 = "increases critical attack chance",
 img = 'img', buy = math.random(40,50)}
 CHAR_ARMOR = {value = math.random(1,5), key = "armor", 
-text1 = " увеличить броню", text2 = "увеличить броню, броня уменьшает урон", text11 = "increase armor", text22 = " increase armor, armor reduces damage",
+text1 = " увеличить броню", text2 = "увеличить броню, броня уменьшает урон", text11 = " increase armor", text22 = " increase armor, armor reduces damage",
  img = 'img', buy = math.random(30,42)}
 CHAR_UKLON = {value = math.random(1,5), key = "uklon",
 text1 = "% увеличения уклонения", text2 = "Вы будете уклоняться от атак как бог", text11 = "% dodge increase", text22 = "You will dodge attacks like a god",
@@ -403,11 +403,11 @@ function change_exp(value)
 			DAMAGE_RED = DAMAGE_RED + add_ten_level
 			DAMAGE_PURPLE = DAMAGE_PURPLE + add_ten_level
 			DAMAGE_YELLOW = DAMAGE_YELLOW + add_ten_level + 20
-			MONEY_BLUE = 1
-			MONEY_RED = 1
-			MONEY_PURPLE = 1
-			MONEY_YELLOW = 2
-		elseif LEVEL >= 20 and LEVEL < 25 then
+			MONEY_BLUE = MONEY_BLUE / 2
+			MONEY_RED = MONEY_BLUE / 2
+			MONEY_PURPLE = MONEY_PURPLE / 2
+			MONEY_YELLOW = MONEY_YELLOW / 2
+		elseif LEVEL > 20 and LEVEL < 25 then
 			DURATION_SPAWN_MOSTER = 2
 			add_every = 5
 		elseif LEVEL >= 25 and LEVEL < 30 then
