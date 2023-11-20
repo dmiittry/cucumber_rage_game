@@ -16,34 +16,34 @@ text1 = " hp", text2 = "увеличивает максимальное здор
 img = 'img', buy = math.random(20,32)}
 CHAR_DMG_BULLET = {value = math.random(2,5), key = "dmg_bullet", 
 text1 = " к урону ружья", text2 = "увеличивает урон основного ружья", text11 = " to gun damage", text22 = "increases the damage of the main shotgun",
- img = 'img', buy = math.random(20,32)}
+ img = 'img', buy = math.random(50,62)}
 CHAR_SPEED_PLR = {value = math.random(2,5), key = "speed_pl", 
 text1 = " к скорости огурчика", text2 = "увеличивает скорость бега", text11 = " to the speed of a pickle", text22 = "increases running speed.", 
-img = 'img', buy = math.random(20,32)}
+img = 'img', buy = math.random(40,52)}
 CHAR_REGEN = {value = math.random(3,5), key = "regen", 
 text1 = " к регенерации HP", text2 = "увеличивает скорость регенерации здоровья в секунду", text11 = " to HP regeneration", text22 = "increases the rate of health regeneration per second",
  img = 'img', buy = math.random(20,32)}
 CHAR_VAMPIR = {value = math.random(1,3), key = "vampir", 
 text1 = " к вампиризму", text2 = "увеличивает кражу здоровья, получаемый урон от пуль конвертируется в здоровье",  text11 = " to vampirism", text22 = "increases health steal, bullet damage received is converted to health",
-img = 'img', buy = math.random(20,32)}
+img = 'img', buy = math.random(60,82)}
 CHAR_DMG_UNIT = {value = math.random(2,5), key = "dmg_unit", 
 text1 = " к урону дополнительного оружия", text2 = "увеличивает урон дополнительного оружия",text11 = " to additional weapon damage", text22 = "increases additional weapon damage",
 img = 'img', buy = math.random(100,150)}
 CHAR_DMG_CRITICAL = {value = math.random(5,10), key = "dmg_critical", 
 text1 = "% критического урона", text2 = "увеличивает критический урон", text11 = "% critical damage", text22 = "increases critical damage",
-img = 'img', buy = math.random(20,32)}
+img = 'img', buy = math.random(60,80)}
 CHAR_CRITICAL = {value = math.random(1,5), key = "critical", 
 text1 = "% шанса критической атаки", text2 = "увеличивает шанс критической атаки",text11 = "% critical attack chance", text22 = "increases critical attack chance",
-img = 'img', buy = math.random(20,32)}
+img = 'img', buy = math.random(40,50)}
 CHAR_ARMOR = {value = math.random(1,5), key = "armor", 
 text1 = " увеличить броню", text2 = "увеличить броню, броня уменьшает урон", text11 = "increase armor", text22 = " increase armor, armor reduces damage",
- img = 'img', buy = math.random(20,32)}
+ img = 'img', buy = math.random(30,42)}
 CHAR_UKLON = {value = math.random(1,5), key = "uklon",
 text1 = "% увеличения уклонения", text2 = "Вы будете уклоняться от атак как бог", text11 = "% dodge increase", text22 = "You will dodge attacks like a god",
- img = 'img', buy = math.random(20,32)}
+ img = 'img', buy = math.random(20,40)}
 CHAR_SPEED_SHOOT = {value = math.random(2,5), key = "speed_shoot", 
 text1 = " увеличивает скорость атаки", text2 = "увеличивает скорострельность главного орудия", text11 = " increases attack speed", text22 = "increases main gun speed", 
- img = 'img', buy = math.random(20,32)}
+ img = 'img', buy = math.random(40,52)}
 SKILL_ADD_AK47 = {value = 0, key = "add_ak", 
 text1 = "Добавить ak47", text2 = "Добавляет ak47, который стреляет сам по себе", text11 = "Add ak47", text22 = "Adds an ak47 that shoots by itself",
 buy = math.random(200, 300), img = 'ak47'}
@@ -104,7 +104,7 @@ LANG_RUS = true
 BOOS_TIME = 3
 GAMEPAD_ON = false
 BOSS_DEAD = false
-
+BOSS_UPDATE = 1
 -- CHAR PLAYER
 HP_PLAYER = 100
 MAX_HP_PLAYER = 100
@@ -278,7 +278,7 @@ function upgrade_skills(key, value)
 			end
 		end
 	elseif key == "boom" then
-		BOOM_DAMAGE = BOOM_DAMAGE + 10
+		BOOM_DAMAGE = BOOM_DAMAGE + 30
 		msg.post("/player/cucumber#cucumber", "add_boom")
 		table.insert(UPGRADE_LIST, UP_DMG_BOOM)
 		for key, value in pairs(UPGRADE_LIST) do
@@ -325,21 +325,21 @@ SPEED_YELLOW = 40
 --BOSS
 MONEY_BOSS = 500
 SCORE_BOSS = 1
-HEALTH_BOSS = 200
-DAMAGE_BOSS = MAX_HP_PLAYER 
+HEALTH_BOSS = 300
+DAMAGE_BOSS = 50
 SPEED_BOSS = 15
 TIME_SHOOT_BOSS = 0.8
 --MINIS
 MONEY_MINIS = 2
-SCORE_MINIS = 2
-HEALTH_MINIS = DAMAGE_BULLET * 2
-DAMAGE_MINIS = MAX_HP_PLAYER / 2
+SCORE_MINIS = 0.5
+HEALTH_MINIS = DAMAGE_BULLET * 5
+DAMAGE_MINIS = MAX_HP_PLAYER
 SPEED_MINIS = 80
 --BOSS TYKVA
 MONEY_BOSS_TYKVA = 150
 SCORE_BOSS_TYKVA = 100
-HEALTH_BOSS_TYKVA = 1000
-DAMAGE_BOSS_TYKVA = 80
+HEALTH_BOSS_TYKVA = DAMAGE_BULLET * 300
+DAMAGE_BOSS_TYKVA = MAX_HP_PLAYER
 SPEED_BOSS_TYKVA = 50
 TIME_SHOOT_BOSS_TYKVA = 2
 
@@ -356,15 +356,15 @@ function change_exp(value)
 		add_ten_level = 20
 	elseif HARD_GAME == "medium" then
 		add_every = 2
-		add_five_level = 20
-		add_ten_level = 30
+		add_five_level = 30
+		add_ten_level = 50
 	elseif HARD_GAME == "hard" then
 		add_every = 3
-		add_five_level = 20
-		add_ten_level = 40
+		add_five_level = 40
+		add_ten_level = 60
 	end
 	if max_level == LEVEL then
-		table.insert(EXP_LVL, EXP_LVL[#EXP_LVL] + 1200)
+		table.insert(EXP_LVL, EXP_LVL[#EXP_LVL] + 1500)
 	end
 	if EXP >= EXP_LVL[LEVEL] then
 		LEVEL = LEVEL + 1
@@ -377,8 +377,8 @@ function change_exp(value)
 		DAMAGE_RED = DAMAGE_RED + add_every
 		DAMAGE_PURPLE = DAMAGE_PURPLE + add_every
 		DAMAGE_YELLOW = DAMAGE_YELLOW + add_every
-		if LEVEL % 5 == 0 then
-			if LEVEL == 5 then
+		if LEVEL % 6 == 0 then
+			if LEVEL == 6 then
 				table.insert(UPGRADE_LIST, SKILL_HEADSHOT)
 				table.insert(UPGRADE_LIST, SKILL_BOOM)
 			end
@@ -390,10 +390,6 @@ function change_exp(value)
 			DAMAGE_RED = DAMAGE_RED + add_five_level
 			DAMAGE_PURPLE = DAMAGE_PURPLE + add_five_level
 			DAMAGE_YELLOW = DAMAGE_YELLOW + add_five_level + 20
-			MONEY_BLUE = 1.5
-			MONEY_RED = 2
-			MONEY_PURPLE = 2
-			MONEY_YELLOW = 2.5 
 			HEALTH_BOSS_TYKVA = HEALTH_BOSS_TYKVA + 250 + add_five_level
 			DAMAGE_BOSS_TYKVA = DAMAGE_BOSS_TYKVA + 10 + add_five_level
 		elseif LEVEL == 10 or LEVEL == 20 then
@@ -411,14 +407,14 @@ function change_exp(value)
 			MONEY_RED = 1
 			MONEY_PURPLE = 1
 			MONEY_YELLOW = 2
-		elseif LEVEL > 20 then
-			DURATION_SPAWN_MOSTER = 3
-			add_every = 5
-		elseif LEVEL > 25 then
+		elseif LEVEL >= 20 and LEVEL < 25 then
 			DURATION_SPAWN_MOSTER = 2
-			add_every = 10
-		elseif LEVEL > 30 then
+			add_every = 5
+		elseif LEVEL >= 25 and LEVEL < 30 then
 			DURATION_SPAWN_MOSTER = 1
+			add_every = 10
+		elseif LEVEL >= 30 then
+			add_every = 15
 		end
 	end
 end
@@ -428,7 +424,7 @@ function imba_mode()
 	-- MAX CHAR PLAYER
 	MAX_VAMPIR = 50 -- % max 9
 	MAX_CRITICAL = 50
-	MAX_ARMOR = 150   -- %
+	MAX_ARMOR = 60   -- %
 	MAX_UKLON_PLAYER = 60 -- max 30 %
 	MAX_SPEED_PLAYER = 200
 	MAX_SPEED_SHOOT = 0.1 -- sekunda - max 0.2
@@ -511,10 +507,10 @@ WEAPONS = "pistol"
 function change_weapon(value)
 	WEAPONS = value
 	if value == "pistol" then
-		DAMAGE_BULLET = 8
+		DAMAGE_BULLET = 10
 		KOL_PROBITIE = 0
 	elseif value == "two-pistol" then
-		DAMAGE_BULLET = 6
+		DAMAGE_BULLET = 5
 		KOL_PROBITIE = 0
 	elseif value == "ak47" then
 		DAMAGE_BULLET = 20
@@ -665,6 +661,7 @@ function arni_cucumber()
 end
 
 function defold_monster()
+	BOSS_UPDATE = 1
 	BOSS_DEAD = false
 	BOOM_DAMAGE = 30
 	BOOM_TIME = 3
@@ -687,8 +684,8 @@ function defold_monster()
 	end
 	MONEY_BOSS_TYKVA = 150
 	SCORE_BOSS_TYKVA = 100
-	HEALTH_BOSS_TYKVA = DAMAGE_BULLET * 200
-	DAMAGE_BOSS_TYKVA = MAX_HP_PLAYER *2/3
+	HEALTH_BOSS_TYKVA = DAMAGE_BULLET * 300
+	DAMAGE_BOSS_TYKVA = MAX_HP_PLAYER 
 	SPEED_BOSS_TYKVA = 90
 	TIME_SHOOT_BOSS_TYKVA = 1.5
 	--SUNDUK
@@ -726,16 +723,16 @@ function defold_monster()
 	--BOSS
 	MONEY_BOSS = 500
 	SCORE_BOSS = 1
-	HEALTH_BOSS = 100
-	DAMAGE_BOSS = MAX_HP_PLAYER + ARMOR
+	HEALTH_BOSS = 300
+	DAMAGE_BOSS = 50
 	SPEED_BOSS = 15
-	TIME_SHOOT_BOSS = 0.8
+	TIME_SHOOT_BOSS = 0.7
 	--MINIS
-	MONEY_MINIS = 2
-	SCORE_MINIS = 2
-	HEALTH_MINIS = DAMAGE_BULLET * 4
-	DAMAGE_MINIS = MAX_HP_PLAYER / 2
-	SPEED_MINIS = 100
+	MONEY_MINIS = 1
+	SCORE_MINIS = 1
+	HEALTH_MINIS = DAMAGE_BULLET * 10
+	DAMAGE_MINIS = MAX_HP_PLAYER
+	SPEED_MINIS = 120
 end
 
 

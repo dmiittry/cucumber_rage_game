@@ -61,7 +61,7 @@ end
 local function player_hitted(self, damage)
 	local rota = vmath.quat_rotation_z(0)
 	is_shield = false
-	local arm = damage * ARMOR / 100
+	local arm = damage * ARMOR/100
 	local dmg = damage - arm
 	KOL_POGL_URON = KOL_POGL_URON + arm
 	factory.create("#damage", nil, rota, {damage = dmg, player = true})
@@ -71,19 +71,18 @@ local function player_hitted(self, damage)
 	end
 	if dmg ~= 0 then
 		particlefx.play("#blood")
-		go.animate("#sprite_cucumber", "tint", go.PLAYBACK_LOOP_PINGPONG, vmath.vector4(1,0,1,1), go.EASING_INBOUNCE, 0.5, 0, set_color)
+		go.animate("#sprite_cucumber", "tint", go.PLAYBACK_ONCE_BACKWARD, vmath.vector4(1,0,1,1), go.EASING_INBOUNCE, 0.2)
 	end
-	timer.delay(TIME_HITTED, false, function()
-		go.cancel_animations("#sprite_cucumber", "tint")
+	timer.delay(0.1, false, function()
 		is_shield_player(self)
 	end)
 end	
 
 function update(self, dt)
-	if HP_PLAYER < MAX_HP_PLAYER then
-		local prosent = HP_PLAYER * 100 / MAX_HP_PLAYER /100
-		go.set("#sprite_cucumber", "tint", vmath.vector4(1,prosent,prosent,1))
-	end
+	-- if HP_PLAYER < MAX_HP_PLAYER then
+	-- 	local prosent = HP_PLAYER * 100 / MAX_HP_PLAYER /100
+	-- 	go.set("#sprite_cucumber", "tint", vmath.vector4(1,prosent,prosent,1))
+	-- end
 	if REGEN_PLAYER > 0 then
 		if HP_PLAYER < MAX_HP_PLAYER then
 			self.regen = self.regen - dt

@@ -18,17 +18,17 @@ function init(self)
 	self.speed_time = 5
 	math.randomseed(os.time())
 	self.speed = SPEED_BOSS
-	self.health = HEALTH_BOSS * (DAMAGE_BULLET + KNIFE_DAMAGE + DAMAGE_UNIT) * (2 - SPEED_SHOOT + TIME_SHOOT_AK47)*2
-	self.health_in = HEALTH_BOSS * (DAMAGE_BULLET + KNIFE_DAMAGE + DAMAGE_UNIT) * (2 - SPEED_SHOOT + TIME_SHOOT_AK47)*2
+	self.health = HEALTH_BOSS * (DAMAGE_BULLET + KNIFE_DAMAGE + DAMAGE_UNIT) * (3 - SPEED_SHOOT + TIME_SHOOT_AK47)*2 * BOSS_UPDATE
+	self.health_in = HEALTH_BOSS * (DAMAGE_BULLET + KNIFE_DAMAGE + DAMAGE_UNIT) * (3 - SPEED_SHOOT + TIME_SHOOT_AK47)*2 * BOSS_UPDATE
 	-- self.health = 100
 	-- self.health_in = 100
 	self.time_shoot = TIME_SHOOT_BOSS
 	self.move = true
 	self.fire = false
 	self.spawn = false
-	self.spawn_time = 15
+	self.spawn_time = 10
 	timer.delay(1, false, function() self.fire = true end)
-	self.damage = DAMAGE_BOSS 
+	self.damage = BOSS_UPDATE * ( MAX_HP_PLAYER + ARMOR ) + DAMAGE_BOSS
 	msg.post("#laser", "disable")
 	msg.post("#laser_v", "disable")
 	msg.post("#laser_v1", "disable")

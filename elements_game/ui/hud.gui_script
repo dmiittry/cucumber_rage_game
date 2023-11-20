@@ -116,7 +116,11 @@ function update(self, dt)
 		prosent_bar_hp = 0
 	end
 	gui.set_size(HP_BAR, vmath.vector3(prosent_bar_hp, 13, 0))
-	gui.set_text(EXP_TEXT, "EXP: ".. EXP .. "/".. EXP_LVL[LEVEL])
+	if LANG_RUS then
+		gui.set_text(EXP_TEXT, "опыт: ".. EXP .. "/".. EXP_LVL[LEVEL])
+	else
+		gui.set_text(EXP_TEXT, "EXP: ".. EXP .. "/".. EXP_LVL[LEVEL])
+	end
 	local min_exp = 0
 	if LEVEL == 1 then
 		min_exp = 0
@@ -367,15 +371,18 @@ function choose_upgrade()
 	BUY1 = first.buy
 	VALUE1 = first.value
 	if free_upgrade then
-		VALUE1 = math.random(10,12)
-		if LEVEL == 20 or LEVEL == 10  then
-			VALUE1 = math.random(20,23)
+		VALUE1 = math.random(8,10)
+		if LEVEL % 10 == 0 then
+			VALUE1 = math.random(13,15)
 		end
 	end
 		
 	if VALUE1 >= 5 then
-		BUY1 = BUY1 + 3
+		BUY1 = BUY1 * 3
 		gui.set_color(TEXT1, GREEN_COLOR)
+	end
+	if LEVEL > 20 then
+		BUY1 = BUY1 + 30
 	end
 	if LANG_RUS then
 		lang_text1 = first.text1
@@ -399,14 +406,17 @@ function choose_upgrade()
 	BUY2 = second.buy
 	VALUE2 = second.value
 	if free_upgrade then
-		VALUE2 = math.random(10,12)
-		if LEVEL == 20 or LEVEL == 10 then
-			VALUE2 = math.random(20,23)
+		VALUE2 = math.random(8,10)
+		if LEVEL % 10 == 0 then
+			VALUE2 = math.random(13,15)
 		end
 	end
 	if VALUE2 >= 5 then
 		BUY2 = BUY2 * 3
 		gui.set_color(TEXT2, GREEN_COLOR)
+	end
+	if LEVEL > 20 then
+		BUY2 = BUY2 + 30
 	end
 
 	if LANG_RUS then
@@ -431,14 +441,17 @@ function choose_upgrade()
 	BUY3 = three.buy
 	VALUE3 = three.value
 	if free_upgrade then
-		VALUE3 = math.random(10,12)
-		if LEVEL == 20 or LEVEL == 10 then
-			VALUE3 = math.random(20,23)
+		VALUE3 = math.random(8,10)
+		if LEVEL % 10 == 0 then
+			VALUE3 = math.random(13,15)
 		end
 	end
 	if VALUE3 >= 5 then
 		BUY3 = BUY3 * 3
 		gui.set_color(TEXT3, GREEN_COLOR)
+	end
+	if LEVEL > 20 then
+		BUY3 = BUY3 + 30
 	end
 
 	if LANG_RUS then
@@ -463,14 +476,17 @@ function choose_upgrade()
 	BUY4 = fore.buy
 	VALUE4 = fore.value
 	if free_upgrade then
-		VALUE4 = math.random(10,12)
-		if LEVEL == 20 or LEVEL == 10 then
-			VALUE4 = math.random(20,23)
+		VALUE4 = math.random(8,10)
+		if LEVEL % 10 == 0 then
+			VALUE4 = math.random(13,15)
 		end
 	end
 	if VALUE4 >= 5 then
 		BUY4 = BUY4 * 3
 		gui.set_color(TEXT4, GREEN_COLOR)
+	end
+	if LEVEL > 20 then
+		BUY4 = BUY4 + 30
 	end
 	if LANG_RUS then
 		lang_text4 = fore.text1

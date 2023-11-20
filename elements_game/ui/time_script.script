@@ -12,5 +12,9 @@ function update(self, dt)
 	end
 	local format = string.format("%02d:%02d", minuta ,second)
 	label.set_text("#label", format)
-	label.set_text("#level_label", LEVEL)
+	if LANG_RUS then
+		label.set_text("#level_label", "уровень " .. LEVEL)
+	else
+		label.set_text("#level_label", "level " .. LEVEL)
+	end
 end

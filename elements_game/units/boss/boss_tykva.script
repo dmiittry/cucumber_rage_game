@@ -22,6 +22,7 @@ function init(self)
 	self.fire = false
 	timer.delay(1, false, function() self.fire = true end)
 	self.damage = DAMAGE_BOSS_TYKVA
+	print("TYKVA", self.damage, self.health)
 	go.animate(".", "scale", go.PLAYBACK_LOOP_PINGPONG, vmath.vector3(1.2,1.2,1), go.EASING_LINEAR, 2)
 end
 

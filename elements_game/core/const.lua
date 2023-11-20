@@ -32,7 +32,7 @@ MAX_TIME_SHOOT_AK47 = 0.5 -- max 0.3
 MAX_TIME_KNIFE = 0.8 -- max 1 sek
 MAX_KOL_PROBITIE = 2
 --------
-LANG_TEXT_LVL_SHOP = " LVL - магазин"
+LANG_TEXT_LVL_SHOP = " уровень-магазин"
 LANG_TEXT_BUY = "Купить"
 LANG_TEXT_SELECT = "Выбрать"
 LANG_TEXT_CLOSE = "закрыть"
@@ -58,7 +58,7 @@ LANG_TEXT_CHAR_DMG_BOOM = "урон взрыва: "
 
 function change_langugage(value)
 	if value then
-		LANG_TEXT_LVL_SHOP = " LVL - магазин"
+		LANG_TEXT_LVL_SHOP = " уровень-магазин"
 		LANG_TEXT_BUY = "Купить"
 		LANG_TEXT_SELECT = "Выбрать"
 		LANG_TEXT_CLOSE = "закрыть"
@@ -82,7 +82,7 @@ function change_langugage(value)
 		LANG_TEXT_CHAR_DMG_KNIFE = "урон меча: "
 		LANG_TEXT_CHAR_DMG_BOOM = "урон взрыва: "
 	else
-		LANG_TEXT_LVL_SHOP = " LVL - shop"
+		LANG_TEXT_LVL_SHOP = " level-shop"
 		LANG_TEXT_BUY = "buy"
 		LANG_TEXT_SELECT = "select"
 		LANG_TEXT_CLOSE = "close"
